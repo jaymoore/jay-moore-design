@@ -72,6 +72,8 @@ The locked file used bare names for inspection clarity. The contract uses Tailwi
 ```css
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* ============================================================
      TYPE
@@ -221,6 +223,18 @@ These are intentional inheritances. The build relies on Tailwind v4's defaults a
 - **Container max-widths** — handled in component-level CSS (`max-w-[720px]` for prose/demos, `max-w-[1120px]` for top bar / footer). Not a global token.
 
 - **Z-index scale** — Tailwind v4 defaults. Top bar uses `z-40` (matches Task 3 of implementation plan).
+
+### One override: the `dark:*` variant
+
+Tailwind v4's default `dark:*` variant is `@media (prefers-color-scheme: dark)`. This contract uses a manual `html.dark` class toggle (per spec + the implementation plan). The two are misaligned out of the box — any `dark:*` utility would fire on OS preference, not on the contract's class.
+
+The fix is one line at the top of `app/globals.css`:
+
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+Compiles `dark:bg-foo` to `.dark\:bg-foo:where(.dark, .dark *)` — fires only when `html.dark` is set, by anything. Same family as the `::selection` / `focus-visible` / reduced-motion operational rules already locked. Token names and values unchanged; this is wiring, not a token.
 
 ---
 

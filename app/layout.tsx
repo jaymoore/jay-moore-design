@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Hanken_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SkipToContent } from "@/components/skip-to-content";
+import { TopBar } from "@/components/top-bar";
 import "./globals.css";
 
 const hankenGrotesk = Hanken_Grotesk({
@@ -44,6 +45,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <SkipToContent />
         <ThemeProvider>
+          <TopBar />
           <main id="main" className="flex-1">
             {children}
           </main>

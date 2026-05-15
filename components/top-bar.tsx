@@ -3,17 +3,67 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ArrowUpRight } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 
-const NAV_ITEMS = [
-  { href: "/work", label: "Work" },
-  { href: "/lab", label: "Lab" },
-  { href: "/about", label: "About" },
+type NavItem =
+  | { kind: "anchor"; href: string; label: string; matchPathname?: string }
+  | { kind: "external"; href: string; label: string };
+
+const NAV_ITEMS: NavItem[] = [
+  { kind: "anchor", href: "/#start", label: "Start", matchPathname: "/" },
+  { kind: "anchor", href: "/#demo", label: "Demo" },
+  { kind: "anchor", href: "/#depth", label: "Depth" },
+  { kind: "external", href: "https://github.com/jaymoore", label: "Github" },
 ];
 
-function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
+function navClass(active: boolean) {
+  return `text-sm transition-colors duration-(--duration-fast) ease-(--ease-snappy) ${
+    active ? "text-accent" : "text-fg-soft hover:text-fg"
+  }`;
+}
+
+function NavLink({
+  item,
+  pathname,
+  onClick,
+  className,
+}: {
+  item: NavItem;
+  pathname: string;
+  onClick?: () => void;
+  className?: string;
+}) {
+  if (item.kind === "external") {
+    return (
+      <a
+        href={item.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClick}
+        className={`inline-flex items-center gap-1 ${navClass(false)} ${className ?? ""}`}
+      >
+        {item.label}
+        <ArrowUpRight
+          size={16}
+          strokeWidth={1.5}
+          className="text-fg-faint"
+          aria-hidden="true"
+        />
+      </a>
+    );
+  }
+  const active = item.matchPathname ? pathname === item.matchPathname : false;
+  return (
+    <Link
+      href={item.href}
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      className={`${navClass(active)} ${className ?? ""}`}
+    >
+      {item.label}
+    </Link>
+  );
 }
 
 export function TopBar() {
@@ -32,38 +82,21 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg">
       <div className="mx-auto flex h-16 w-full max-w-[1120px] items-center justify-between px-6">
-        <Link href="/" className="flex items-baseline gap-4 text-sm">
-          <span className="font-medium text-fg">Jay Moore</span>
-          <span
-            className="hidden font-mono text-xs text-fg-faint sm:inline"
-            aria-hidden
-          >
-            /
-          </span>
-          <span className="hidden text-fg-soft sm:inline">Design Engineer</span>
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-sm text-fg transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-fg-soft"
+        >
+          <span className="brand-dot" aria-hidden />
+          Jay Moore
         </Link>
 
         <nav
-          className="hidden items-center gap-8 md:flex"
+          className="hidden items-center gap-6 md:flex"
           aria-label="Primary"
         >
-          {NAV_ITEMS.map((item) => {
-            const active = isActive(pathname, item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={`border-b-2 pb-1 text-sm transition-colors duration-(--duration-fast) ease-(--ease-snappy) ${
-                  active
-                    ? "border-accent text-accent"
-                    : "border-transparent text-fg-soft hover:border-line hover:text-fg"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {NAV_ITEMS.map((item) => (
+            <NavLink key={item.label} item={item} pathname={pathname} />
+          ))}
           <ThemeToggle />
         </nav>
 
@@ -104,22 +137,15 @@ export function TopBar() {
           className="flex flex-col gap-px bg-line"
           aria-label="Mobile primary"
         >
-          {NAV_ITEMS.map((item) => {
-            const active = isActive(pathname, item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                onClick={() => setOpen(false)}
-                className={`bg-bg px-6 py-4 text-sm ${
-                  active ? "text-accent" : "text-fg-soft"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {NAV_ITEMS.map((item) => (
+            <NavLink
+              key={item.label}
+              item={item}
+              pathname={pathname}
+              onClick={() => setOpen(false)}
+              className="block w-full bg-bg px-6 py-4"
+            />
+          ))}
           <div className="flex items-center justify-between bg-bg px-6 py-4">
             <span className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
               Theme

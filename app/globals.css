@@ -129,3 +129,13 @@ html.dark {
     }
   }
 }
+
+@layer components {
+  .brand-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-ok);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ok) 18%, transparent);
+  }
+}

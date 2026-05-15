@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Private content (NDA-respectful Fiserv case study; not committed publicly)
+content-private/

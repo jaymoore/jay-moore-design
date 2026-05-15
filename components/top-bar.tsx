@@ -47,7 +47,6 @@ function NavLink({
         <ArrowUpRight
           size={16}
           strokeWidth={1.5}
-          className="text-fg-faint"
           aria-hidden="true"
         />
       </a>

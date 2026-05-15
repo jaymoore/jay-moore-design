@@ -32,11 +32,7 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg">
       <div className="mx-auto flex h-16 w-full max-w-[1120px] items-center justify-between px-6">
-        <Link
-          href="/"
-          className="flex items-baseline gap-3 text-sm"
-          aria-label="Jay Moore — home"
-        >
+        <Link href="/" className="flex items-baseline gap-4 text-sm">
           <span className="font-medium text-fg">Jay Moore</span>
           <span
             className="hidden font-mono text-xs text-fg-faint sm:inline"
@@ -73,7 +69,7 @@ export function TopBar() {
 
         <button
           type="button"
-          className="flex h-8 w-8 flex-col items-center justify-center gap-1.5 md:hidden"
+          className="flex h-8 w-8 flex-col items-center justify-center gap-1.5 rounded-sm transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:bg-bg-2 md:hidden"
           aria-expanded={open}
           aria-controls="top-bar-mobile-menu"
           aria-label={open ? "Close menu" : "Open menu"}
@@ -99,6 +95,7 @@ export function TopBar() {
 
       <div
         id="top-bar-mobile-menu"
+        inert={!open}
         className={`overflow-hidden border-t border-line transition-[max-height,opacity] duration-(--duration-normal) ease-(--ease-snappy) md:hidden ${
           open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
         }`}

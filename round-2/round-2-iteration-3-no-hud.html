@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Round 2 · Iteration 3 — no-HUD control</title>
+<!--
+  ROUND 2 / ITERATION 3 — "NO-HUD CONTROL"
+  Phase 0 visual exploration. Inspectable on purpose. NOT the build target.
+
+  Direction: C (The Instrument), DECOMPRESSED with B's calm. Light mode is the PRIMARY
+  designed state.
+
+  What this iteration tests: NO status bar at all (Codex R6 #4 — the HUD is a hypothesis
+  under test, not a foundation; Jay already flagged it "cliche and overused"). The
+  mono-structural RIGOR is carried entirely by: the type system, the hairline grid, the
+  precision states, the data language, the labeled coordinates down the left edge. If the
+  Instrument identity survives here, the HUD was decoration. If it doesn't, the HUD earned
+  its place. This is the control.
+
+  The one true proof-bearing field (the method record) does NOT vanish — it relocates to
+  sit WITH the hero, local-to-demo, where it is contextually about the thing it describes.
+
+  Grid intensity: STRONGEST of the three — because with no HUD, the grid is doing more of
+  the "this is an instrument" work.
+
+  Fixed across all 3 iterations: ONE placeholder hero at realistic footprint, no section
+  boxes, decompressed whitespace-separated sections, Jay-specific copy, terse captions,
+  evidence rail, mono-structural type, dark toggle, responsive, inspectable.
+
+  Calm/rigor survival rules in force: calm wins the scan spine, rigor wins inside the demo.
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root {
+    --display: 'Hanken Grotesk', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+
+    /* LIGHT — primary designed state */
+    --bg: #f3f4f6;
+    --bg-2: #eaebee;
+    --panel: #ffffff;
+    --fg: #15171b;
+    --fg-soft: #545961;
+    --fg-faint: #8b9098;
+    --grid: #dfe2e7;
+    --line: #d8dbe0;
+    --line-strong: #c3c7ce;
+    --accent: #1f6fd6;
+    --accent-dim: #9cbde9;
+    --accent-wash: #eaf2fc;
+    --ok: #2f9e6b;
+    --shadow: 0 1px 2px rgba(20,22,26,.04), 0 6px 20px rgba(20,22,26,.06);
+  }
+  [data-theme="dark"] {
+    --bg: #0c0d0f;
+    --bg-2: #131417;
+    --panel: #16181b;
+    --fg: #e8e9ec;
+    --fg-soft: #9498a0;
+    --fg-faint: #5c606a;
+    --grid: #1e2025;
+    --line: #25282d;
+    --line-strong: #353941;
+    --accent: #4ea3ff;
+    --accent-dim: #2b6bb0;
+    --accent-wash: #11202f;
+    --ok: #56c08d;
+    --shadow: 0 2px 8px rgba(0,0,0,.5);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--display);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background .4s ease, color .4s ease;
+    /* STRONGEST grid — with no HUD, the grid carries more of the instrument signal */
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 100% 80px, 80px 100%;
+    background-position: 0 56px, 0 0;
+  }
+  ::selection { background: var(--accent); color: #fff; }
+  a { color: inherit; }
+
+  /* ---- NAV — single thin row, no HUD above it ---- */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 56px;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line-strong);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 30px;
+    z-index: 60;
+  }
+  .brand {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 13.5px;
+  }
+  .brand .dot {
+    display: inline-block;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ok);
+    margin-right: 8px;
+    vertical-align: 1px;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 18%, transparent);
+  }
+  .nav-right { display: flex; align-items: center; gap: 4px; }
+  .nav-links { display: flex; gap: 2px; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    text-decoration: none;
+    color: var(--fg-soft);
+    padding: 7px 13px;
+    border-radius: 4px;
+    transition: color .15s, background .15s;
+  }
+  .nav-links a:hover { color: var(--fg); background: var(--bg-2); }
+  .nav-links a.is-current { color: var(--accent); }
+  .nav-links a.ext::after { content: " \2197"; color: var(--fg-faint); }
+  .theme-btn {
+    background: none;
+    border: 1px solid var(--line-strong);
+    color: var(--fg-soft);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: border-color .15s, color .15s;
+  }
+  .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ---- MAIN — decompressed, with a labeled coordinate edge ---- */
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 30px;
+  }
+  /* sections carry a left-edge mono coordinate — the rigor signal, no HUD needed */
+  section {
+    padding: 124px 0;
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+  section:first-of-type {
+    padding-top: 152px;
+    border-top: none;
+  }
+  .coord {
+    position: absolute;
+    left: -30px;
+    top: 124px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-faint);
+    writing-mode: vertical-rl;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  section:first-of-type .coord { top: 152px; }
+  .sec-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sec-tag::before {
+    content: "";
+    width: 22px; height: 1px;
+    background: var(--line-strong);
+  }
+
+  /* BLOCK 1 — positioning + pivot */
+  .kicker {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--fg-soft);
+    margin-bottom: 26px;
+    line-height: 1.5;
+    max-width: 52ch;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: clamp(2.4rem, 5vw, 3.9rem);
+    line-height: 1.07;
+    letter-spacing: -0.025em;
+    max-width: 17ch;
+  }
+  h1 .hl { color: var(--accent); }
+  .sub {
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    line-height: 1.6;
+    color: var(--fg-soft);
+    max-width: 54ch;
+    margin-top: 26px;
+  }
+  .pivot-meta {
+    margin-top: 44px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .pivot-meta div {
+    padding: 0 26px;
+    border-left: 1px solid var(--line-strong);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--fg-soft);
+  }
+  .pivot-meta div:first-child { padding-left: 0; border-left: none; }
+  .pivot-meta .k { color: var(--fg-faint); display: block; margin-bottom: 5px; }
+  .pivot-meta .v { color: var(--fg); }
+
+  /* BLOCK 2 — hero placeholder + the relocated method record (local-to-demo) */
+  .demo-title {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 2.2vw, 1.85rem);
+    font-weight: 600;
+    letter-spacing: -.015em;
+  }
+  .demo-caption {
+    font-size: 1.05rem;
+    color: var(--fg-soft);
+    line-height: 1.6;
+    margin: 14px 0 40px;
+    max-width: 58ch;
+  }
+  .hero-placeholder {
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    box-shadow: var(--shadow);
+    aspect-ratio: 16 / 10;
+    display: flex;
+    flex-direction: column;
+  }
+  .hero-ph-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+  .hero-ph-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    text-align: center;
+    padding: 40px;
+    background-image:
+      repeating-linear-gradient(
+        -45deg,
+        transparent, transparent 11px,
+        color-mix(in srgb, var(--line) 50%, transparent) 11px,
+        color-mix(in srgb, var(--line) 50%, transparent) 12px
+      );
+  }
+  .hero-ph-label {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--fg-soft);
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    padding: 8px 14px;
+  }
+  .hero-ph-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-faint);
+    max-width: 44ch;
+    line-height: 1.6;
+    background: var(--panel);
+    padding: 4px 10px;
+  }
+  /* the proof-bearing field — relocated here, local to the demo it describes */
+  .method-strip {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-soft);
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    background: var(--bg-2);
+  }
+  .method-strip .k {
+    color: var(--fg-faint);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-size: 10px;
+  }
+  .method-strip a { color: var(--accent); text-decoration: none; }
+  .method-strip a:hover { text-decoration: underline; }
+  .method-strip .sep { color: var(--line-strong); }
+
+  /* BLOCK 3 — depth rail */
+  .rail { display: flex; flex-direction: column; }
+  .rail a {
+    display: grid;
+    grid-template-columns: 36px 1fr auto;
+    gap: 20px;
+    align-items: center;
+    padding: 24px 8px;
+    border-top: 1px solid var(--line);
+    text-decoration: none;
+    transition: background .15s, padding-left .15s;
+  }
+  .rail a:first-child { border-top: none; }
+  .rail a:hover { background: var(--panel); padding-left: 16px; }
+  .rail-idx {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-faint);
+  }
+  .rail-title {
+    font-family: var(--display);
+    font-size: 1.22rem;
+    font-weight: 600;
+  }
+  .rail-desc {
+    font-size: .95rem;
+    color: var(--fg-soft);
+    margin-top: 4px;
+    max-width: 60ch;
+  }
+  .rail-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 32px 0 48px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-faint);
+  }
+  footer a { color: var(--fg-soft); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  section, footer { opacity: 0; transform: translateY(12px); animation: rise .6s cubic-bezier(.32,.72,0,1) forwards; }
+  section:nth-of-type(1) { animation-delay: .05s; }
+  section:nth-of-type(2) { animation-delay: .13s; }
+  section:nth-of-type(3) { animation-delay: .21s; }
+  footer { animation-delay: .29s; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    section, footer { opacity: 1; transform: none; animation: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  @media (max-width: 800px) {
+    body { background-size: 100% 72px, 72px 100%; }
+    .nav { padding: 0 16px; }
+    .nav-links a { padding: 7px 9px; }
+    main { padding: 0 16px; }
+    section { padding: 88px 0; }
+    section:first-of-type { padding-top: 116px; }
+    .coord { display: none; }
+    .pivot-meta div { padding: 0 16px 0 0; border-left: none; margin-bottom: 16px; }
+    .hero-placeholder { aspect-ratio: 4 / 5; }
+    .method-strip { flex-wrap: wrap; }
+    .rail a { grid-template-columns: 24px 1fr; }
+    .rail-tag { grid-column: 2; margin-top: 6px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ---- NAV — single row, NO HUD ---- -->
+  <nav class="nav" aria-label="Primary">
+    <span class="brand"><span class="dot"></span>Jay Moore</span>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#start" class="is-current">Start</a>
+        <a href="#demo">Demo</a>
+        <a href="#depth">Depth</a>
+        <a href="#" class="ext">Github</a>
+      </div>
+      <button class="theme-btn" id="themeBtn">&#9680; light</button>
+    </div>
+  </nav>
+
+  <!-- ---- MAIN — 3-BLOCK SCAN SPINE ---- -->
+  <main>
+
+    <!-- BLOCK 1 — POSITIONING + PIVOT -->
+    <section id="start">
+      <span class="coord">01 / positioning</span>
+      <p class="kicker">Interaction designer who codes. 10 yrs in complex software UX, now shipping it in React.</p>
+      <h1>Design engineer for <span class="hl">AI-native</span> workflows.</h1>
+      <p class="sub">I build the trust surfaces, the streaming UI, and the agentic fallbacks &mdash; the seam between design and engineering on products where the AI has to stay legible to the person using it.</p>
+      <div class="pivot-meta">
+        <div><span class="k">now</span><span class="v">Simple Path Media &mdash; decision support</span></div>
+        <div><span class="k">prior</span><span class="v">Fiserv &middot; Kleinfelder</span></div>
+        <div><span class="k">open to</span><span class="v">Staff / Principal DE &middot; US remote</span></div>
+      </div>
+    </section>
+
+    <!-- BLOCK 2 — HERO (placeholder + relocated method record) -->
+    <section id="demo">
+      <span class="coord">02 / live demo</span>
+      <div class="sec-tag">live demo &mdash; the hero object</div>
+      <h2 class="demo-title">Trust surface &mdash; confidence, evidence, override</h2>
+      <p class="demo-caption">When the model is uncertain, show the receipts. Override beats obedience &mdash; the operator decides, and the disagreement becomes training data.</p>
+
+      <div class="hero-placeholder" role="img" aria-label="Placeholder for the hero interaction, currently in design">
+        <div class="hero-ph-bar"><span>trust-surface.tsx</span><span>hero interaction</span></div>
+        <div class="hero-ph-body">
+          <span class="hero-ph-label">[ hero interaction &mdash; in design ]</span>
+          <span class="hero-ph-note">The thesis-demonstrating interaction is being designed in a separate pass. This block holds its real footprint so structure can be judged without it.</span>
+        </div>
+      </div>
+
+      <!-- the one true proof-bearing field, relocated to sit with the thing it describes -->
+      <div class="method-strip">
+        <span class="k">built</span>
+        <span>12 commits</span>
+        <span class="sep">/</span>
+        <span>0 failed CI</span>
+        <span class="sep">/</span>
+        <a href="#">view PR &rarr;</a>
+      </div>
+    </section>
+
+    <!-- BLOCK 3 — DEPTH -->
+    <section id="depth">
+      <span class="coord">03 / depth</span>
+      <div class="sec-tag">where to go for depth</div>
+      <nav class="rail" aria-label="Deeper evidence">
+        <a href="#">
+          <span class="rail-idx">01</span>
+          <span>
+            <span class="rail-title">SPM lifecycle engine</span>
+            <div class="rail-desc">Full case study. TTF-touch 30 min &rarr; 60 s. Reply rate 4.6&ndash;4.9% against a ~1% industry baseline.</div>
+          </span>
+          <span class="rail-tag">case study</span>
+        </a>
+        <a href="#">
+          <span class="rail-idx">02</span>
+          <span>
+            <span class="rail-title">About &mdash; the pivot</span>
+            <div class="rail-desc">10 yrs product design into design engineering. Fiserv, Kleinfelder, SPM. The cross-domain bridge.</div>
+          </span>
+          <span class="rail-tag">background</span>
+        </a>
+        <a href="#">
+          <span class="rail-idx">03</span>
+          <span>
+            <span class="rail-title">Get in touch</span>
+            <div class="rail-desc">Open to Staff / Principal Design Engineer roles. US remote.</div>
+          </span>
+          <span class="rail-tag">contact</span>
+        </a>
+      </nav>
+    </section>
+
+    <footer>
+      <span>Jay Moore &mdash; design engineer for AI-native workflows</span>
+      <span><a href="#">github</a> &middot; <a href="#">jay@jaymoore.net</a></span>
+    </footer>
+
+  </main>
+
+<script>
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.addEventListener('click', () => {
+    const root = document.documentElement;
+    const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+    root.dataset.theme = next;
+    themeBtn.innerHTML = next === 'light' ? '\u25D0 light' : '\u25D0 dark';
+  });
+
+  const navA = document.querySelectorAll('.nav-links a[href^="#"]');
+  const secs = [...navA].map(a => document.querySelector(a.getAttribute('href')));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const i = secs.indexOf(e.target);
+        navA.forEach((a, ai) => a.classList.toggle('is-current', ai === i));
+      }
+    });
+  }, { rootMargin: '-25% 0px -65% 0px' });
+  secs.forEach(s => s && io.observe(s));
+</script>
+</body>
+</html>

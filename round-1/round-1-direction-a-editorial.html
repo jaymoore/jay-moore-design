@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Round 1 · Direction A — The Editorial</title>
+<!--
+  ROUND 1 / DIRECTION A — "THE EDITORIAL"
+  Phase 0 visual exploration sketch. Inspectable on purpose. NOT the build target.
+  Bet served: simple surface / deep craft / demo-as-hero / 3-block scan spine / recruiter scan spine.
+  Divergence: type IS the hero. Warm paper. Serif display.
+  Structural move absent from Rauno/Paco: the left-margin RUNNING SPINE — a thin vertical
+  index that names which block you are in, like a book's running header.
+  Anti-derivative: no fragment-manifesto copy. Jay-specific placeholder language.
+-->
+<style>
+  /* ---- TYPE: display = Spectral (serious literary serif), body = Söhne-like via system grotesque fallback,
+         here using "Spectral" + "Inter Tight" loaded from Google as inspectable sketch fonts.
+         Mono = "Spline Sans Mono" for metadata. NONE of these is Geist. ---- */
+  @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,400&family=Inter+Tight:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap');
+
+  :root {
+    --serif: 'Spectral', Georgia, serif;
+    --sans: 'Inter Tight', system-ui, sans-serif;
+    --mono: 'Spline Sans Mono', ui-monospace, monospace;
+
+    /* warm paper light */
+    --paper: #f4f1ea;
+    --paper-2: #ece7dc;
+    --ink: #1a1714;
+    --ink-soft: #4e463c;
+    --ink-faint: #8a8073;
+    --rule: #d8d0c0;
+    --rule-strong: #c3b9a4;
+    --accent: #9a3b1f;        /* one warm oxblood accent, used sparingly */
+    --demo-bg: #fbf9f4;
+    --shadow: 0 1px 2px rgba(26,23,20,.04), 0 8px 24px -12px rgba(26,23,20,.12);
+  }
+  [data-theme="dark"] {
+    --paper: #15130f;
+    --paper-2: #1d1a15;
+    --ink: #ece7dc;
+    --ink-soft: #b3a994;
+    --ink-faint: #6f6657;
+    --rule: #2c2820;
+    --rule-strong: #3c372c;
+    --accent: #d06a44;
+    --demo-bg: #1a1712;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition: background .4s ease, color .4s ease;
+  }
+  ::selection { background: var(--accent); color: var(--paper); }
+  a { color: inherit; }
+
+  /* ---- LAYOUT SHELL: a fixed left running spine + the main column ---- */
+  .shell {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    max-width: 1180px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  /* ---- THE RUNNING SPINE (structural move) ---- */
+  .spine {
+    border-right: 1px solid var(--rule);
+    padding: 38px 28px 38px 32px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .spine-mark {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .spine-name {
+    font-family: var(--serif);
+    font-size: 21px;
+    font-weight: 500;
+    line-height: 1.2;
+    margin-top: 6px;
+  }
+  .spine-index { margin-top: 48px; display: flex; flex-direction: column; gap: 2px; }
+  .spine-index a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .04em;
+    text-decoration: none;
+    color: var(--ink-faint);
+    padding: 7px 0;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    transition: color .2s ease;
+  }
+  .spine-index a:last-child { border-bottom: 1px solid var(--rule); }
+  .spine-index a:hover,
+  .spine-index a.is-current { color: var(--accent); }
+  .spine-index a .n { color: var(--ink-faint); }
+  .spine-index a.is-current .n { color: var(--accent); }
+  .spine-foot { display: flex; flex-direction: column; gap: 10px; }
+  .spine-foot a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+  .spine-foot a:hover { color: var(--accent); }
+  .theme-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .04em;
+    background: none;
+    border: 1px solid var(--rule-strong);
+    color: var(--ink-soft);
+    padding: 7px 10px;
+    border-radius: 2px;
+    cursor: pointer;
+    width: fit-content;
+    transition: border-color .2s, color .2s;
+  }
+  .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ---- MAIN COLUMN ---- */
+  .main { padding: 0; }
+  .block {
+    padding: 64px 64px 64px 56px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .block:last-child { border-bottom: none; }
+  .block-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .block-label::before {
+    content: "";
+    width: 18px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  /* BLOCK 1 — positioning + pivot */
+  .pivot-kicker {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.6rem, 5.4vw, 4.2rem);
+    line-height: 1.06;
+    letter-spacing: -0.014em;
+    max-width: 16ch;
+  }
+  h1 em { font-style: italic; color: var(--accent); }
+  .pivot-sub {
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 1.7vw, 1.32rem);
+    font-weight: 300;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 42ch;
+    margin-top: 26px;
+  }
+  .pivot-meta {
+    margin-top: 34px;
+    display: flex;
+    gap: 26px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+  }
+  .pivot-meta span { display: flex; gap: 7px; }
+  .pivot-meta b { color: var(--ink); font-weight: 500; }
+
+  /* BLOCK 2 — hero demo */
+  .demo-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .demo-title {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  .demo-caption {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 10px 0 26px;
+  }
+  /* the live demo object — staged big, given room */
+  .demo-stage {
+    background: var(--demo-bg);
+    border: 1px solid var(--rule-strong);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    padding: 30px;
+  }
+  .sugg-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .sugg-text {
+    font-family: var(--sans);
+    font-size: 1.02rem;
+    line-height: 1.5;
+    max-width: 46ch;
+  }
+  .conf {
+    font-family: var(--mono);
+    font-size: 12px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    padding: 4px 9px;
+    white-space: nowrap;
+    color: var(--ink-soft);
+  }
+  .conf b { color: var(--accent); font-weight: 600; }
+  .ev-toggle {
+    margin-top: 16px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    padding: 0;
+    border-bottom: 1px dashed var(--rule-strong);
+  }
+  .ev-toggle:hover { color: var(--accent); border-color: var(--accent); }
+  .ev-list {
+    list-style: none;
+    margin-top: 14px;
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .ev-list.open { display: flex; }
+  .ev-list li {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    padding-left: 14px;
+    position: relative;
+  }
+  .ev-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--ink-faint);
+  }
+  .demo-actions {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    gap: 10px;
+  }
+  .btn {
+    font-family: var(--sans);
+    font-size: .92rem;
+    font-weight: 500;
+    padding: 9px 15px;
+    border-radius: 3px;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .05s;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .demo-state {
+    margin-top: 16px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    min-height: 1.2em;
+  }
+  .demo-state b { color: var(--accent); }
+  .method-proof {
+    margin-top: 24px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .method-proof a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  .method-proof a:hover { border-color: var(--accent); }
+
+  /* BLOCK 3 — where to go for depth (the evidence rail) */
+  .rail { display: flex; flex-direction: column; }
+  .rail a {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: baseline;
+    padding: 22px 4px;
+    border-top: 1px solid var(--rule);
+    text-decoration: none;
+    transition: padding-left .18s ease;
+  }
+  .rail a:last-child { border-bottom: 1px solid var(--rule); }
+  .rail a:hover { padding-left: 14px; }
+  .rail-title {
+    font-family: var(--serif);
+    font-size: 1.32rem;
+    font-weight: 500;
+  }
+  .rail-desc {
+    font-family: var(--sans);
+    font-size: .95rem;
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+  .rail-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .rail-arrow { color: var(--accent); }
+
+  footer {
+    padding: 30px 64px 30px 56px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+  }
+  footer a { color: var(--ink-soft); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* sketch watermark */
+  .sketch-tag {
+    position: fixed;
+    bottom: 14px;
+    right: 16px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: var(--ink-faint);
+    background: var(--paper-2);
+    border: 1px solid var(--rule);
+    padding: 4px 8px;
+    border-radius: 2px;
+    z-index: 50;
+  }
+
+  /* staggered load */
+  .block > * { opacity: 0; animation: rise .6s cubic-bezier(.32,.72,0,1) forwards; }
+  .block > *:nth-child(1) { animation-delay: .05s; }
+  .block > *:nth-child(2) { animation-delay: .12s; }
+  .block > *:nth-child(3) { animation-delay: .19s; }
+  .block > *:nth-child(4) { animation-delay: .26s; }
+  .block > *:nth-child(5) { animation-delay: .33s; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+  .block > * { transform: translateY(8px); }
+  @media (prefers-reduced-motion: reduce) {
+    .block > * { opacity: 1; transform: none; animation: none; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* focus states — always visible */
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* ---- RESPONSIVE: spine collapses to a top bar ---- */
+  @media (max-width: 820px) {
+    .shell { grid-template-columns: 1fr; }
+    .spine {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--rule);
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .spine-index { display: none; }
+    .spine-foot { flex-direction: row; align-items: center; gap: 16px; }
+    .block { padding: 44px 24px; }
+    footer { padding: 26px 24px; }
+    h1 { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ============ THE RUNNING SPINE (structural move) ============ -->
+  <aside class="spine">
+    <div>
+      <div class="spine-mark">Portfolio · 2026</div>
+      <div class="spine-name">Jay Moore</div>
+    </div>
+
+    <nav class="spine-index" aria-label="Page sections">
+      <a href="#start" class="is-current"><span>Start</span><span class="n">01</span></a>
+      <a href="#demo"><span>Live demo</span><span class="n">02</span></a>
+      <a href="#depth"><span>Depth</span><span class="n">03</span></a>
+    </nav>
+
+    <div class="spine-foot">
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle color theme">◐ Theme</button>
+      <a href="#">GitHub ↗</a>
+      <a href="#">jay@jaymoore.net</a>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN COLUMN — 3-BLOCK SCAN SPINE ============ -->
+  <main class="main">
+
+    <!-- ---- BLOCK 1 — POSITIONING + PIVOT ---- -->
+    <section class="block" id="start">
+      <div class="block-label">01 — Positioning</div>
+      <p class="pivot-kicker">Interaction designer who codes. 10 yrs in complex software UX, now shipping it in React.</p>
+      <h1>Design engineer for <em>AI-native</em> workflows.</h1>
+      <p class="pivot-sub">I build the trust surfaces, the streaming UI, and the agentic fallbacks — the seam between design and engineering on products where the AI has to be legible to the person using it.</p>
+      <div class="pivot-meta">
+        <span><b>Now</b> Simple Path Media — lifecycle automation + decision support</span>
+        <span><b>Open to</b> Staff / Principal DE · US remote</span>
+      </div>
+    </section>
+
+    <!-- ---- BLOCK 2 — ONE HERO DEMO + ONE-LINE METHOD PROOF ---- -->
+    <section class="block" id="demo">
+      <div class="block-label">02 — Live demo</div>
+      <div class="demo-head">
+        <span class="demo-title">Trust surface — confidence, evidence, override</span>
+      </div>
+      <p class="demo-caption">When the model is uncertain, show the receipts. Override beats obedience — the operator decides, and the disagreement becomes training data.</p>
+
+      <div class="demo-stage" id="demoStage">
+        <div class="sugg-row">
+          <p class="sugg-text">Schedule this send for Tuesday 9:00 AM — best historical reply rate for this segment.</p>
+          <span class="conf">conf <b>72%</b></span>
+        </div>
+        <button class="ev-toggle" id="evToggle" aria-expanded="false">↳ show evidence</button>
+        <ul class="ev-list" id="evList">
+          <li>Segment baseline: 4.8% reply rate</li>
+          <li>Tuesday 9AM cohort: +1.4 percentage points</li>
+          <li>Last 30 days: 12 sends, 4 replies</li>
+        </ul>
+        <div class="demo-actions">
+          <button class="btn btn-primary" data-decision="accepted">Accept</button>
+          <button class="btn" data-decision="rejected">Reject</button>
+          <button class="btn" data-decision="overridden">Override</button>
+        </div>
+        <div class="demo-state" id="demoState" aria-live="polite"></div>
+      </div>
+
+      <p class="method-proof">
+        ↳ Built in 12 commits · 0 failed CI checks · 2-day build —
+        <a href="#">see the merged PR ↗</a>
+      </p>
+    </section>
+
+    <!-- ---- BLOCK 3 — WHERE TO GO FOR DEPTH (evidence rail) ---- -->
+    <section class="block" id="depth">
+      <div class="block-label">03 — Depth</div>
+      <nav class="rail" aria-label="Deeper evidence">
+        <a href="#">
+          <span>
+            <span class="rail-title">SPM lifecycle engine</span>
+            <span class="rail-desc">Full case study. TTF-touch 30 min → 60 s. Reply rate 4.6–4.9% vs ~1% industry baseline.</span>
+          </span>
+          <span class="rail-meta">case study<br><span class="rail-arrow">read →</span></span>
+        </a>
+        <a href="#">
+          <span>
+            <span class="rail-title">About — the pivot</span>
+            <span class="rail-desc">10 yrs product design → design engineer. Fiserv, Kleinfelder, SPM. The cross-domain bridge.</span>
+          </span>
+          <span class="rail-meta">background<br><span class="rail-arrow">read →</span></span>
+        </a>
+        <a href="#">
+          <span>
+            <span class="rail-title">Get in touch</span>
+            <span class="rail-desc">Open to Staff / Principal Design Engineer roles. US remote.</span>
+          </span>
+          <span class="rail-meta">contact<br><span class="rail-arrow">email →</span></span>
+        </a>
+      </nav>
+    </section>
+
+    <footer>
+      <span>Jay Moore — design engineer for AI-native workflows</span>
+      <span><a href="#">GitHub</a> · <a href="#">jay@jaymoore.net</a></span>
+    </footer>
+
+  </main>
+</div>
+
+<div class="sketch-tag">ROUND 1 · DIR A · THE EDITORIAL · sketch</div>
+
+<script>
+  // theme toggle
+  const themeBtn = document.getElementById('themeBtn');
+  themeBtn.addEventListener('click', () => {
+    const root = document.documentElement;
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  });
+
+  // evidence toggle
+  const evToggle = document.getElementById('evToggle');
+  const evList = document.getElementById('evList');
+  evToggle.addEventListener('click', () => {
+    const open = evList.classList.toggle('open');
+    evToggle.setAttribute('aria-expanded', String(open));
+    evToggle.textContent = open ? '↳ hide evidence' : '↳ show evidence';
+  });
+
+  // decision state
+  const demoState = document.getElementById('demoState');
+  document.querySelectorAll('[data-decision]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const d = btn.dataset.decision;
+      demoState.innerHTML = 'decision: <b>' + d + '</b> — captured as a recordable event (operator, timestamp, delta)';
+    });
+  });
+
+  // running spine: highlight current section
+  const links = document.querySelectorAll('.spine-index a');
+  const sections = [...links].map(l => document.querySelector(l.getAttribute('href')));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = '#' + e.target.id;
+        links.forEach(l => l.classList.toggle('is-current', l.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => s && io.observe(s));
+</script>
+</body>
+</html>

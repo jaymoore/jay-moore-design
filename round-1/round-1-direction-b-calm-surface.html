@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Round 1 · Direction B — The Calm Surface</title>
+<!--
+  ROUND 1 / DIRECTION B — "THE CALM SURFACE"
+  Phase 0 visual exploration sketch. Inspectable on purpose. NOT the build target.
+  Bet served: simple surface / deep craft / demo-as-hero / 3-block scan spine / recruiter scan spine.
+  Divergence: thedot.space breathing room, redirected. The demo fills the viewport as the
+  single object on screen. One idea per screen, taken literally.
+  Structural move absent from Rauno/Paco: the homepage is a HORIZONTAL SEQUENCE of three
+  full-height "stations" — you move through 3 calm rooms, not down a scroll-stack.
+  (Falls back to vertical on touch / narrow.) Persistent labeled nav + progress dots
+  keep it a scan spine, not a slideshow you can get lost in.
+  Anti-derivative: no fragment-manifesto copy. Jay-specific placeholder language.
+-->
+<style>
+  /* TYPE: display = "Fraunces" (humanist serif with a real optical hand — soft, confident,
+     not invisible, not Geist), body = "Figtree" (clean humanist sans), mono = "DM Mono". */
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Figtree:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --display: 'Fraunces', Georgia, serif;
+    --sans: 'Figtree', system-ui, sans-serif;
+    --mono: 'DM Mono', ui-monospace, monospace;
+
+    /* cool calm off-white */
+    --bg: #f6f7f8;
+    --bg-2: #eef0f2;
+    --fg: #16181c;
+    --fg-soft: #565b64;
+    --fg-faint: #9aa0a8;
+    --line: #e2e5e8;
+    --line-strong: #cfd4d9;
+    --accent: #2f6f5e;        /* one calm deep-green accent */
+    --card: #ffffff;
+    --shadow: 0 1px 3px rgba(16,18,22,.04), 0 18px 40px -22px rgba(16,18,22,.18);
+  }
+  [data-theme="dark"] {
+    --bg: #0e0f11;
+    --bg-2: #16181b;
+    --fg: #eef0f2;
+    --fg-soft: #9aa0a8;
+    --fg-faint: #5b616a;
+    --line: #232629;
+    --line-strong: #34383d;
+    --accent: #4f9d88;
+    --card: #181a1d;
+    --shadow: 0 1px 3px rgba(0,0,0,.4), 0 18px 40px -22px rgba(0,0,0,.7);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    transition: background .45s ease, color .45s ease;
+    overflow: hidden; /* the track scrolls, not the body */
+  }
+  ::selection { background: var(--accent); color: #fff; }
+  a { color: inherit; }
+
+  /* ---- PERSISTENT NAV ---- */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 34px;
+    z-index: 40;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.06rem;
+    letter-spacing: -0.01em;
+  }
+  .topnav { display: flex; align-items: center; gap: 4px; }
+  .topnav a {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: .02em;
+    text-decoration: none;
+    color: var(--fg-soft);
+    padding: 7px 11px;
+    border-radius: 6px;
+    transition: background .18s, color .18s;
+  }
+  .topnav a:hover { background: var(--bg-2); color: var(--fg); }
+  .topnav a.is-current { color: var(--accent); }
+  .theme-btn {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    background: none;
+    border: 1px solid var(--line-strong);
+    color: var(--fg-soft);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 6px;
+    transition: border-color .18s, color .18s;
+  }
+  .theme-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ---- THE HORIZONTAL TRACK (structural move) ---- */
+  .track {
+    display: flex;
+    height: 100vh;
+    width: 300vw;
+    transition: transform .7s cubic-bezier(.32,.72,0,1);
+  }
+  .station {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 92px 8vw 70px;
+    position: relative;
+  }
+  .station-label {
+    position: absolute;
+    top: 84px;
+    left: 8vw;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+
+  /* STATION 1 — positioning + pivot */
+  .pivot-kicker {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--fg-soft);
+    margin-bottom: 26px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(2.7rem, 6vw, 5rem);
+    line-height: 1.04;
+    letter-spacing: -0.018em;
+    max-width: 15ch;
+  }
+  h1 .hl { color: var(--accent); }
+  .pivot-sub {
+    font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+    line-height: 1.55;
+    color: var(--fg-soft);
+    max-width: 44ch;
+    margin-top: 28px;
+  }
+  .pivot-meta {
+    margin-top: 38px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-soft);
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    padding: 7px 12px;
+    border-radius: 20px;
+  }
+  .chip b { color: var(--fg); }
+  .station-cue {
+    margin-top: 46px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--fg-faint);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cue-btn {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: filter .15s, transform .05s;
+  }
+  .cue-btn:hover { filter: brightness(1.08); }
+  .cue-btn:active { transform: translateY(1px); }
+
+  /* STATION 2 — the hero demo, given the whole room */
+  .demo-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 56px;
+    align-items: center;
+    max-width: 1100px;
+  }
+  .demo-side .demo-title {
+    font-family: var(--display);
+    font-size: clamp(1.7rem, 2.6vw, 2.3rem);
+    font-weight: 500;
+    line-height: 1.12;
+  }
+  .demo-side .demo-caption {
+    font-size: 1.05rem;
+    color: var(--fg-soft);
+    line-height: 1.55;
+    margin-top: 18px;
+    max-width: 38ch;
+  }
+  .method-proof {
+    margin-top: 26px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--fg-soft);
+    line-height: 1.7;
+  }
+  .method-proof a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; }
+  .method-proof a:hover { border-color: var(--accent); }
+
+  .demo-stage {
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 28px;
+  }
+  .sugg-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .sugg-text { font-size: 1rem; line-height: 1.5; max-width: 40ch; }
+  .conf {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 4px 9px;
+    white-space: nowrap;
+  }
+  .conf b { color: var(--accent); }
+  .ev-toggle {
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    background: none;
+    border: none;
+    color: var(--fg-faint);
+    cursor: pointer;
+    padding: 0;
+  }
+  .ev-toggle:hover { color: var(--accent); }
+  .ev-list {
+    list-style: none;
+    margin-top: 12px;
+    display: none;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .ev-list.open { display: flex; }
+  .ev-list li {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-soft);
+    padding-left: 14px;
+    position: relative;
+  }
+  .ev-list li::before { content: "·"; position: absolute; left: 3px; color: var(--accent); }
+  .demo-actions {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 9px;
+  }
+  .btn {
+    font-family: var(--sans);
+    font-size: .92rem;
+    font-weight: 500;
+    padding: 9px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: var(--bg);
+    color: var(--fg);
+    cursor: pointer;
+    transition: border-color .15s, transform .05s;
+  }
+  .btn:hover { border-color: var(--accent); }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .demo-state {
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--fg-faint);
+    min-height: 1.2em;
+  }
+  .demo-state b { color: var(--accent); }
+
+  /* STATION 3 — where to go for depth */
+  .rail {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 680px;
+    width: 100%;
+  }
+  .rail a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px 24px;
+    text-decoration: none;
+    transition: border-color .18s, transform .18s, box-shadow .18s;
+  }
+  .rail a:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .rail-title {
+    font-family: var(--display);
+    font-size: 1.3rem;
+    font-weight: 500;
+  }
+  .rail-desc {
+    font-size: .93rem;
+    color: var(--fg-soft);
+    margin-top: 4px;
+    max-width: 46ch;
+  }
+  .rail-go {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* ---- PROGRESS DOTS — bottom center, keeps the track a scan spine ---- */
+  .dots {
+    position: fixed;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 40;
+    align-items: center;
+  }
+  .dots button {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background .2s, border-color .2s, transform .2s;
+  }
+  .dots button.is-current { background: var(--accent); border-color: var(--accent); transform: scale(1.25); }
+  .arrow {
+    background: var(--card);
+    border: 1px solid var(--line-strong);
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-family: var(--mono);
+    color: var(--fg-soft);
+    display: grid;
+    place-items: center;
+    transition: border-color .18s, color .18s;
+  }
+  .arrow:hover { border-color: var(--accent); color: var(--accent); }
+  .arrow:disabled { opacity: .3; cursor: not-allowed; }
+
+  .sketch-tag {
+    position: fixed;
+    bottom: 22px;
+    right: 18px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    color: var(--fg-faint);
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    padding: 4px 8px;
+    border-radius: 5px;
+    z-index: 40;
+  }
+
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* entrance */
+  .station > * { opacity: 0; transform: translateY(12px); }
+  .station.live > * { animation: rise .65s cubic-bezier(.32,.72,0,1) forwards; }
+  .station.live > *:nth-child(2) { animation-delay: .06s; }
+  .station.live > *:nth-child(3) { animation-delay: .13s; }
+  .station.live > *:nth-child(4) { animation-delay: .2s; }
+  .station.live > *:nth-child(5) { animation-delay: .27s; }
+  @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track { transition: none; }
+    .station > * { opacity: 1 !important; transform: none !important; animation: none !important; }
+  }
+
+  /* ---- RESPONSIVE: horizontal track becomes a normal vertical scroll ---- */
+  @media (max-width: 900px) {
+    body { overflow: auto; }
+    .track {
+      flex-direction: column;
+      width: 100%;
+      height: auto;
+      transform: none !important;
+    }
+    .station {
+      width: 100%;
+      height: auto;
+      min-height: 100vh;
+      padding: 104px 24px 80px;
+    }
+    .station-label { left: 24px; top: 80px; }
+    .demo-wrap { grid-template-columns: 1fr; gap: 32px; }
+    .dots { display: none; }
+    .station > * { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ---- PERSISTENT NAV ---- -->
+  <header class="topbar">
+    <span class="brand">Jay Moore</span>
+    <nav class="topnav" aria-label="Primary">
+      <a href="#" data-go="0" class="is-current">Start</a>
+      <a href="#" data-go="1">Live demo</a>
+      <a href="#" data-go="2">Depth</a>
+      <a href="#">GitHub ↗</a>
+      <button class="theme-btn" id="themeBtn" aria-label="Toggle color theme">◐ Theme</button>
+    </nav>
+  </header>
+
+  <!-- ---- THE HORIZONTAL TRACK — 3 STATIONS = 3-BLOCK SCAN SPINE ---- -->
+  <div class="track" id="track">
+
+    <!-- STATION 1 — POSITIONING + PIVOT -->
+    <section class="station live" id="s0">
+      <div class="station-label">01 — Positioning</div>
+      <p class="pivot-kicker">Interaction designer who codes. 10 yrs in complex software UX, now shipping it in React.</p>
+      <h1>Design engineer for <span class="hl">AI-native</span> workflows.</h1>
+      <p class="pivot-sub">I build the trust surfaces, the streaming UI, the agentic fallbacks — the seam between design and engineering, where the AI has to stay legible to the person using it.</p>
+      <div class="pivot-meta">
+        <span class="chip"><b>Now</b> &nbsp;Simple Path Media — decision support</span>
+        <span class="chip"><b>Open to</b> &nbsp;Staff / Principal DE · US remote</span>
+      </div>
+      <div class="station-cue">
+        <button class="cue-btn" data-go="1">See the live demo →</button>
+        <span>or use the nav — three rooms, ~45 seconds</span>
+      </div>
+    </section>
+
+    <!-- STATION 2 — THE HERO DEMO -->
+    <section class="station" id="s1">
+      <div class="station-label">02 — Live demo</div>
+      <div class="demo-wrap">
+        <div class="demo-side">
+          <h2 class="demo-title">Trust surface — confidence, evidence, override</h2>
+          <p class="demo-caption">When the model is uncertain, show the receipts. Override beats obedience — the operator decides, and the disagreement becomes training data.</p>
+          <p class="method-proof">
+            Built in 12 commits · 0 failed CI checks · 2-day build<br>
+            <a href="#">see the merged PR ↗</a>
+          </p>
+        </div>
+        <div class="demo-stage">
+          <div class="sugg-row">
+            <p class="sugg-text">Schedule this send for Tuesday 9:00 AM — best historical reply rate for this segment.</p>
+            <span class="conf">conf <b>72%</b></span>
+          </div>
+          <button class="ev-toggle" id="evToggle" aria-expanded="false">↳ show evidence</button>
+          <ul class="ev-list" id="evList">
+            <li>Segment baseline: 4.8% reply rate</li>
+            <li>Tuesday 9AM cohort: +1.4 percentage points</li>
+            <li>Last 30 days: 12 sends, 4 replies</li>
+          </ul>
+          <div class="demo-actions">
+            <button class="btn btn-primary" data-decision="accepted">Accept</button>
+            <button class="btn" data-decision="rejected">Reject</button>
+            <button class="btn" data-decision="overridden">Override</button>
+          </div>
+          <div class="demo-state" id="demoState" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATION 3 — DEPTH -->
+    <section class="station" id="s2">
+      <div class="station-label">03 — Depth</div>
+      <nav class="rail" aria-label="Deeper evidence">
+        <a href="#">
+          <span>
+            <span class="rail-title">SPM lifecycle engine</span>
+            <div class="rail-desc">Full case study. TTF-touch 30 min → 60 s. Reply rate 4.6–4.9% vs ~1% industry baseline.</div>
+          </span>
+          <span class="rail-go">case study →</span>
+        </a>
+        <a href="#">
+          <span>
+            <span class="rail-title">About — the pivot</span>
+            <div class="rail-desc">10 yrs product design → design engineer. Fiserv, Kleinfelder, SPM. The cross-domain bridge.</div>
+          </span>
+          <span class="rail-go">background →</span>
+        </a>
+        <a href="#">
+          <span>
+            <span class="rail-title">Get in touch</span>
+            <div class="rail-desc">Open to Staff / Principal Design Engineer roles. US remote.</div>
+          </span>
+          <span class="rail-go">email →</span>
+        </a>
+      </nav>
+    </section>
+
+  </div>
+
+  <!-- ---- PROGRESS DOTS + ARROWS ---- -->
+  <div class="dots">
+    <button class="arrow" id="prev" aria-label="Previous room" disabled>‹</button>
+    <button data-go="0" class="is-current" aria-label="Room 1"></button>
+    <button data-go="1" aria-label="Room 2"></button>
+    <button data-go="2" aria-label="Room 3"></button>
+    <button class="arrow" id="next" aria-label="Next room">›</button>
+  </div>
+
+  <div class="sketch-tag">ROUND 1 · DIR B · THE CALM SURFACE · sketch</div>
+
+<script>
+  const track = document.getElementById('track');
+  const dots = [...document.querySelectorAll('.dots button[data-go]')];
+  const navLinks = [...document.querySelectorAll('.topnav a[data-go]')];
+  const stations = [...document.querySelectorAll('.station')];
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  let idx = 0;
+  const max = 2;
+
+  function go(i) {
+    idx = Math.max(0, Math.min(max, i));
+    track.style.transform = 'translateX(-' + (idx * 100) + 'vw)';
+    dots.forEach((d, di) => d.classList.toggle('is-current', di === idx));
+    navLinks.forEach((l, li) => l.classList.toggle('is-current', li === idx));
+    stations.forEach((s, si) => { if (si === idx) s.classList.add('live'); });
+    prev.disabled = idx === 0;
+    next.disabled = idx === max;
+  }
+
+  document.querySelectorAll('[data-go]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      if (el.tagName === 'A') e.preventDefault();
+      go(parseInt(el.dataset.go, 10));
+    });
+  });
+  prev.addEventListener('click', () => go(idx - 1));
+  next.addEventListener('click', () => go(idx + 1));
+
+  // keyboard: arrow keys move rooms
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') go(idx + 1);
+    if (e.key === 'ArrowLeft') go(idx - 1);
+  });
+
+  // theme
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    const root = document.documentElement;
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  });
+
+  // evidence toggle
+  const evToggle = document.getElementById('evToggle');
+  const evList = document.getElementById('evList');
+  evToggle.addEventListener('click', () => {
+    const open = evList.classList.toggle('open');
+    evToggle.setAttribute('aria-expanded', String(open));
+    evToggle.textContent = open ? '↳ hide evidence' : '↳ show evidence';
+  });
+
+  // decision state
+  const demoState = document.getElementById('demoState');
+  document.querySelectorAll('[data-decision]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      demoState.innerHTML = 'decision: <b>' + btn.dataset.decision + '</b> — captured as a recordable event (operator, timestamp, delta)';
+    });
+  });
+</script>
+</body>
+</html>

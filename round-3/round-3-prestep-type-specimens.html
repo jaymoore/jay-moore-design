@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Round 3 · Pre-step — Type Specimen Lock</title>
+<!--
+  ROUND 3 / PRE-STEP — TYPE SPECIMEN LOCK
+  Codex R7's keystone fix: lock type FIRST, in grayscale, before palette.
+  This is NOT a render of the Iteration 3 structure. No layout, no color, no chrome.
+  It is a specimen sheet — the same content set in 4 candidate display+mono pairs so the
+  choice is about LETTERFORMS and RHYTHM, not about color or composition.
+
+  Grayscale on purpose. The locked structure earned its instrument identity in grayscale;
+  the type has to hold that identity on its own letterforms before any palette is chosen.
+
+  Each pair shows the 3 specimens that matter for THIS site:
+    1. HEADING  — the h1 / pivot statement. Does it have a confident hand without shouting?
+    2. PARAGRAPH — the demo caption / about prose. Is it calm and legible at a real measure?
+    3. CODE / LABEL BLOCK — the mono. Does it read as structural/instrument, not decorative?
+
+  Exit: Jay locks ONE pair. Then 3 palette treatments render on the locked type.
+-->
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Fragment+Mono&family=Spline+Sans+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
+
+  :root {
+    /* GRAYSCALE ONLY — no color in this sheet, on purpose */
+    --bg: #f4f4f4;
+    --panel: #ffffff;
+    --ink: #111111;
+    --ink-2: #3a3a3a;
+    --ink-soft: #6a6a6a;
+    --ink-faint: #9a9a9a;
+    --line: #e0e0e0;
+    --line-strong: #c8c8c8;
+    --hair: #ededed;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Hanken Grotesk', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 48px 32px 96px;
+  }
+
+  .sheet-head {
+    max-width: 1180px;
+    margin: 0 auto 40px;
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 24px;
+  }
+  .sheet-head .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 12px;
+  }
+  .sheet-head h1 {
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -.02em;
+  }
+  .sheet-head p {
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    margin-top: 10px;
+    max-width: 68ch;
+    line-height: 1.6;
+  }
+  .sheet-head .how {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin-top: 16px;
+    line-height: 1.7;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+  }
+  .sheet-head .how b { color: var(--ink); }
+
+  .grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .specimen {
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    display: flex;
+    flex-direction: column;
+  }
+  .specimen-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--line);
+    background: #fafafa;
+  }
+  .specimen-head .pair-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: .08em;
+  }
+  .specimen-head .pair-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .specimen-head .pair-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    text-align: right;
+    max-width: 24ch;
+    line-height: 1.5;
+  }
+  .specimen-body { padding: 26px 20px 28px; }
+
+  .spec-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed var(--line-strong);
+  }
+  .spec-block { margin-bottom: 26px; }
+  .spec-block:last-child { margin-bottom: 0; }
+
+  /* the actual specimens. font-family set per-pair below. */
+  .sp-kicker {
+    font-size: 12.5px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .sp-h1 {
+    font-weight: 600;
+    font-size: 33px;
+    line-height: 1.08;
+    letter-spacing: -.025em;
+  }
+  .sp-h1 .em { font-style: normal; } /* placeholder hook for the would-be accent word */
+  .sp-para {
+    font-size: 15px;
+    line-height: 1.62;
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+  .sp-code {
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--ink-2);
+    background: #fafafa;
+    border: 1px solid var(--line);
+    padding: 12px 14px;
+    white-space: pre-wrap;
+  }
+  .sp-code .c-key { color: var(--ink-faint); }
+  .sp-code .c-val { color: var(--ink); }
+  .sp-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-top: 14px;
+    border: 1px solid var(--line);
+  }
+  .sp-meta-row div {
+    padding: 8px 14px;
+    border-left: 1px solid var(--line);
+    font-size: 11.5px;
+  }
+  .sp-meta-row div:first-child { border-left: none; }
+  .sp-meta-row .k { color: var(--ink-faint); display: block; margin-bottom: 2px; font-size: 10px; }
+  .sp-meta-row .v { color: var(--ink); }
+
+  /* ---- PAIR A — Hanken Grotesk + JetBrains Mono (the carry-forward / baseline) ---- */
+  .pair-a .sp-kicker,
+  .pair-a .sp-h1 { font-family: 'Hanken Grotesk', sans-serif; }
+  .pair-a .sp-para { font-family: 'Hanken Grotesk', sans-serif; }
+  .pair-a .sp-code,
+  .pair-a .sp-meta-row { font-family: 'JetBrains Mono', monospace; }
+
+  /* ---- PAIR B — Inter Tight + IBM Plex Mono (the tightest, most neutral-modern) ---- */
+  .pair-b .sp-kicker,
+  .pair-b .sp-h1 { font-family: 'Inter Tight', sans-serif; }
+  .pair-b .sp-para { font-family: 'Inter Tight', sans-serif; }
+  .pair-b .sp-code,
+  .pair-b .sp-meta-row { font-family: 'IBM Plex Mono', monospace; }
+
+  /* ---- PAIR C — Geist + Geist Mono (Vercel's own hand — the "alignment" extreme) ---- */
+  .pair-c .sp-kicker,
+  .pair-c .sp-h1 { font-family: 'Geist', sans-serif; }
+  .pair-c .sp-para { font-family: 'Geist', sans-serif; }
+  .pair-c .sp-code,
+  .pair-c .sp-meta-row { font-family: 'Geist Mono', monospace; }
+
+  /* ---- PAIR D — Hanken Grotesk + Spline Sans Mono (baseline display, warmer mono) ---- */
+  .pair-d .sp-kicker,
+  .pair-d .sp-h1 { font-family: 'Hanken Grotesk', sans-serif; }
+  .pair-d .sp-para { font-family: 'Hanken Grotesk', sans-serif; }
+  .pair-d .sp-code,
+  .pair-d .sp-meta-row { font-family: 'Spline Sans Mono', monospace; }
+
+  .footnote {
+    max-width: 1180px;
+    margin: 36px auto 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    border-top: 1px solid var(--line-strong);
+    padding-top: 20px;
+  }
+  .footnote b { color: var(--ink); }
+
+  @media (max-width: 920px) {
+    .grid { grid-template-columns: 1fr; }
+    body { padding: 32px 16px 64px; }
+    .sp-h1 { font-size: 28px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="sheet-head">
+    <div class="tag">Round 3 · pre-step · type specimen lock</div>
+    <h1>Four candidate type pairs. Grayscale. No layout, no color.</h1>
+    <p>
+      Codex R7's keystone fix: lock type before palette. Each card sets the same three specimens that
+      matter for this site &mdash; the heading (pivot statement), the paragraph (demo caption / about prose),
+      and the code/label block (the mono that carries the instrument rigor). Same content everywhere, so
+      the only variable is the letterforms.
+    </p>
+    <div class="how">
+      <b>How to read this:</b> the structure (Iteration 3) earned its instrument identity in grayscale.
+      The type has to hold that identity on letterforms alone.<br />
+      &nbsp;&nbsp;1 &mdash; <b>heading:</b> confident hand without shouting? a real point of view, not Geist-default, not invisible?<br />
+      &nbsp;&nbsp;2 &mdash; <b>paragraph:</b> calm and legible at a 50ch+ measure? does it want to be read?<br />
+      &nbsp;&nbsp;3 &mdash; <b>code/label:</b> does the mono read as structural &mdash; an instrument &mdash; or as a decorative "techy" font?<br />
+      <b>Exit:</b> lock ONE pair. Then three palette treatments render on it.
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- PAIR A -->
+    <div class="specimen pair-a">
+      <div class="specimen-head">
+        <div>
+          <span class="pair-id">PAIR A</span>
+          <div class="pair-name">Hanken Grotesk &times; JetBrains Mono</div>
+        </div>
+        <div class="pair-note">the carry-forward. baseline. humanist grotesque + a structural mono with real character.</div>
+      </div>
+      <div class="specimen-body">
+        <div class="spec-block">
+          <div class="spec-label">01 / heading</div>
+          <p class="sp-kicker">Interaction designer who codes. 10 yrs in complex software UX, now shipping it in React.</p>
+          <div class="sp-h1">Design engineer for <span class="em">AI-native</span> workflows.</div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-label">02 / paragraph</div>
+          <p class="sp-para">When the model is uncertain, show the receipts. Override beats obedience &mdash; the operator decides, and the disagreement becomes training data. The seam between design and engineering on products where the AI has to stay legible to the person using it.</p>
+        </div>
+        <div class="spec-block">
+          <div class="spec-label">03 / code + label</div>
+          <div class="sp-code"><span class="c-key">built</span>  <span class="c-val">12 commits / 0 failed CI</span>
+<span class="c-key">role</span>   <span class="c-val">staff / principal DE</span>
+<span class="c-key">scope</span>  <span class="c-val">trust-surface.tsx</span></div>
+          <div class="sp-meta-row">
+            <div><span class="k">now</span><span class="v">Simple Path Media</span></div>
+            <div><span class="k">prior</span><span class="v">Fiserv &middot; Kleinfelder</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAIR B -->
+    <div class="specimen pair-b">
+      <div class="specimen-head">
+        <div>
+          <span class="pair-id">PAIR B</span>
+          <div class="pair-name">Inter Tight &times; IBM Plex Mono</div>
+        </div>
+        <div class="pair-note">the tightest, most neutral-modern. Plex Mono = engineered, institutional, no whimsy.</div>
+      </div>
+      <div class="specimen-body">
+        <div class="spec-block">
+          <div class="spec-label">01 / heading</div>
+          <p class="sp-kicker">Interaction designer who codes. 10 yrs in complex software UX, now shipping it in React.</p>
+          <div class="sp-h1">Design engineer for <span class="em">AI-native</span> workflows.</div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-label">02 / paragraph</div>
+          <p class="sp-para">When the model is uncertain, show the receipts. Override beats obedience &mdash; the operator decides, and the disagreement becomes training data. The seam between design and engineering on products where the AI has to stay legible to the person using it.</p>
+        </div>
+        <div class="spec-block">
+          <div class="spec-label">03 / code + label</div>
+          <div class="sp-code"><span class="c-key">built</span>  <span class="c-val">12 commits / 0 failed CI</span>
+<span class="c-key">role</span>   <span class="c-val">staff / principal DE</span>
+<span class="c-key">scope</span>  <span class="c-val">trust-surface.tsx</span></div>
+          <div class="sp-meta-row">
+            <div><span class="k">now</span><span class="v">Simple Path Media</span></div>
+            <div><span class="k">prior</span><span class="v">Fiserv &middot; Kleinfelder</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAIR C -->
+    <div class="specimen pair-c">
+      <div class="specimen-head">
+        <div>
+          <span class="pair-id">PAIR C</span>
+          <div class="pair-name">Geist &times; Geist Mono</div>
+        </div>
+        <div class="pair-note">Vercel's own typeface. the "alignment" extreme &mdash; tests whether borrowing their hand reads as fluent or as derivative.</div>
+      </div>
+      <div class="specimen-body">
+        <div class="spec-block">
+          <div class="spec-label">01 / heading</div>
+          <p class="sp-kicker">Interaction designer who codes. 10 yrs in complex software UX, now shipping it in React.</p>
+          <div class="sp-h1">Design engineer for <span class="em">AI-native</span> workflows.</div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-label">02 / paragraph</div>
+          <p class="sp-para">When the model is uncertain, show the receipts. Override beats obedience &mdash; the operator decides, and the disagreement becomes training data. The seam between design and engineering on products where the AI has to stay legible to the person using it.</p>
+        </div>
+        <div class="spec-block">
+          <div class="spec-label">03 / code + label</div>
+          <div class="sp-code"><span class="c-key">built</span>  <span class="c-val">12 commits / 0 failed CI</span>
+<span class="c-key">role</span>   <span class="c-val">staff / principal DE</span>
+<span class="c-key">scope</span>  <span class="c-val">trust-surface.tsx</span></div>
+          <div class="sp-meta-row">
+            <div><span class="k">now</span><span class="v">Simple Path Media</span></div>
+            <div><span class="k">prior</span><span class="v">Fiserv &middot; Kleinfelder</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAIR D -->
+    <div class="specimen pair-d">
+      <div class="specimen-head">
+        <div>
+          <span class="pair-id">PAIR D</span>
+          <div class="pair-name">Hanken Grotesk &times; Spline Sans Mono</div>
+        </div>
+        <div class="pair-note">baseline display, warmer mono. Spline Sans Mono is softer, more humane than JetBrains &mdash; tests how warm the instrument can get.</div>
+      </div>
+      <div class="specimen-body">
+        <div class="spec-block">
+          <div class="spec-label">01 / heading</div>
+          <p class="sp-kicker">Interaction designer who codes. 10 yrs in complex software UX, now shipping it in React.</p>
+          <div class="sp-h1">Design engineer for <span class="em">AI-native</span> workflows.</div>
+        </div>
+        <div class="spec-block">
+          <div class="spec-label">02 / paragraph</div>
+          <p class="sp-para">When the model is uncertain, show the receipts. Override beats obedience &mdash; the operator decides, and the disagreement becomes training data. The seam between design and engineering on products where the AI has to stay legible to the person using it.</p>
+        </div>
+        <div class="spec-block">
+          <div class="spec-label">03 / code + label</div>
+          <div class="sp-code"><span class="c-key">built</span>  <span class="c-val">12 commits / 0 failed CI</span>
+<span class="c-key">role</span>   <span class="c-val">staff / principal DE</span>
+<span class="c-key">scope</span>  <span class="c-val">trust-surface.tsx</span></div>
+          <div class="sp-meta-row">
+            <div><span class="k">now</span><span class="v">Simple Path Media</span></div>
+            <div><span class="k">prior</span><span class="v">Fiserv &middot; Kleinfelder</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footnote">
+    <b>Reminder:</b> this sheet is grayscale and layout-free on purpose. You are choosing letterforms and
+    rhythm, not a website. The orange, the palette, the composition all come AFTER &mdash; on the locked
+    type, in the three Round 3 palette treatments.<br />
+    <b>The decision:</b> lock one pair (A / B / C / D), or tell me what none of them is doing and I will
+    cut a fifth candidate.
+  </div>
+
+</body>
+</html>

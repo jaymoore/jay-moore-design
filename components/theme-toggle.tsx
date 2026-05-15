@@ -10,9 +10,13 @@ export function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={`Switch to ${next} mode`}
-      className="rounded-sm border border-line px-3 py-1 font-mono text-xs uppercase tracking-wider text-fg-soft transition-colors hover:border-line-strong hover:text-fg"
+      className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-sm text-fg-soft transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:border-line-strong hover:text-fg"
     >
-      {next}
+      <span
+        className="block size-3 rounded-full border border-current"
+        aria-hidden
+      />
+      {theme}
     </button>
   );
 }

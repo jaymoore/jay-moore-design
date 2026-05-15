@@ -124,7 +124,14 @@ The locked file used bare names for inspection clarity. The contract uses Tailwi
   --radius-sm: 0.375rem;   /*  6px — small chips */
   --radius-md: 0.625rem;   /* 10px — default surfaces */
   --radius-lg: 1rem;       /* 16px — large cards */
-  /* No rounded-full anywhere — spec discipline. */
+  /* No rounded-full anywhere — spec discipline.
+     Two documented exceptions, both grounded in the user-provided image reference:
+       1. The brand status dot in the TopBar (--color-ok, 6px). Status indicators
+          are conventionally circular; making it a square would read as a system
+          glyph, not a live signal.
+       2. The theme toggle pill (rounded-full container + inner outline circle).
+          The pill shape is the recognized affordance for binary mode controls
+          in the image reference. */
 
   /* ============================================================
      MOTION — durations + easing + stagger

@@ -106,7 +106,7 @@ The locked file used bare names for inspection clarity. The contract uses Tailwi
   --color-fg:           #16191d;  /* body text — AAA (15.85) */
   --color-fg-soft:      #42474e;  /* secondary body — AAA (8.42 on bg, 7.75 on bg-2) */
   --color-fg-faint:     #676c72;  /* faint meta labels — AA (4.76) */
-  --color-grid:         #e0e4e8;  /* background grid lines */
+  --color-grid:         rgba(28, 25, 23, 0.045);  /* body grid lines, fg-tinted 4.5% alpha */
   --color-line:         #d7dbe0;  /* default border */
   --color-line-strong:  #bfc4cb;  /* emphasized border */
   --color-accent:       #1f57bd;  /* links, live dot, hl word — AA (5.51 worst, AAA on panel) */
@@ -159,7 +159,7 @@ html.dark {
   --color-fg:           #e6e8ec;  /* AAA (15.86) */
   --color-fg-soft:      #a8aeb7;  /* AAA (8.71 on bg, 7.83 on panel) */
   --color-fg-faint:     #777d87;  /* AA (4.70) */
-  --color-grid:         #181c20;
+  --color-grid:         rgba(238, 236, 231, 0.045);
   --color-line:         #242a30;
   --color-line-strong:  #353c44;
   --color-accent:       #5b9bff;  /* AA (6.31 worst) */

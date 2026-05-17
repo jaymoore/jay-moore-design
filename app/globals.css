@@ -32,7 +32,7 @@
   --color-fg:           #16191d;
   --color-fg-soft:      #42474e;
   --color-fg-faint:     #676c72;
-  --color-grid:         #e0e4e8;
+  --color-grid:         rgba(28, 25, 23, 0.045);
   --color-line:         #d7dbe0;
   --color-line-strong:  #bfc4cb;
   --color-accent:       #1f57bd;
@@ -76,7 +76,7 @@ html.dark {
   --color-fg:           #e6e8ec;
   --color-fg-soft:      #a8aeb7;
   --color-fg-faint:     #777d87;
-  --color-grid:         #181c20;
+  --color-grid:         rgba(238, 236, 231, 0.045);
   --color-line:         #242a30;
   --color-line-strong:  #353c44;
   --color-accent:       #5b9bff;
@@ -102,11 +102,22 @@ html.dark {
   }
 
   body {
-    background: var(--color-bg);
+    background-color: var(--color-bg);
+    background-image:
+      linear-gradient(to right,  var(--color-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
+    background-size: 80px 80px;
+    background-position: 0 0;
     color: var(--color-fg);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (max-width: 820px) {
+    body {
+      background-size: 60px 60px;
+    }
   }
 
   ::selection {

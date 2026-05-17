@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
-import { LayoutGroup, motion } from "motion/react";
+import { LayoutGroup, motion, MotionConfig } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type Mode = "ready" | "text" | "canvas";
@@ -237,13 +237,15 @@ export function TrustSurface() {
             <p className="mb-4 font-mono text-2xs uppercase tracking-wider text-fg-faint">
               You asked: {SAMPLE_PROMPT}
             </p>
-            <LayoutGroup>
-              <SectionList
-                sections={sections}
-                mode={mode}
-                isStreaming={isStreaming}
-              />
-            </LayoutGroup>
+            <MotionConfig reducedMotion="user">
+              <LayoutGroup>
+                <SectionList
+                  sections={sections}
+                  mode={mode}
+                  isStreaming={isStreaming}
+                />
+              </LayoutGroup>
+            </MotionConfig>
           </div>
         )}
       </div>

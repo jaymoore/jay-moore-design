@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { DepthList } from "@/components/depth-list";
 import { TrustSurface } from "@/components/trust-surface";
 
 export default function Home() {
@@ -146,78 +146,7 @@ export default function Home() {
             — Where to go for depth
           </p>
 
-          <ol className="mt-8">
-            <li className="grid grid-cols-[40px_1fr] gap-4 border-t border-line py-8 sm:grid-cols-[40px_1fr_140px]">
-              <span className="pt-1 font-mono text-2xs text-fg-faint">01</span>
-              <div className="min-w-0">
-                <h3 className="text-lg font-medium text-fg sm:text-xl">
-                  <Link
-                    href="/work/spm-lifecycle"
-                    className="transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-accent"
-                  >
-                    SPM lifecycle engine
-                  </Link>
-                </h3>
-                <p className="mt-2 max-w-[60ch] text-sm text-fg-soft">
-                  Full case study. TTF-touch 30 min → 60 s. Reply rate 4.6–4.9%
-                  against a ~1% industry baseline.
-                </p>
-              </div>
-              <Link
-                href="/work/spm-lifecycle"
-                className="hidden self-start pt-1 text-right font-mono text-2xs uppercase tracking-wider text-accent transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-accent-deep sm:block"
-              >
-                Case study →
-              </Link>
-            </li>
-
-            <li className="grid grid-cols-[40px_1fr] gap-4 border-t border-line py-8 sm:grid-cols-[40px_1fr_140px]">
-              <span className="pt-1 font-mono text-2xs text-fg-faint">02</span>
-              <div className="min-w-0">
-                <h3 className="text-lg font-medium text-fg sm:text-xl">
-                  <Link
-                    href="/about"
-                    className="transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-accent"
-                  >
-                    About — the pivot
-                  </Link>
-                </h3>
-                <p className="mt-2 max-w-[60ch] text-sm text-fg-soft">
-                  10 yrs product design into design engineering. Fiserv,
-                  Kleinfelder, SPM. The cross-domain bridge.
-                </p>
-              </div>
-              <Link
-                href="/about"
-                className="hidden self-start pt-1 text-right font-mono text-2xs uppercase tracking-wider text-accent transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-accent-deep sm:block"
-              >
-                Background →
-              </Link>
-            </li>
-
-            <li className="grid grid-cols-[40px_1fr] gap-4 border-y border-line py-8 sm:grid-cols-[40px_1fr_140px]">
-              <span className="pt-1 font-mono text-2xs text-fg-faint">03</span>
-              <div className="min-w-0">
-                <h3 className="text-lg font-medium text-fg sm:text-xl">
-                  <a
-                    href="mailto:jay@jaymoore.net"
-                    className="transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-accent"
-                  >
-                    Get in touch
-                  </a>
-                </h3>
-                <p className="mt-2 max-w-[60ch] text-sm text-fg-soft">
-                  Open to Staff / Principal Design Engineer roles. US remote.
-                </p>
-              </div>
-              <a
-                href="mailto:jay@jaymoore.net"
-                className="hidden self-start pt-1 text-right font-mono text-2xs uppercase tracking-wider text-accent transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-accent-deep sm:block"
-              >
-                Contact →
-              </a>
-            </li>
-          </ol>
+          <DepthList />
         </div>
       </section>
     </>

@@ -107,7 +107,10 @@ html.dark {
       linear-gradient(to right,  var(--color-grid) 1px, transparent 1px),
       linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
     background-size: 80px 80px;
-    background-position: 0 0;
+    /* Anchor the first VISIBLE horizontal grid line to y=65 — just below
+       the TopBar's bottom hairline (h-16 inner = 64px + 1px border = 65px
+       total). Shift = 65 - 80 = -15px. */
+    background-position: 0 -15px;
     color: var(--color-fg);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -117,6 +120,15 @@ html.dark {
   @media (max-width: 820px) {
     body {
       background-size: 60px 60px;
+      /* At the 60px grid, +5px shift puts a line at y=65 (TopBar bottom
+         + border): 60 + 5 = 65. */
+      background-position: 0 5px;
+    }
+  }
+
+  @media print {
+    body {
+      background-image: none;
     }
   }
 

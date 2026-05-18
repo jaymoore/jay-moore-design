@@ -86,9 +86,12 @@ function DepthRow({
     >
       <Link
         href={item.href}
-        className="group grid grid-cols-[48px_1fr] items-start gap-4 rounded-sm px-4 py-8 transition-all duration-(--duration-fast) ease-(--ease-snappy) hover:bg-bg-2 hover:shadow-(--shadow) sm:grid-cols-[48px_1fr_160px]"
+        className="group grid grid-cols-[48px_1fr] items-start gap-4 rounded-sm px-4 py-8 transition-all duration-(--duration-fast) ease-(--ease-snappy) hover:shadow-(--shadow) sm:grid-cols-[48px_1fr_160px]"
       >
-        <span className="pt-1 font-mono text-2xs text-fg-faint">
+        <span
+          aria-hidden
+          className="pt-1 font-mono text-2xs text-fg-faint"
+        >
           {item.number}
         </span>
 

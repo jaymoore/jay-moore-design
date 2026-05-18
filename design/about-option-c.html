@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/about — Option C · Q&amp;A / recruiter prompts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Spline Sans Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --text-2xs: 0.6875rem;
+      --text-xs:  0.75rem;
+      --text-sm:  0.875rem;
+      --text-base: 1rem;
+      --text-lg:  1.3125rem;
+      --text-xl:  1.75rem;
+      --text-2xl: 2.3125rem;
+      --text-3xl: 3.0625rem;
+      --text-4xl: 4.0625rem;
+      --color-bg: #f1f3f5;
+      --color-bg-2: #e7eaed;
+      --color-panel: #ffffff;
+      --color-fg: #16191d;
+      --color-fg-soft: #42474e;
+      --color-fg-faint: #676c72;
+      --color-line: #d7dbe0;
+      --color-line-strong: #bfc4cb;
+      --color-accent: #1f57bd;
+      --color-accent-deep: #1a4496;
+      --color-ok: #2f9e6b;
+      --color-grid: rgba(28, 25, 23, 0.045);
+      --radius-sm: 0.375rem;
+      --radius-md: 0.625rem;
+      --duration-fast: 150ms;
+      --ease-snappy: cubic-bezier(.32, .72, 0, 1);
+      color-scheme: light;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: var(--color-bg);
+      background-image:
+        linear-gradient(to right,  var(--color-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
+      background-size: 80px 80px;
+      background-position: 0 -15px;
+      color: var(--color-fg);
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+
+    .topbar { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--color-line); background: var(--color-bg); }
+    .topbar-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); color: var(--color-fg); text-decoration: none; }
+    .brand-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ok) 18%, transparent); }
+    .nav { display: flex; align-items: center; gap: 24px; font-size: var(--text-sm); color: var(--color-fg-soft); }
+    .nav a { text-decoration: none; }
+
+    main { max-width: 1120px; margin: 0 auto; padding: 96px 24px; }
+
+    .eyebrow { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-fg-faint); margin: 0 0 16px; }
+    h1 { font-size: var(--text-4xl); line-height: 1.05; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 24px; }
+    .lede { font-size: var(--text-lg); color: var(--color-fg-soft); max-width: 60ch; margin: 0; }
+
+    .rule { border: 0; border-top: 1px solid var(--color-line); margin: 64px 0; }
+
+    /* Q&A items */
+    .qa { display: grid; grid-template-columns: 1fr; gap: 16px; padding: 48px 0; border-top: 1px solid var(--color-line); }
+    @media (min-width: 720px) {
+      .qa { grid-template-columns: 60px 1fr; gap: 32px; }
+    }
+    .qa-num { font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg-faint); padding-top: 4px; }
+    .qa-question { font-family: var(--font-mono); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-fg); margin: 0 0 16px; line-height: 1.4; }
+    .qa-answer { font-size: var(--text-lg); color: var(--color-fg); margin: 0 0 16px; max-width: 60ch; line-height: 1.45; }
+    .qa-answer.body { font-size: var(--text-base); color: var(--color-fg-soft); line-height: 1.6; }
+    .qa-answer.body:last-child { margin-bottom: 0; }
+    .qa-answer .tbd { color: var(--color-fg-faint); font-style: italic; }
+
+    /* Timeline strip */
+    .timeline-strip { display: grid; grid-template-columns: 1fr; gap: 16px; padding: 32px 0; border-top: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line); }
+    @media (min-width: 720px) {
+      .timeline-strip { grid-template-columns: 60px 1fr; gap: 32px; align-items: baseline; }
+    }
+    .timeline-strip-label { font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg-faint); padding-top: 4px; }
+    .timeline-strip-row { display: flex; flex-wrap: wrap; gap: 8px 16px; font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-fg); }
+    .timeline-strip-row .year { color: var(--color-fg-faint); margin-right: 6px; }
+    .timeline-strip-row .sep { color: var(--color-line-strong); }
+
+    /* CTA */
+    .cta-grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 48px; }
+    @media (min-width: 720px) { .cta-grid { grid-template-columns: 1fr 1fr; } }
+    .cta { display: flex; flex-direction: column; padding: 24px; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-panel); text-decoration: none; transition: border-color var(--duration-fast) var(--ease-snappy); }
+    .cta:hover { border-color: var(--color-line-strong); }
+    .cta-label { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-fg-faint); margin: 0 0 8px; }
+    .cta-title { font-size: var(--text-lg); color: var(--color-fg); margin: 0 0 8px; font-weight: 500; }
+    .cta-desc { font-size: var(--text-sm); color: var(--color-fg-soft); margin: 0; }
+    .cta-arrow { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-accent); margin-top: 16px; }
+
+    .footer { border-top: 1px solid var(--color-line); background: var(--color-bg); }
+    .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg-faint); }
+    .footer a { color: var(--color-fg-soft); text-decoration: none; }
+    .footer a:hover { color: var(--color-accent); }
+
+    .compare-banner { background: var(--color-accent); color: white; padding: 4px 12px; font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="compare-banner">/about — Option C · Q&amp;A · NOT served by Next, comparison artifact</div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#"><span class="brand-dot"></span> Jay Moore</a>
+      <nav class="nav">
+        <a href="#">Start</a>
+        <a href="#">Demo</a>
+        <a href="#">Depth</a>
+        <a href="#">Github ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <p class="eyebrow">About — the pivot</p>
+    <h1>Questions you're asking.</h1>
+    <p class="lede">The recruiter version. Five questions a Vercel or Anthropic hiring manager would lead with — and Jay's direct answer to each.</p>
+
+    <article class="qa">
+      <div class="qa-num">01</div>
+      <div>
+        <p class="qa-question">Why the pivot — what changed?</p>
+        <p class="qa-answer tbd">[Direct answer in Jay's voice — 1–2 sentences as the headline. The moment designing screens stopped being enough; the decision to ship React.]</p>
+        <p class="qa-answer body tbd">[Supporting paragraph if needed — what the catalyst was. Why now.]</p>
+      </div>
+    </article>
+
+    <article class="qa">
+      <div class="qa-num">02</div>
+      <div>
+        <p class="qa-question">What did 10 yrs of product design actually teach you?</p>
+        <p class="qa-answer tbd">[The carry-forward — what survived the pivot. Operator's mindset. Knowing when the model is wrong.]</p>
+        <p class="qa-answer body tbd">[Supporting — 1–2 specific examples from Fiserv / Kleinfelder.]</p>
+      </div>
+    </article>
+
+    <article class="qa">
+      <div class="qa-num">03</div>
+      <div>
+        <p class="qa-question">Why AI-native workflows, specifically?</p>
+        <p class="qa-answer tbd">[The thesis — trust surfaces, streaming UI, agentic fallbacks. The seam between design and engineering on products where the AI has to stay legible.]</p>
+        <p class="qa-answer body tbd">[Supporting — why this is the work that matches both the craft and the market.]</p>
+      </div>
+    </article>
+
+    <article class="qa">
+      <div class="qa-num">04</div>
+      <div>
+        <p class="qa-question">What are you optimizing for in the next role?</p>
+        <p class="qa-answer tbd">[Direct — staff / principal level. US remote. AI-native product team. Real shipping cadence.]</p>
+        <p class="qa-answer body tbd">[What kinds of teams / problems are the best fit.]</p>
+      </div>
+    </article>
+
+    <article class="qa">
+      <div class="qa-num">05</div>
+      <div>
+        <p class="qa-question">What can I expect if I hire you?</p>
+        <p class="qa-answer tbd">[Concrete — shipping cadence, design language, methodology. The seam between design + engineering as one practice.]</p>
+        <p class="qa-answer body tbd">[Closing — the cross-domain bridge in one sentence.]</p>
+      </div>
+    </article>
+
+    <section class="timeline-strip">
+      <div class="timeline-strip-label">Timeline</div>
+      <div class="timeline-strip-row">
+        <span><span class="year">2014–18</span>Fiserv</span>
+        <span class="sep">·</span>
+        <span><span class="year">2018–23</span>Kleinfelder</span>
+        <span class="sep">·</span>
+        <span><span class="year">2023—</span>Simple Path Media</span>
+      </div>
+    </section>
+
+    <p class="eyebrow" style="margin-top: 64px;">Where to go next</p>
+    <div class="cta-grid">
+      <a class="cta" href="#">
+        <p class="cta-label">Case study</p>
+        <p class="cta-title">SPM lifecycle engine</p>
+        <p class="cta-desc">Full study — TTF-touch 30 min → 60 s. Reply rate 4.6–4.9% against a ~1% industry baseline.</p>
+        <p class="cta-arrow">Read →</p>
+      </a>
+      <a class="cta" href="mailto:jay@jaymoore.net">
+        <p class="cta-label">Contact</p>
+        <p class="cta-title">Get in touch</p>
+        <p class="cta-desc">Open to Staff / Principal Design Engineer roles. US remote.</p>
+        <p class="cta-arrow">Email →</p>
+      </a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Jay Moore — design engineer for AI-native workflows</span>
+      <span><a href="#">github</a> · <a href="#">linkedin</a> · <a href="mailto:jay@jaymoore.net">jay@jaymoore.net</a></span>
+    </div>
+  </footer>
+</body>
+</html>

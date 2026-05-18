@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/about — Option A · Two-column editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Spline Sans Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+      --text-2xs: 0.6875rem;
+      --text-xs:  0.75rem;
+      --text-sm:  0.875rem;
+      --text-base: 1rem;
+      --text-lg:  1.3125rem;
+      --text-xl:  1.75rem;
+      --text-2xl: 2.3125rem;
+      --text-3xl: 3.0625rem;
+      --text-4xl: 4.0625rem;
+      --text-5xl: 5.4375rem;
+      --color-bg: #f1f3f5;
+      --color-bg-2: #e7eaed;
+      --color-panel: #ffffff;
+      --color-fg: #16191d;
+      --color-fg-soft: #42474e;
+      --color-fg-faint: #676c72;
+      --color-line: #d7dbe0;
+      --color-line-strong: #bfc4cb;
+      --color-accent: #1f57bd;
+      --color-accent-deep: #1a4496;
+      --color-ok: #2f9e6b;
+      --color-grid: rgba(28, 25, 23, 0.045);
+      --radius-sm: 0.375rem;
+      --radius-md: 0.625rem;
+      --radius-lg: 1rem;
+      --duration-fast: 150ms;
+      --ease-snappy: cubic-bezier(.32, .72, 0, 1);
+      color-scheme: light;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: var(--color-bg);
+      background-image:
+        linear-gradient(to right,  var(--color-grid) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--color-grid) 1px, transparent 1px);
+      background-size: 80px 80px;
+      background-position: 0 -15px;
+      color: var(--color-fg);
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+
+    /* TopBar mock */
+    .topbar { position: sticky; top: 0; z-index: 40; border-bottom: 1px solid var(--color-line); background: var(--color-bg); }
+    .topbar-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-sm); color: var(--color-fg); text-decoration: none; }
+    .brand-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-ok); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ok) 18%, transparent); }
+    .nav { display: flex; align-items: center; gap: 24px; font-size: var(--text-sm); color: var(--color-fg-soft); }
+    .nav a { text-decoration: none; }
+    .nav .active { color: var(--color-accent); }
+
+    /* Main container */
+    main { max-width: 1120px; margin: 0 auto; padding: 96px 24px; }
+
+    /* Hero */
+    .eyebrow { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-fg-faint); margin: 0 0 16px; }
+    h1 { font-size: var(--text-4xl); line-height: 1.05; letter-spacing: -0.02em; font-weight: 600; margin: 0 0 24px; }
+    .lede { font-size: var(--text-lg); color: var(--color-fg-soft); max-width: 60ch; margin: 0; }
+
+    /* Section divider */
+    .rule { border: 0; border-top: 1px solid var(--color-line); margin: 64px 0; }
+
+    /* Two-column layout */
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 64px; }
+    @media (min-width: 880px) {
+      .grid-2 { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 80px; align-items: start; }
+      .sidebar { position: sticky; top: 96px; }
+    }
+
+    /* Narrative stanzas */
+    .stanza { margin-bottom: 48px; }
+    .stanza:last-child { margin-bottom: 0; }
+    .stanza-label { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-fg-faint); margin: 0 0 4px; }
+    .stanza-rule { height: 1px; width: 32px; background: var(--color-line); margin-bottom: 16px; }
+    .stanza p { font-size: var(--text-base); color: var(--color-fg-soft); margin: 0 0 16px; max-width: 60ch; line-height: 1.6; }
+    .stanza p:last-child { margin-bottom: 0; }
+    .stanza .tbd { color: var(--color-fg-faint); font-style: italic; }
+
+    /* Sidebar */
+    .sidebar-block { margin-bottom: 32px; }
+    .sidebar-label { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-fg-faint); margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--color-line); }
+    .timeline-row { display: grid; grid-template-columns: 60px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--color-line); align-items: baseline; }
+    .timeline-row:last-child { border-bottom: 0; }
+    .timeline-year { font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg-faint); }
+    .timeline-company { font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg); font-weight: 500; }
+    .timeline-role { font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg-soft); display: block; margin-top: 2px; }
+
+    /* Thesis */
+    .thesis-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+    @media (min-width: 720px) { .thesis-grid { grid-template-columns: repeat(2, 1fr); } }
+    .thesis-row { display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 12px 0; border-top: 1px solid var(--color-line); }
+    .thesis-label { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-fg-faint); }
+    .thesis-value { font-size: var(--text-sm); color: var(--color-fg); }
+
+    /* CTA */
+    .cta-grid { display: grid; gap: 16px; grid-template-columns: 1fr; margin-top: 32px; }
+    @media (min-width: 720px) { .cta-grid { grid-template-columns: 1fr 1fr; } }
+    .cta { display: flex; flex-direction: column; padding: 24px; border: 1px solid var(--color-line); border-radius: var(--radius-md); background: var(--color-panel); text-decoration: none; transition: border-color var(--duration-fast) var(--ease-snappy); }
+    .cta:hover { border-color: var(--color-line-strong); }
+    .cta-label { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-fg-faint); margin: 0 0 8px; }
+    .cta-title { font-size: var(--text-lg); color: var(--color-fg); margin: 0 0 8px; font-weight: 500; }
+    .cta-desc { font-size: var(--text-sm); color: var(--color-fg-soft); margin: 0; }
+    .cta-arrow { font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-accent); margin-top: 16px; }
+
+    /* Footer mock */
+    .footer { border-top: 1px solid var(--color-line); background: var(--color-bg); }
+    .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; max-width: 1120px; margin: 0 auto; padding: 32px 24px 48px; font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg-faint); }
+    .footer a { color: var(--color-fg-soft); text-decoration: none; }
+    .footer a:hover { color: var(--color-accent); }
+
+    .compare-banner { background: var(--color-accent); color: white; padding: 4px 12px; font-family: var(--font-mono); font-size: var(--text-2xs); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="compare-banner">/about — Option A · Two-column editorial · NOT served by Next, comparison artifact</div>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#"><span class="brand-dot"></span> Jay Moore</a>
+      <nav class="nav">
+        <a href="#">Start</a>
+        <a href="#">Demo</a>
+        <a href="#">Depth</a>
+        <a href="#">Github ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <p class="eyebrow">About — the pivot</p>
+    <h1>Cross-domain bridge.</h1>
+    <p class="lede">10 yrs product design into design engineering. The pivot, the catalyst, and why this combination is useful for AI-native work.</p>
+
+    <hr class="rule">
+
+    <div class="grid-2">
+      <div>
+        <section class="stanza">
+          <p class="stanza-label">Then</p>
+          <div class="stanza-rule"></div>
+          <p class="tbd">[Pivot beat 1 — what Jay was doing in product design, what made it work, what carried forward. 2–3 paragraphs in Jay's voice.]</p>
+          <p class="tbd">[Continuation — the kind of problems being solved, the operator's mindset emerging.]</p>
+        </section>
+
+        <section class="stanza">
+          <p class="stanza-label">Catalyst</p>
+          <div class="stanza-rule"></div>
+          <p class="tbd">[Pivot beat 2 — what changed. The point where designing screens stopped being enough. The decision to ship React. 2–3 paragraphs.]</p>
+        </section>
+
+        <section class="stanza">
+          <p class="stanza-label">Now</p>
+          <div class="stanza-rule"></div>
+          <p class="tbd">[Pivot beat 3 — design engineer for AI-native workflows. What that means in practice. Trust surfaces, streaming UI, agentic fallbacks. 2–3 paragraphs.]</p>
+        </section>
+
+        <section class="stanza">
+          <p class="stanza-label">Why this combination</p>
+          <div class="stanza-rule"></div>
+          <p class="tbd">[Closing argument — the cross-domain bridge. Why 10 yrs of product design + recent design engineering is rare and useful for AI-native teams. 1–2 paragraphs.]</p>
+        </section>
+      </div>
+
+      <aside class="sidebar">
+        <div class="sidebar-block">
+          <p class="sidebar-label">Timeline</p>
+          <div class="timeline-row">
+            <span class="timeline-year">2023—</span>
+            <span>
+              <span class="timeline-company">Simple Path Media</span>
+              <span class="timeline-role">Design Engineer</span>
+            </span>
+          </div>
+          <div class="timeline-row">
+            <span class="timeline-year">2018–23</span>
+            <span>
+              <span class="timeline-company">Kleinfelder</span>
+              <span class="timeline-role">Product Design</span>
+            </span>
+          </div>
+          <div class="timeline-row">
+            <span class="timeline-year">2014–18</span>
+            <span>
+              <span class="timeline-company">Fiserv</span>
+              <span class="timeline-role">Product Design</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="sidebar-block">
+          <p class="sidebar-label">Role open to</p>
+          <p style="margin:0; font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg-soft); line-height: 1.7;">Staff / Principal<br>Design Engineer<br>US remote</p>
+        </div>
+
+        <div class="sidebar-block">
+          <p class="sidebar-label">Located</p>
+          <p style="margin:0; font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg-soft); line-height: 1.7;">[TBD city, state]</p>
+        </div>
+
+        <div class="sidebar-block">
+          <p class="sidebar-label">Reach</p>
+          <p style="margin:0; font-family: var(--font-mono); font-size: var(--text-2xs); color: var(--color-fg-soft); line-height: 1.7;">
+            <a href="mailto:jay@jaymoore.net" style="color: var(--color-fg-soft); text-decoration: none;">jay@jaymoore.net</a><br>
+            <a href="https://github.com/jaymoore" style="color: var(--color-fg-soft); text-decoration: none;">github.com/jaymoore</a>
+          </p>
+        </div>
+      </aside>
+    </div>
+
+    <hr class="rule">
+
+    <p class="eyebrow">Thesis</p>
+    <h2 style="font-size: var(--text-xl); margin: 8px 0 24px; font-weight: 500;">What I bring</h2>
+    <div class="thesis-grid">
+      <div class="thesis-row">
+        <span class="thesis-label">Trust surface</span>
+        <span class="thesis-value">When the model is uncertain, show the receipts. Override beats obedience.</span>
+      </div>
+      <div class="thesis-row">
+        <span class="thesis-label">Streaming UI</span>
+        <span class="thesis-value">Streaming as transport for arbitrary doc structures, not chat bubbles.</span>
+      </div>
+      <div class="thesis-row">
+        <span class="thesis-label">Agentic fallbacks</span>
+        <span class="thesis-value">The seam between design and engineering on products where the AI has to stay legible.</span>
+      </div>
+      <div class="thesis-row">
+        <span class="thesis-label">LLM-first methodology</span>
+        <span class="thesis-value">Design and engineering as one practice. Specifications that compile to code.</span>
+      </div>
+    </div>
+
+    <hr class="rule">
+
+    <p class="eyebrow">Where to go next</p>
+    <div class="cta-grid">
+      <a class="cta" href="#">
+        <p class="cta-label">Case study</p>
+        <p class="cta-title">SPM lifecycle engine</p>
+        <p class="cta-desc">Full study — TTF-touch 30 min → 60 s. Reply rate 4.6–4.9% against a ~1% industry baseline.</p>
+        <p class="cta-arrow">Read →</p>
+      </a>
+      <a class="cta" href="mailto:jay@jaymoore.net">
+        <p class="cta-label">Contact</p>
+        <p class="cta-title">Get in touch</p>
+        <p class="cta-desc">Open to Staff / Principal Design Engineer roles. US remote.</p>
+        <p class="cta-arrow">Email →</p>
+      </a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Jay Moore — design engineer for AI-native workflows</span>
+      <span><a href="#">github</a> · <a href="#">linkedin</a> · <a href="mailto:jay@jaymoore.net">jay@jaymoore.net</a></span>
+    </div>
+  </footer>
+</body>
+</html>

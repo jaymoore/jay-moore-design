@@ -248,9 +248,9 @@ export default function AboutPage() {
 
       {/* CTA */}
       <section>
-        <p className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
+        <h2 className="font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
           Where to go next
-        </p>
+        </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <Link
             href="/work/spm-lifecycle"
@@ -315,9 +315,9 @@ function Stanza({
 }) {
   return (
     <section className="mb-12 last:mb-0">
-      <p className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
+      <h2 className="font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
         {label}
-      </p>
+      </h2>
       <div className="mt-2 h-px w-8 bg-line" />
       <div className="mt-4 space-y-4">{children}</div>
     </section>

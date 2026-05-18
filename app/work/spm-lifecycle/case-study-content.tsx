@@ -19,7 +19,7 @@ export function CaseStudyContent() {
         <h1 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-tight text-fg sm:text-4xl">
           SPM lifecycle engine.
         </h1>
-        <Placeholder size="lede">
+        <Placeholder size="large">
           Lede — what the lifecycle engine is, in one sentence. Frame the
           problem and the work. Placeholder; real prose lands in a separate
           content session.
@@ -31,7 +31,7 @@ export function CaseStudyContent() {
       {/* 01 — TL;DR */}
       <CaseSection num="01" id="tldr" label="TL;DR">
         <SectionHeading eyebrow="TL;DR" title="Metrics first" />
-        <Placeholder size="tldr">
+        <Placeholder size="large">
           One-sentence summary of the case study, surfaced before any narrative.
         </Placeholder>
         <dl className="mt-8 max-w-[640px] rounded-md border border-line bg-panel">
@@ -58,7 +58,7 @@ export function CaseStudyContent() {
       {/* 02 — Problem */}
       <CaseSection num="02" id="problem" label="Problem">
         <SectionHeading eyebrow="Problem" title="What was broken" />
-        <Placeholder size="tldr">
+        <Placeholder size="large">
           TL;DR sentence — the broken thing in one line.
         </Placeholder>
         <Placeholder>
@@ -74,7 +74,7 @@ export function CaseStudyContent() {
       {/* 03 — Approach */}
       <CaseSection num="03" id="approach" label="Approach">
         <SectionHeading eyebrow="Approach" title="What got built" />
-        <Placeholder size="tldr">
+        <Placeholder size="large">
           TL;DR sentence — the approach in one line.
         </Placeholder>
         <Placeholder>
@@ -114,7 +114,7 @@ export function CaseStudyContent() {
       {/* 04 — Demo */}
       <CaseSection num="04" id="demo" label="Demo">
         <SectionHeading eyebrow="Demo" title="Live artifact" />
-        <Placeholder size="tldr">
+        <Placeholder size="large">
           TL;DR sentence — what the demo demonstrates and how to interact with
           it.
         </Placeholder>
@@ -143,7 +143,7 @@ export function CaseStudyContent() {
       {/* 05 — Outcomes */}
       <CaseSection num="05" id="outcomes" label="Outcomes">
         <SectionHeading eyebrow="Outcomes" title="What changed" />
-        <Placeholder size="tldr">
+        <Placeholder size="large">
           TL;DR sentence — outcomes in one line.
         </Placeholder>
         <Placeholder>
@@ -292,15 +292,13 @@ function Placeholder({
   size = "body",
   children,
 }: {
-  size?: "lede" | "tldr" | "body";
+  size?: "large" | "body";
   children: React.ReactNode;
 }) {
   const className =
-    size === "lede"
+    size === "large"
       ? "mt-6 max-w-[60ch] text-lg italic leading-relaxed text-fg-faint"
-      : size === "tldr"
-        ? "mt-6 max-w-[60ch] text-lg italic leading-relaxed text-fg-faint"
-        : "mt-6 max-w-[60ch] text-base italic leading-relaxed text-fg-faint";
+      : "mt-6 max-w-[60ch] text-base italic leading-relaxed text-fg-faint";
   return <p className={className}>[{children}]</p>;
 }
 

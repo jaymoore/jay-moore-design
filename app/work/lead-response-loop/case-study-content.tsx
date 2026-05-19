@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Simulator } from "./simulator";
 
 type Metric = { label: string; value: string; sub?: string };
 
@@ -201,28 +202,22 @@ export function CaseStudyContent() {
 
       {/* 04 — Demo */}
       <CaseSection num="04" id="demo" label="Demo">
-        <SectionHeading eyebrow="Demo" title="Live artifact" />
-        <Placeholder size="large">
-          TL;DR sentence — what the demo demonstrates and how to interact with
-          it.
-        </Placeholder>
-        <div
-          className="mt-8 flex aspect-[16/10] flex-col items-center justify-center gap-4 rounded-md border border-line bg-panel"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(45deg, var(--color-line) 0, var(--color-line) 1px, transparent 1px, transparent 12px)",
-          }}
-          role="img"
-          aria-label="Live demo placeholder — to be built in a separate session"
-        >
-          <span className="rounded-sm border border-line bg-bg px-3 py-1 font-mono text-2xs uppercase tracking-wider text-fg-soft">
-            [ live demo · separate session ]
-          </span>
-          <p className="max-w-[40ch] text-center font-mono text-2xs text-fg-faint">
-            Interactive lead-response simulator lands here in Task 3.2/3.3.
-            Same chrome family as the trust-surface slot on the homepage.
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="Demo"
+          title="Run the loop on the page."
+        />
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          Pick a scenario below. The simulator dispatches a sequence of events
+          that mirrors the production webhook flow — missed call, text-back,
+          prospect reply, pre-filter (or LLM classification), owner
+          notification. The classification call hits the product&rsquo;s
+          real{" "}
+          <code>POST /qualify</code> endpoint when wired in production; falls
+          back to a cached canned output here while the beta partner
+          deployment is in onboarding. Either way it&rsquo;s the same JSON
+          schema (<code>X-Schema-Version: v1</code>).
+        </p>
+        <Simulator />
       </CaseSection>
 
       <hr className="my-16 border-line" />

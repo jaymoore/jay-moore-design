@@ -35,29 +35,33 @@ ff128c3 feat: /work/spm-lifecycle case study scaffold + password gate
 
 The existing `/work/spm-lifecycle` page is password-gated and unchanged from its 2026-05-18 state.
 
-## What's blocked on Jay before subagent-driven execution can begin
+## Phase 0 status — COMPLETE (2026-05-19)
 
-Phase 0 of the plan = manual account setup. Subagents can't do this part:
+All Phase 0 manual setup landed this session. Sanity checks green:
 
-- **Twilio account** (test phone number, $20 prepaid)
-- **Anthropic API key** with $50/mo hard cap
-- **Cloudflare account** (Workers/D1/KV/Cron) + Account ID
-- **Cal.com workspace** (test event type + webhook secret)
-- **Upstash Redis** (REST URL + token)
-- **Resend** (Jay's email as verified recipient + API key)
-- **GitHub repo** at `github.com/simplepathmedia/auto-lead-response-loop` (empty, can be created via `gh repo create`)
-- **SSH host alias** `github-simplepathmedia` configured + public key added to GitHub
-- **Secrets file** at `~/.config/auto-lead-response-loop/.env` with 16 keys including `QUALIFY_API_TOKEN` + `METRICS_API_TOKEN` + `CASE_STUDY_PASSWORD` (generate with `openssl rand -hex 32`)
+- ✅ `.env` at `~/.config/auto-lead-response-loop/.env` — 16/16 keys filled (Twilio, Anthropic, Cloudflare, Cal.com, Upstash, Resend, internal tokens, `JAY_ALERT_EMAIL`, `CASE_STUDY_PASSWORD`). File perms `600`.
+- ✅ Twilio: account active, test phone number purchased, $20 prepaid + budget alerts. Auto-recharge disabled.
+- ✅ Anthropic: dedicated API key with $50/mo hard cap.
+- ✅ Cloudflare: account ID + scoped API token (Workers Scripts Edit · Workers KV Edit · D1 Edit · Account Settings Read · User Details Read).
+- ✅ Cal.com: event type id `5745823` ("HVAC service appointment", 30 min), webhook with `BOOKING_CREATED` trigger + signing secret + placeholder subscriber URL (swap on Day 5 deploy), API key.
+- ✅ Upstash Redis: free regional DB in `us-east-1`, REST URL + read-write token captured.
+- ✅ Resend: `simplepathmedia.com` already verified as sending domain (pre-existing), API key scoped to that domain.
+- ✅ GitHub: `simplepathmedia/auto-lead-response-loop` private repo created (empty). `gh auth status` shows both `jaymoore` (active) and `simplepathmedia` accounts authenticated.
+- ✅ SSH: `~/.ssh/id_ed25519_simplepathmedia` keypair generated, `Host github-simplepathmedia` block appended to `~/.ssh/config`, public key uploaded to GitHub via `gh ssh-key add`. `ssh -T git@github-simplepathmedia` returns `Hi simplepathmedia!`.
+- ✅ Internal tokens: `QUALIFY_API_TOKEN` + `METRICS_API_TOKEN` generated via `openssl rand -hex 32` and inserted into `.env`.
 
-Phase 0 details in plan §0.1, §0.2, §0.3.
+No Phase 0 work remains. The next session starts directly at Phase 1 Task 1.1.
 
 ## When ready to resume
 
-Open a fresh session. Tell Claude:
+Open a fresh session in `/Users/jay/00-Dev-jaymoore/jay-moore-design`. Paste exactly:
 
-> Resuming the Lead Response Loop sprint. Phase 0 complete. Execute the plan at `process/2026-05-19-lead-response-loop.md` using subagent-driven-development. Spec is `process/2026-05-19-lead-response-loop-design.md`. Start at Phase 1 Task 1.1.
+> Resuming the Lead Response Loop sprint. Phase 0 is complete (see `process/2026-05-19-session-handoff.md`). Execute the plan at `process/2026-05-19-lead-response-loop.md` using `superpowers:subagent-driven-development`. Spec is `process/2026-05-19-lead-response-loop-design.md`. Start at Phase 1 Task 1.1.
 
-Or — if you only got partway through Phase 0 — tell Claude what's done + what's left, ask to continue.
+The new session should:
+1. Read the spec + plan headers
+2. Load the `.env` at `~/.config/auto-lead-response-loop/.env` for any keys it needs to verify accounts (read-only)
+3. Begin Task 1.1: init `/Users/jay/00-Dev/auto-lead-response-loop`, scaffold wrangler + vitest, push to `git@github-simplepathmedia:simplepathmedia/auto-lead-response-loop.git`
 
 ## Sprint clock
 

@@ -48,6 +48,108 @@ const OUTCOMES_TILES: Metric[] = [
   { label: "Bookings created", value: "0", sub: "onboarding pending" },
 ];
 
+type BuildLogEntry = {
+  num: number;
+  day: string;
+  title: string;
+  body: React.ReactNode;
+  refs: string;
+};
+
+const BUILD_LOG: BuildLogEntry[] = [
+  {
+    num: 1,
+    day: "D1",
+    title: "Scaffold + D1 schema",
+    body: "Wrangler + Vitest scaffold, 6-table D1 schema (calls, messages, classifications, owner_decisions, bookings, opt_outs).",
+    refs: "simplepathmedia/auto-lead-response-loop @ 80cb46c, a9de39f",
+  },
+  {
+    num: 2,
+    day: "D2",
+    title: "Twilio webhook reliability",
+    body: "HMAC-SHA1 sig-verify (test vector quoted in the plan was stale — verified correct value against the twilio npm package), KV-backed idempotency, retry-registry with exponential backoff.",
+    refs: "f926d13, e44065b, 77340b3",
+  },
+  {
+    num: 3,
+    day: "D2",
+    title: "Missed-call → text-back loop",
+    body: "POST /webhooks/twilio/call-status fires SMS text-back within 60s on no-answer / busy / failed. Telemetry: every event correlation-id'd to D1.",
+    refs: "c6009ea, d3c00b1",
+  },
+  {
+    num: 4,
+    day: "D3",
+    title: "Spam pre-filter (Decision 2 anchor)",
+    body: "30-line regex pre-filter for 4 high-confidence patterns. Short-circuits ~20% of inbound before paying for inference.",
+    refs: "c7695a2",
+  },
+  {
+    num: 5,
+    day: "D3",
+    title: "LLM qualifier + frozen contract (Decision 3 anchor)",
+    body: "Claude Haiku with tool-use schema. QualifierOutput shape frozen at v1, shipped with X-Schema-Version header on every response.",
+    refs: "7646e3f",
+  },
+  {
+    num: 6,
+    day: "D3",
+    title: "POST /qualify sync endpoint",
+    body: "Bearer-token auth, 5s timeout, schema-enforced output. Same code path the inbound webhook uses internally.",
+    refs: "6c4fcc6",
+  },
+  {
+    num: 7,
+    day: "D3",
+    title: "Inbound SMS → qualify → log",
+    body: "webhooks/twilio/sms-inbound integrates pre-filter + qualifier + opt-out + STOP/HELP keyword detection + classification logging.",
+    refs: "9f789bb",
+  },
+  {
+    num: 8,
+    day: "D4",
+    title: "Owner notification + reply loop",
+    body: "Single-keyword YES/NO/INFO interface over SMS. Cal.com link sent on YES. Escalation scheduled on every notification.",
+    refs: "a6d8abd, b6dd3cb, c4cf42e",
+  },
+  {
+    num: 9,
+    day: "D5",
+    title: "Eval harness + v1 prompt result (Section 06 anchor)",
+    body: "50 labeled examples, confusion matrix, P50/P95 latency. v1 prompt landed at 96% label accuracy / 74% urgency accuracy.",
+    refs: "01eabe9, 177a8f2",
+  },
+  {
+    num: 10,
+    day: "D5",
+    title: "Observability + cron + Resend",
+    body: "GET /metrics/public aggregate endpoint, CF Cron Trigger every 60s for retry-replay + escalation processing, Resend email escalation on 3-strike failure.",
+    refs: "da2795f, 7ed891c",
+  },
+  {
+    num: 11,
+    day: "D8",
+    title: "Case study URL rename + simulator skeleton",
+    body: "/work/spm-lifecycle → /work/lead-response-loop. State machine + UI panes scaffolded under the rename.",
+    refs: "jaymoore/jay-moore-design @ 3302418, 53154f5",
+  },
+  {
+    num: 12,
+    day: "D9",
+    title: "Simulator → /qualify proxy (Decision 3 reversal landed)",
+    body: "Replaced the planned direct-Claude call from the simulator with a Server Action proxy to the product's /qualify endpoint. One source of truth across both code paths.",
+    refs: "98841c7",
+  },
+  {
+    num: 13,
+    day: "D10",
+    title: "Case study prose, sections 00–09",
+    body: "Lede, TL;DR, Problem, Approach, Decisions (including one reversal narrative), Evaluation, Outcomes (in-build framing), Roadmap. Each commit Codex-reviewed pre-merge.",
+    refs: "43b88bd, 7d39483, 5ade780",
+  },
+];
+
 type RoadmapItem = { title: string; body: string };
 
 const ROADMAP_ITEMS: RoadmapItem[] = [
@@ -443,16 +545,58 @@ export function CaseStudyContent() {
 
       <hr className="my-16 border-line" />
 
-      {/* 08 — Build log (appendix, lands in Task 4.2) */}
+      {/* 08 — Build log */}
       <CaseSection num="08" id="build-log" label="Build log">
         <SectionHeading
           eyebrow="Build log"
           title="14 days of decisions, in order."
         />
-        <Placeholder size="large">
-          Curated chronological PR + screenshot trail. Anchored to decisions
-          and outcomes, not diary noise. Lands in Task 4.2.
-        </Placeholder>
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          14 days, two repos (
+          <code>simplepathmedia/auto-lead-response-loop</code> for the product,
+          <code>jaymoore/jay-moore-design</code> for the case study
+          you&rsquo;re reading), shipped against the original plan with one
+          major mid-flight reversal. Curated — not diary. Each entry is
+          anchored from a section above.
+        </p>
+
+        <ol className="mt-10 max-w-[840px] space-y-8">
+          {BUILD_LOG.map((entry) => (
+            <li
+              key={entry.num}
+              id={`bl-${entry.num}`}
+              className="grid scroll-mt-20 grid-cols-[64px_1fr] gap-4 border-t border-line pt-6 sm:grid-cols-[80px_1fr]"
+            >
+              <div className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                {entry.day}
+              </div>
+              <div>
+                <h3 className="text-lg font-medium text-fg">
+                  <span className="mr-2 font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                    {String(entry.num).padStart(2, "0")}
+                  </span>
+                  {entry.title}
+                </h3>
+                <p className="mt-2 max-w-[60ch] text-base leading-relaxed text-fg-soft">
+                  {entry.body}
+                </p>
+                <p className="mt-2 font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                  {entry.refs}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <p className="mt-12 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          Two failures worth naming: the plan&rsquo;s quoted Twilio sig-verify
+          test vector was wrong (caught Day 2 via Node crypto cross-check). And{" "}
+          <code>vi.mock</code> doesn&rsquo;t work in{" "}
+          <code>@cloudflare/vitest-pool-workers</code> — caught when the
+          call-status test silently swallowed the mock. Both surfaced because
+          tests were authored before the implementation. The TDD discipline
+          isn&rsquo;t aesthetic.
+        </p>
       </CaseSection>
 
       <hr className="my-16 border-line" />

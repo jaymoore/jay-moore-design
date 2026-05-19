@@ -253,18 +253,19 @@ export default function AboutPage() {
         </h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <Link
-            href="/work/spm-lifecycle"
+            href="/work/lead-response-loop"
             className="group flex flex-col rounded-md border border-line bg-panel p-6 transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:border-line-strong"
           >
             <span className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
               Case study
             </span>
             <span className="mt-2 text-lg font-medium text-fg">
-              SPM lifecycle engine
+              Lead Response Loop
             </span>
             <span className="mt-2 text-sm text-fg-soft">
-              Full study — TTF-touch 30 min → 60 s. Reply rate 4.6–4.9% against
-              a ~1% industry baseline.
+              Decision-support response system for high-noise inbound lead
+              channels. HVAC + plumbing first, pattern transferable.
+              Password-gated.
             </span>
             <span className="mt-4 inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-wider text-accent">
               Read

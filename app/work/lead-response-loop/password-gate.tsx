@@ -17,7 +17,7 @@ export function PasswordGate() {
         Case study · access required
       </p>
       <h1 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-tight text-fg sm:text-4xl">
-        SPM lifecycle engine.
+        Lead Response Loop.
       </h1>
       <p className="mt-6 text-base text-fg-soft">
         Private case study. Enter the password shared with you to continue.

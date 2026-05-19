@@ -19,12 +19,12 @@ export async function unlockCaseStudy(
   }
 
   const cookieStore = await cookies();
-  cookieStore.set("spm-case-study-auth", password, {
+  cookieStore.set("lrl-case-study-auth", password, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 30,
-    path: "/work/spm-lifecycle",
+    path: "/work/lead-response-loop",
   });
 
   return { ok: true };

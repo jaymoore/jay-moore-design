@@ -17,12 +17,11 @@ export function CaseStudyContent() {
           Case study
         </p>
         <h1 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-tight text-fg sm:text-4xl">
-          SPM lifecycle engine.
+          Lead Response Loop.
         </h1>
         <Placeholder size="large">
-          Lede — what the lifecycle engine is, in one sentence. Frame the
-          problem and the work. Placeholder; real prose lands in a separate
-          content session.
+          Lede — what the system is, in one sentence. Frame the problem and
+          the work. Placeholder; real prose lands in Task 4.1.
         </Placeholder>
       </header>
 
@@ -62,9 +61,9 @@ export function CaseStudyContent() {
           TL;DR sentence — the broken thing in one line.
         </Placeholder>
         <Placeholder>
-          Narrative for the problem statement. 2–3 paragraphs covering: what SPM
-          does, what the lifecycle issue was, why TTF-touch and reply rate were
-          the right numbers to chase, and the cost of inaction.
+          Narrative for the problem statement. 2–3 paragraphs covering: the
+          home-services economics of missed calls, why response time wins
+          jobs, and the cost of inaction. Real prose lands in Task 4.1.
         </Placeholder>
         <Placeholder>Continuation — supporting detail or anecdote.</Placeholder>
       </CaseSection>
@@ -131,9 +130,8 @@ export function CaseStudyContent() {
             [ live demo · separate session ]
           </span>
           <p className="max-w-[40ch] text-center font-mono text-2xs text-fg-faint">
-            The SPM lifecycle interaction lives here. Built in a separate
-            session; same chrome family as the trust-surface slot on the
-            homepage.
+            Interactive lead-response simulator lands here in Task 3.2/3.3.
+            Same chrome family as the trust-surface slot on the homepage.
           </p>
         </div>
       </CaseSection>

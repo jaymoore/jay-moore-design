@@ -14,10 +14,10 @@ type DepthItem = {
 const ITEMS: DepthItem[] = [
   {
     number: "01",
-    title: "SPM lifecycle engine",
-    body: "Full case study. TTF-touch 30 min → 60 s. Reply rate 4.6–4.9% against a ~1% industry baseline.",
+    title: "Lead Response Loop",
+    body: "Decision-support response system for high-noise inbound lead channels. HVAC + plumbing first, pattern transferable. Password-gated.",
     cta: "Case study",
-    href: "/work/spm-lifecycle",
+    href: "/work/lead-response-loop",
   },
   {
     number: "02",

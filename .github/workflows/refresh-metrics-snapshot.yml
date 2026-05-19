@@ -1,0 +1,52 @@
+name: Refresh metrics snapshot
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch latest snapshot from product
+        env:
+          METRICS_API_TOKEN: ${{ secrets.METRICS_API_TOKEN }}
+          METRICS_ENDPOINT_URL: ${{ secrets.METRICS_ENDPOINT_URL }}
+        run: |
+          if [ -z "$METRICS_API_TOKEN" ] || [ -z "$METRICS_ENDPOINT_URL" ]; then
+            echo "::warning::METRICS_API_TOKEN or METRICS_ENDPOINT_URL not set; skipping refresh"
+            exit 0
+          fi
+          curl -fsSL --max-time 15 \
+            -H "Authorization: Bearer $METRICS_API_TOKEN" \
+            "$METRICS_ENDPOINT_URL/metrics/public" \
+            -o app/work/lead-response-loop/metrics-snapshot.json.new
+
+      - name: Diff + commit if changed
+        id: diff
+        run: |
+          if [ ! -f app/work/lead-response-loop/metrics-snapshot.json.new ]; then
+            echo "No new snapshot fetched; nothing to do"
+            exit 0
+          fi
+          if ! cmp -s app/work/lead-response-loop/metrics-snapshot.json app/work/lead-response-loop/metrics-snapshot.json.new; then
+            mv app/work/lead-response-loop/metrics-snapshot.json.new app/work/lead-response-loop/metrics-snapshot.json
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            rm app/work/lead-response-loop/metrics-snapshot.json.new
+          fi
+
+      - name: Push updated snapshot
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "metrics-bot"
+          git config user.email "metrics@jaymoore.dev"
+          git add app/work/lead-response-loop/metrics-snapshot.json
+          git commit -m "chore: refresh metrics-snapshot.json"
+          git push

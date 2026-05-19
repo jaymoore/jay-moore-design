@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Simulator } from "./simulator";
+import { getMetricsSnapshot } from "./metrics";
 
 type Metric = { label: string; value: string; sub?: string };
 
@@ -40,12 +41,6 @@ const EVAL_ROWS: EvalRow[] = [
     target: "—",
     status: "Pass",
   },
-];
-
-const OUTCOMES_TILES: Metric[] = [
-  { label: "Total calls handled", value: "0", sub: "onboarding pending" },
-  { label: "Owner-approved leads", value: "0", sub: "onboarding pending" },
-  { label: "Bookings created", value: "0", sub: "onboarding pending" },
 ];
 
 type BuildLogEntry = {
@@ -171,7 +166,41 @@ const ROADMAP_ITEMS: RoadmapItem[] = [
   },
 ];
 
-export function CaseStudyContent() {
+export async function CaseStudyContent() {
+  const { data: metrics, source } = await getMetricsSnapshot();
+  const outcomesTiles: Metric[] = [
+    {
+      label: "Total calls handled",
+      value: metrics.total_calls.toString(),
+      sub:
+        metrics.total_calls === 0
+          ? "onboarding pending"
+          : `${metrics.qualified_pct}% qualified`,
+    },
+    {
+      label: "P95 LLM latency",
+      value:
+        metrics.latency_p95_ms > 0
+          ? `${(metrics.latency_p95_ms / 1000).toFixed(1)}s`
+          : "—",
+      sub:
+        metrics.latency_p95_ms > 0
+          ? `P50 ${(metrics.latency_p50_ms / 1000).toFixed(1)}s`
+          : "onboarding pending",
+    },
+    {
+      label: "Beta partner days live",
+      value:
+        metrics.beta_partner_days_live > 0
+          ? metrics.beta_partner_days_live.toString()
+          : "0",
+      sub:
+        metrics.beta_partner_days_live > 0
+          ? "since first call"
+          : "onboarding pending",
+    },
+  ];
+
   return (
     <article className="mx-auto w-full max-w-[1120px] px-6 py-24">
       {/* Hero */}
@@ -514,7 +543,7 @@ export function CaseStudyContent() {
         </ul>
 
         <dl className="mt-10 max-w-[640px] rounded-md border border-line bg-panel">
-          {OUTCOMES_TILES.map((m, i) => (
+          {outcomesTiles.map((m, i) => (
             <div
               key={m.label}
               className={`grid grid-cols-[160px_1fr] items-baseline gap-4 px-5 py-5 sm:grid-cols-[220px_1fr] ${
@@ -539,7 +568,13 @@ export function CaseStudyContent() {
         </dl>
         <p className="mt-4 max-w-[640px] font-mono text-2xs text-fg-faint">
           Telemetry refreshes every 6 hours via scheduled GitHub Action against{" "}
-          <code>/metrics/public</code>. Snapshot pending first beta call.
+          <code>/metrics/public</code>. Current render:{" "}
+          {source === "live" ? (
+            <span>live (snapshot for ISR)</span>
+          ) : (
+            <span>cached snapshot fallback (endpoint not yet configured)</span>
+          )}
+          . Eval accuracy on labeled test set: {Math.round(metrics.accuracy_on_labeled_set * 100)}%.
         </p>
       </CaseSection>
 

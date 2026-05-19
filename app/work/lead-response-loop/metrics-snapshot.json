@@ -1,0 +1,11 @@
+{
+  "schema_version": "v1",
+  "generated_at": 0,
+  "total_calls": 0,
+  "qualified_pct": 0,
+  "latency_p50_ms": 0,
+  "latency_p95_ms": 0,
+  "accuracy_on_labeled_set": 0.96,
+  "beta_partner_days_live": 0,
+  "_note": "Seed value. Refreshed by .github/workflows/refresh-metrics-snapshot.yml every 6 hours once METRICS_API_TOKEN + METRICS_ENDPOINT_URL secrets are configured and the product endpoint is reachable."
+}

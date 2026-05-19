@@ -1,11 +1,19 @@
 import Link from "next/link";
 
-type Metric = { label: string; value: string };
+type Metric = { label: string; value: string; sub?: string };
 
 const TLDR_METRICS: Metric[] = [
-  { label: "TTF-touch", value: "30 min → 60 s" },
-  { label: "Reply rate", value: "4.6–4.9%" },
-  { label: "Industry baseline", value: "~1%" },
+  {
+    label: "Qualification accuracy",
+    value: "96%",
+    sub: "48/50 on labeled test set",
+  },
+  { label: "P95 LLM latency", value: "1.6s", sub: "target ≤ 3.5s" },
+  {
+    label: "Beta partner status",
+    value: "Onboarding",
+    sub: "telemetry lands week of measurement",
+  },
 ];
 
 export function CaseStudyContent() {
@@ -19,10 +27,16 @@ export function CaseStudyContent() {
         <h1 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-tight text-fg sm:text-4xl">
           Lead Response Loop.
         </h1>
-        <Placeholder size="large">
-          Lede — what the system is, in one sentence. Frame the problem and
-          the work. Placeholder; real prose lands in Task 4.1.
-        </Placeholder>
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          Read this expecting engineering, not vertical. The product is missed-lead
+          recovery for HVAC and plumbing owners. The patterns — multi-agent
+          classification with a deterministic pre-filter, a frozen LLM output
+          contract shared between simulator and production, decision-support over
+          full automation, idempotent webhooks, durable retry queues, server-only
+          secret boundaries — apply anywhere a high-noise inbound channel meets a
+          latency budget. Sales funnels, support triage, onboarding intake. HVAC
+          is where there were real prospects to test against.
+        </p>
       </header>
 
       <hr className="my-16 border-line" />
@@ -30,9 +44,11 @@ export function CaseStudyContent() {
       {/* 01 — TL;DR */}
       <CaseSection num="01" id="tldr" label="TL;DR">
         <SectionHeading eyebrow="TL;DR" title="Metrics first" />
-        <Placeholder size="large">
-          One-sentence summary of the case study, surfaced before any narrative.
-        </Placeholder>
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          Shipped end-to-end in 14 days. Live decision support over real Twilio
+          calls and real Claude qualifications. Beta partner onboarding in
+          progress.
+        </p>
         <dl className="mt-8 max-w-[640px] rounded-md border border-line bg-panel">
           {TLDR_METRICS.map((m, i) => (
             <div
@@ -44,8 +60,15 @@ export function CaseStudyContent() {
               <dt className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
                 {m.label}
               </dt>
-              <dd className="text-2xl font-semibold tracking-tight text-fg">
-                {m.value}
+              <dd>
+                <div className="text-2xl font-semibold tracking-tight text-fg">
+                  {m.value}
+                </div>
+                {m.sub && (
+                  <div className="mt-1 font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                    {m.sub}
+                  </div>
+                )}
               </dd>
             </div>
           ))}
@@ -56,16 +79,28 @@ export function CaseStudyContent() {
 
       {/* 02 — Problem */}
       <CaseSection num="02" id="problem" label="Problem">
-        <SectionHeading eyebrow="Problem" title="What was broken" />
-        <Placeholder size="large">
-          TL;DR sentence — the broken thing in one line.
-        </Placeholder>
-        <Placeholder>
-          Narrative for the problem statement. 2–3 paragraphs covering: the
-          home-services economics of missed calls, why response time wins
-          jobs, and the cost of inaction. Real prose lands in Task 4.1.
-        </Placeholder>
-        <Placeholder>Continuation — supporting detail or anecdote.</Placeholder>
+        <SectionHeading
+          eyebrow="Problem"
+          title="The response window is measured in minutes."
+        />
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          A $500K–$5M HVAC or plumbing business runs on tickets in the $300–$1,500
+          range. The gap between a lost lead and a booked one is a single SMS
+          reply, sent within minutes. Industry studies put a 5-minute response
+          window at roughly 21× higher qualification odds than a 30-minute
+          window. Owners in this size band don&rsquo;t have admin staff — they
+          answer their own phones between jobs and miss 30–40% of inbound calls
+          during the workday. Those misses don&rsquo;t ring back. They hit the
+          next name in the local search results.
+        </p>
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          Existing tooling is split in two: heavyweight CRM platforms (weeks of
+          onboarding) and low-quality auto-responders (same template to every
+          caller). Neither closes the loop from missed call to qualified booking
+          in seconds. The engineering question is what falls out when you treat
+          the response loop itself as the product, not a feature of a larger
+          CRM. That&rsquo;s what this case study documents.
+        </p>
       </CaseSection>
 
       <hr className="my-16 border-line" />

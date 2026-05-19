@@ -481,7 +481,10 @@ describe("verifyTwilioSignature", () => {
     const authToken = "12345";
     const url = "https://mycompany.com/myapp.php?foo=1&bar=2";
     const params = { CallSid: "CA1234", Caller: "+14158675309" };
-    const expectedSig = "RSOYDt4T1cUTdK1PDd93/VVr8B8=";
+    // Verified via Node crypto.createHmac('sha1', '12345') + twilio
+    // npm package's validateRequest. The vector originally quoted in
+    // an earlier revision of this plan was stale/incorrect.
+    const expectedSig = "m1Z1v9KNVgm5diNA2Ohp20M57jE=";
     expect(verifyTwilioSignature(authToken, expectedSig, url, params)).toBe(true);
   });
 
@@ -489,7 +492,10 @@ describe("verifyTwilioSignature", () => {
     const authToken = "12345";
     const url = "https://mycompany.com/myapp.php?foo=1&bar=2";
     const params = { CallSid: "CA1234", Caller: "+19999999999" };
-    const expectedSig = "RSOYDt4T1cUTdK1PDd93/VVr8B8=";
+    // Verified via Node crypto.createHmac('sha1', '12345') + twilio
+    // npm package's validateRequest. The vector originally quoted in
+    // an earlier revision of this plan was stale/incorrect.
+    const expectedSig = "m1Z1v9KNVgm5diNA2Ohp20M57jE=";
     expect(verifyTwilioSignature(authToken, expectedSig, url, params)).toBe(false);
   });
 });

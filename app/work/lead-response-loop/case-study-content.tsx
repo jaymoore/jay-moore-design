@@ -16,6 +16,31 @@ const TLDR_METRICS: Metric[] = [
   },
 ];
 
+type EvalRow = {
+  metric: string;
+  result: string;
+  target: string;
+  status: string;
+};
+
+const EVAL_ROWS: EvalRow[] = [
+  { metric: "Label accuracy", result: "96% · 48/50", target: "≥ 85%", status: "Pass" },
+  {
+    metric: "Urgency accuracy",
+    result: "74% · 37/50",
+    target: "≥ 75%",
+    status: "Off by 1",
+  },
+  { metric: "P50 LLM latency", result: "1.3s", target: "—", status: "—" },
+  { metric: "P95 LLM latency", result: "1.6s", target: "≤ 3.5s", status: "Pass" },
+  {
+    metric: "Spam (pre-filter + LLM)",
+    result: "8/8",
+    target: "—",
+    status: "Pass",
+  },
+];
+
 export function CaseStudyContent() {
   return (
     <article className="mx-auto w-full max-w-[1120px] px-6 py-24">
@@ -107,39 +132,41 @@ export function CaseStudyContent() {
 
       {/* 03 — Approach */}
       <CaseSection num="03" id="approach" label="Approach">
-        <SectionHeading eyebrow="Approach" title="What got built" />
-        <Placeholder size="large">
-          TL;DR sentence — the approach in one line.
-        </Placeholder>
-        <Placeholder>
-          Narrative — the lifecycle engine architecture, the decision-support
-          framing, the operator&rsquo;s mental model, the key trade-offs.
-        </Placeholder>
-
-        <ArtifactPanel
-          type="diagram"
-          caption="Lifecycle engine architecture"
+        <SectionHeading
+          eyebrow="Approach"
+          title="A multi-agent loop with a frozen output contract."
         />
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          The system has four agents working in sequence: an intake handler that
+          catches missed calls and fires a text-back within seconds; a
+          deterministic pre-filter that catches obvious spam before paying for
+          inference; a Claude Haiku classifier that returns a structured verdict
+          with confidence and evidence quotes; and an owner-side notifier that
+          surfaces a single-keyword decision (YES / NO / INFO) over SMS. The loop is
+          event-sourced — every step writes a correlation-id&rsquo;d row to D1 —
+          so a downstream consumer can replay any moment.
+        </p>
 
-        <Placeholder>
-          Continuation — implementation details, what made the engine work, how
-          the decision-support layer surfaces the right context at the right
-          time.
-        </Placeholder>
+        <ArtifactPanel type="diagram" caption="System architecture (TBD)" />
+
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          The single most important interface in the system is the
+          qualifier&rsquo;s JSON output. It&rsquo;s frozen at <code>v1</code> and
+          shipped with a version header on every response, because three
+          different callers — the production webhook handler, the public{" "}
+          <code>POST /qualify</code> endpoint, and the simulator on this page —
+          all consume the same shape. Drift between any two of those would be a
+          hidden product bug.
+        </p>
 
         <ArtifactPanel
           type="code"
-          caption="Decision-support kernel — core loop"
+          caption="Qualifier output schema (TypeScript)"
         />
-
-        <Placeholder>
-          Continuation — the UI surface. How operators see and act on the
-          lifecycle state.
-        </Placeholder>
 
         <ArtifactPanel
           type="screenshot"
-          caption="Operator surface in production"
+          caption="Sample qualification trace (anonymized)"
         />
       </CaseSection>
 
@@ -173,29 +200,174 @@ export function CaseStudyContent() {
 
       <hr className="my-16 border-line" />
 
-      {/* 05 — Outcomes */}
-      <CaseSection num="05" id="outcomes" label="Outcomes">
+      {/* 05 — Decisions */}
+      <CaseSection num="05" id="decisions" label="Decisions">
+        <SectionHeading
+          eyebrow="Decisions"
+          title="Four calls. One reversal."
+        />
+
+        <Decision title="Decision-support over full automation">
+          The first instinct on an AI-classified lead pipeline is to auto-route
+          confident matches. Push them to Cal.com without bothering the owner;
+          auto-dismiss spam; <code>manual_review</code> only for the ambiguous
+          middle. In practice, every false-positive auto-route is a wasted slot
+          the owner has to apologize for. v1 is decision-support: the owner sees
+          a one-line SMS with label, confidence, evidence quote, and three
+          keystrokes (YES / NO / INFO) gate every send. The training data —
+          owner&rsquo;s explicit YES/NO against the classifier&rsquo;s{" "}
+          <code>recommended_action</code> — feeds the next prompt iteration.
+          Trust accrues incrementally; never decays from a single bad auto-send.
+        </Decision>
+
+        <Decision title="Deterministic pre-filter before LLM">
+          Roughly 20% of inbound to a US business phone is spam. There&rsquo;s no
+          reason to pay for inference on a &ldquo;Congratulations you won $5000
+          bit.ly/abc&rdquo;. A 30-line regex pre-filter catches four
+          high-confidence patterns (shortened URLs, lottery-style claims,
+          adult-spam keywords, get-rich-quick) and short-circuits the LLM.
+          Ambiguous cases always go to the LLM. Tradeoff: regex is brittle and
+          won&rsquo;t catch novel spam; the eval harness covers this gap with 8
+          spam examples in the labeled test set and a confusion-matrix view on
+          every prompt iteration.
+        </Decision>
+
+        <Decision title="Frozen LLM output contract (the reversal)">
+          Original plan: the portfolio simulator calls Claude directly via a
+          Next.js Server Action. Faster to wire up; one Anthropic key in two
+          places. Codex review caught the drift risk: two independent inference
+          implementations will diverge, producing different outputs for
+          identical inputs. Reversed mid-build. Now the product exposes{" "}
+          <code>POST /qualify</code> (sync endpoint) and the simulator proxies
+          through a Server Action that forwards to that endpoint. Same prompt
+          version, same JSON schema, same code path. Costs an extra HTTP hop on
+          every simulator run; gains one source of truth. Schema is versioned in
+          the response header (<code>X-Schema-Version: v1</code>) so future
+          revisions are explicit.
+        </Decision>
+
+        <Decision title="60-second end-to-end latency budget">
+          Missed-call recovery has a hard UX constraint: the first text-back
+          should land within 60 seconds of call end. The controllable budget is
+          tight — ~2s for classification and ~5s for persistence plus outbound
+          send, with Twilio network time outside direct control. Current eval
+          shows classifier P95 at 1.6s, leaving headroom. If Anthropic times
+          out, the route degrades to manual review and forwards the raw caller
+          message to the owner. Slower, but the loop never drops a lead
+          silently.
+        </Decision>
+      </CaseSection>
+
+      <hr className="my-16 border-line" />
+
+      {/* 06 — Evaluation */}
+      <CaseSection num="06" id="evaluation" label="Evaluation">
+        <SectionHeading
+          eyebrow="Evaluation"
+          title="How I know this works."
+        />
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          50 labeled examples in <code>eval/test-set.jsonl</code> — 15 urgent,
+          15 standard, 12 not_a_fit, 8 spam, 5 edge cases (very-short,
+          multi-language, partial info, sarcasm, multi-issue). The harness runs
+          the same code path the production webhook uses (pre-filter → Claude
+          Haiku with the v1 prompt + tool-use schema), records label +
+          confidence + evidence + extracted fields, and emits a confusion
+          matrix.
+        </p>
+
+        <div className="mt-8 max-w-[720px] overflow-hidden rounded-md border border-line">
+          <table className="w-full text-sm">
+            <thead className="bg-bg-2">
+              <tr>
+                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                  Metric
+                </th>
+                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                  Result
+                </th>
+                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                  Target
+                </th>
+                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {EVAL_ROWS.map((row, i) => (
+                <tr
+                  key={row.metric}
+                  className={i > 0 ? "border-t border-line" : undefined}
+                >
+                  <td className="px-4 py-3 text-fg">{row.metric}</td>
+                  <td className="px-4 py-3 font-mono text-fg">{row.result}</td>
+                  <td className="px-4 py-3 font-mono text-fg-soft">
+                    {row.target}
+                  </td>
+                  <td className="px-4 py-3 font-mono text-2xs uppercase tracking-wider text-fg-soft">
+                    {row.status}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="mt-8 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          The urgency miss is one case: &ldquo;help&rdquo; alone (edge{" "}
+          <code>e1</code>) classifies as <code>not_a_fit</code> with{" "}
+          <code>none</code> urgency. The test set author tagged it{" "}
+          <code>urgent</code>. Both readings are defensible — one-word
+          &ldquo;help&rdquo; is ambiguous in production too — so v1 ships at 74%
+          with the edge case documented rather than gaming either side until
+          the number passes.
+        </p>
+
+        <h3 className="mt-12 font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
+          False-positive / false-negative policy
+        </h3>
+        <p className="mt-3 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          False positives (LLM flags a real lead as spam) are worse than false
+          negatives (LLM passes spam through to the owner). The owner dismisses
+          spam in one keystroke; a misclassified real lead silently drops.
+          Confidence &lt; 0.5 always routes to <code>manual_review</code>,
+          surfacing the raw message to the owner regardless of label.
+        </p>
+
+        <h3 className="mt-12 font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
+          SLO targets at v1
+        </h3>
+        <p className="mt-3 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          Label accuracy ≥ 85% (met). P95 latency ≤ 3.5s (met). Uptime —
+          measured once beta partner is live (pending).
+        </p>
+      </CaseSection>
+
+      <hr className="my-16 border-line" />
+
+      {/* 07 — Outcomes */}
+      <CaseSection num="07" id="outcomes" label="Outcomes">
         <SectionHeading eyebrow="Outcomes" title="What changed" />
         <Placeholder size="large">
-          TL;DR sentence — outcomes in one line.
+          TL;DR sentence — outcomes in one line. Prose lands in Task 4.1
+          follow-up.
         </Placeholder>
         <Placeholder>
-          Outcomes narrative. Real metrics belong here: TTF-touch 30 min → 60 s,
-          reply rate 4.6–4.9% vs ~1% industry baseline. Context for what the
-          numbers mean, who they affect, how they were measured.
+          Outcomes narrative. In-build framing per spec: real telemetry tiles
+          with next-measurement-date gates. No fabricated metrics.
         </Placeholder>
         <Placeholder>
           Reflections / honest tradeoffs. What didn&rsquo;t work, what
-          I&rsquo;d do differently, what&rsquo;s still open. The counterweight
-          to the metrics.
+          I&rsquo;d do differently, what&rsquo;s still open.
         </Placeholder>
       </CaseSection>
 
       <hr className="my-16 border-line" />
 
-      {/* 06 — Where next */}
+      {/* 10 — Where next */}
       <section id="where-next" className="relative scroll-mt-20">
-        <CaseSectionLabel num="06" label="Where next" />
+        <CaseSectionLabel num="10" label="Where next" />
         <div className="md:pl-20">
           <h2 className="font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
             Where to go next
@@ -313,6 +485,30 @@ function SectionHeading({
         {title}
       </h2>
     </>
+  );
+}
+
+/* ============================================================
+   Decision — used in section 05 to render a tradeoff narrative
+   with a sticky title and a single body paragraph.
+   ============================================================ */
+
+function Decision({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="mt-10 border-t border-line pt-6">
+      <h3 className="font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
+        {title}
+      </h3>
+      <p className="mt-3 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+        {children}
+      </p>
+    </div>
   );
 }
 

@@ -41,6 +41,33 @@ const EVAL_ROWS: EvalRow[] = [
   },
 ];
 
+const OUTCOMES_TILES: Metric[] = [
+  { label: "Total calls handled", value: "0", sub: "onboarding pending" },
+  { label: "Owner-approved leads", value: "0", sub: "onboarding pending" },
+  { label: "Bookings created", value: "0", sub: "onboarding pending" },
+];
+
+type RoadmapItem = { title: string; body: string };
+
+const ROADMAP_ITEMS: RoadmapItem[] = [
+  {
+    title: "Website form follow-up",
+    body: "Same loop, different intake — a contact-form submission instead of a missed call. Trivial extension once the qualifier and notifier are in place.",
+  },
+  {
+    title: "Owner-facing web dashboard",
+    body: "v1 is SMS-only on the owner side. A web view becomes useful at ~10+ leads/day or when the owner wants to delegate YES/NO/INFO decisions to office staff. Multi-tenant infrastructure precedes this.",
+  },
+  {
+    title: "Weekly lead-recovery report",
+    body: "Email digest: total calls, recovery rate, conversion, top failure modes. Mostly a SQL-from-D1 + Resend send. Half a day of work.",
+  },
+  {
+    title: "AI receptionist",
+    body: "Voice channel — answer the call instead of letting it ring out. Different stack (Vapi or Retell), different conversation model, different latency budget. Its own sprint, post-beta-revenue.",
+  },
+];
+
 export function CaseStudyContent() {
   return (
     <article className="mx-auto w-full max-w-[1120px] px-6 py-24">
@@ -348,19 +375,119 @@ export function CaseStudyContent() {
 
       {/* 07 — Outcomes */}
       <CaseSection num="07" id="outcomes" label="Outcomes">
-        <SectionHeading eyebrow="Outcomes" title="What changed" />
+        <SectionHeading eyebrow="Outcomes" title="In build, measured honestly." />
+        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          The product is live in a single-tenant configuration against a Twilio
+          test number. Production telemetry — call counts, classification
+          accuracy on real prospects, owner decision rate, booking conversion —
+          lands once beta partner onboarding completes (week of measurement,
+          pending Twilio A2P 10DLC approval). Until then the numbers in
+          Section 06 are the eval-harness numbers, not real-world.
+        </p>
+
+        <h3 className="mt-12 font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
+          Eval-harness ≠ real-world
+        </h3>
+        <p className="mt-3 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          The harness measures classifier behavior on a researcher-authored test
+          set. Production will surface failure modes the test set didn&rsquo;t
+          anticipate — accent + speech-to-text typos in caller SMS, multi-message
+          conversations the v1 prompt assumes are single-turn, weird Twilio
+          webhook ordering. The eval gives a floor, not a ceiling.
+        </p>
+
+        <h3 className="mt-12 font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
+          What changed about my own thinking during the build
+        </h3>
+        <ul className="mt-3 ml-6 max-w-[60ch] list-disc space-y-3 text-lg leading-relaxed text-fg-soft marker:text-fg-faint">
+          <li>
+            The biggest correction was the frozen output contract (Section 05,
+            Decision 3). Codex caught it before the simulator&rsquo;s inference
+            path shipped. The &ldquo;one source of truth&rdquo; principle was
+            internalized in the abstract but lost track of in the moment because
+            direct Claude calls in the simulator were the faster wire-up. The
+            discipline shows up most when it&rsquo;s inconvenient.
+          </li>
+          <li>
+            The eval harness was scoped as a stretch goal. Once it existed
+            (Day 5), it changed how I evaluated prompt revisions — vibes vs.
+            confusion matrix. v2 of the qualifier prompt won&rsquo;t ship
+            without a re-run.
+          </li>
+        </ul>
+
+        <dl className="mt-10 max-w-[640px] rounded-md border border-line bg-panel">
+          {OUTCOMES_TILES.map((m, i) => (
+            <div
+              key={m.label}
+              className={`grid grid-cols-[160px_1fr] items-baseline gap-4 px-5 py-5 sm:grid-cols-[220px_1fr] ${
+                i > 0 ? "border-t border-line" : ""
+              }`}
+            >
+              <dt className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                {m.label}
+              </dt>
+              <dd>
+                <div className="text-2xl font-semibold tracking-tight text-fg">
+                  {m.value}
+                </div>
+                {m.sub && (
+                  <div className="mt-1 font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                    {m.sub}
+                  </div>
+                )}
+              </dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-4 max-w-[640px] font-mono text-2xs text-fg-faint">
+          Telemetry refreshes every 6 hours via scheduled GitHub Action against{" "}
+          <code>/metrics/public</code>. Snapshot pending first beta call.
+        </p>
+      </CaseSection>
+
+      <hr className="my-16 border-line" />
+
+      {/* 08 — Build log (appendix, lands in Task 4.2) */}
+      <CaseSection num="08" id="build-log" label="Build log">
+        <SectionHeading
+          eyebrow="Build log"
+          title="14 days of decisions, in order."
+        />
         <Placeholder size="large">
-          TL;DR sentence — outcomes in one line. Prose lands in Task 4.1
-          follow-up.
+          Curated chronological PR + screenshot trail. Anchored to decisions
+          and outcomes, not diary noise. Lands in Task 4.2.
         </Placeholder>
-        <Placeholder>
-          Outcomes narrative. In-build framing per spec: real telemetry tiles
-          with next-measurement-date gates. No fabricated metrics.
-        </Placeholder>
-        <Placeholder>
-          Reflections / honest tradeoffs. What didn&rsquo;t work, what
-          I&rsquo;d do differently, what&rsquo;s still open.
-        </Placeholder>
+      </CaseSection>
+
+      <hr className="my-16 border-line" />
+
+      {/* 09 — Roadmap */}
+      <CaseSection num="09" id="roadmap" label="Roadmap">
+        <SectionHeading
+          eyebrow="Roadmap"
+          title="Out of scope for v1. On the queue."
+        />
+
+        {ROADMAP_ITEMS.map((item) => (
+          <div key={item.title} className="mt-8 border-t border-line pt-6">
+            <h3 className="font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
+              {item.title}
+            </h3>
+            <p className="mt-3 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+              {item.body}
+            </p>
+          </div>
+        ))}
+
+        <h3 className="mt-12 font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
+          Quality queue
+        </h3>
+        <p className="mt-3 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+          Prompt iteration v2 (target <code>urgency_accuracy</code> ≥ 80%); more
+          eval examples (currently 50, target 200); per-partner business profile
+          editor; formal TCPA compliance review.
+        </p>
       </CaseSection>
 
       <hr className="my-16 border-line" />

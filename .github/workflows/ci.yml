@@ -1,31 +1,62 @@
 name: CI
 
 on:
-  pull_request:
   push:
     branches: [main]
+  pull_request:
+  workflow_dispatch:
 
 jobs:
-  lint-typecheck:
-    name: Lint + Typecheck
+  build-and-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
           cache: npm
 
-      - name: Install dependencies
+      - name: Install
         run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
 
       - name: Lint
         run: npm run lint
 
-      - name: Typecheck
-        run: npm run typecheck
+      - name: Build
+        run: npm run build
+
+      - name: Vitest (state machine + Server Action smoke)
+        run: npm test
+
+      - name: Secret audit — fail if server-only tokens leak into client bundle
+        run: |
+          set -euo pipefail
+          if [ ! -d .next/static ]; then
+            echo "::error::.next/static not found after build"
+            exit 1
+          fi
+          # Pattern names that should NEVER appear in the client bundle.
+          # We grep for the env-var literal names, since real values are
+          # never committed.
+          BAD_PATTERNS=(
+            QUALIFY_API_TOKEN
+            METRICS_API_TOKEN
+            ANTHROPIC_API_KEY
+            UPSTASH_REDIS_REST_TOKEN
+          )
+          FOUND=0
+          for pattern in "${BAD_PATTERNS[@]}"; do
+            if grep -r --include='*.js' --include='*.mjs' --include='*.cjs' -l "$pattern" .next/static/ >/dev/null 2>&1; then
+              echo "::error::Found '$pattern' in client bundle. Server-only secrets must not leak."
+              grep -r --include='*.js' --include='*.mjs' --include='*.cjs' -l "$pattern" .next/static/
+              FOUND=1
+            fi
+          done
+          if [ $FOUND -eq 1 ]; then
+            exit 1
+          fi
+          echo "Secret audit clean."

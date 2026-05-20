@@ -20,19 +20,37 @@ type Section =
 
 const SAMPLE_PROMPT = "Summarize Q3 performance for the board deck.";
 
-const SAMPLE_RESPONSE = `TL;DR
-Q3 +23% led by Enterprise (+47% YoY). Watch concentration: top 3 accounts = 31% of revenue.
+const SAMPLE_STREAM_TEXT = `Q3 came in at +23%, driven mostly by Enterprise — that segment grew 47% year over year and is now at $14.2M ARR. Mid-Market was flat at $4.2M, the second quarter in a row at that level. SMB was down 6% to $1.8M, in line with the planned wind-down.
 
-SEGMENTS
-Enterprise: +47%, YoY · $14.2M ARR
-Mid-Market: Flat, $4.2M · 2 quarters
-SMB: -6%, $1.8M · planned
+The number worth flagging is concentration. Your top three Enterprise accounts now represent 31% of recognized revenue, up from 24% in Q2. That's two consecutive quarters of the top trending in the wrong direction for diversification.
 
-RISK
-Top 3 enterprise accounts now represent 31% of recognized revenue, up from 24% in Q2. Concentration risk has grown two consecutive quarters.
+Recommendation: put segment concentration on the board agenda before the headline 23% lands.`;
 
-RECOMMENDATION
-Board agenda: discuss segment diversification before celebrating the headline 23%.`;
+const SAMPLE_SECTIONS: Section[] = [
+  {
+    type: "tldr",
+    content:
+      "Q3 +23% led by Enterprise (+47% YoY). Watch concentration: top 3 accounts = 31% of revenue.",
+  },
+  {
+    type: "segments",
+    items: [
+      { label: "Enterprise", metric: "+47%", detail: "YoY · $14.2M ARR" },
+      { label: "Mid-Market", metric: "Flat", detail: "$4.2M · 2 quarters" },
+      { label: "SMB", metric: "-6%", detail: "$1.8M · planned" },
+    ],
+  },
+  {
+    type: "risk",
+    content:
+      "Top 3 enterprise accounts now represent 31% of recognized revenue, up from 24% in Q2. Concentration risk has grown two consecutive quarters.",
+  },
+  {
+    type: "recommendation",
+    content:
+      "Board agenda: discuss segment diversification before celebrating the headline 23%.",
+  },
+];
 
 const STREAM_INTERVAL_MS = 14;
 
@@ -47,75 +65,6 @@ const MORPH_TRANSITION = {
   duration: MORPH_DURATION_S,
   ease: MORPH_EASE,
 };
-
-const SECTION_HEADS = ["TL;DR", "SEGMENTS", "RISK", "RECOMMENDATION"] as const;
-type SectionHead = (typeof SECTION_HEADS)[number];
-
-function isSectionHead(line: string): line is SectionHead {
-  return SECTION_HEADS.includes(line.trim().toUpperCase() as SectionHead);
-}
-
-function headToType(head: SectionHead): Section["type"] {
-  switch (head) {
-    case "TL;DR":
-      return "tldr";
-    case "SEGMENTS":
-      return "segments";
-    case "RISK":
-      return "risk";
-    case "RECOMMENDATION":
-      return "recommendation";
-  }
-}
-
-function parseSegmentLine(line: string): SegmentItem {
-  const colon = line.indexOf(":");
-  if (colon === -1) return { label: line.trim(), metric: "", detail: "" };
-  const label = line.slice(0, colon).trim();
-  const rest = line.slice(colon + 1).trim();
-  const comma = rest.indexOf(",");
-  if (comma === -1) return { label, metric: rest, detail: "" };
-  const metric = rest.slice(0, comma).trim();
-  const detail = rest.slice(comma + 1).trim();
-  return { label, metric, detail };
-}
-
-function parseResponse(text: string): Section[] {
-  if (!text.trim()) return [];
-  const sections: Section[] = [];
-  const lines = text.split("\n");
-
-  let currentHead: SectionHead | null = null;
-  let buffer: string[] = [];
-
-  const flush = () => {
-    if (!currentHead) return;
-    const type = headToType(currentHead);
-    if (type === "segments") {
-      const items = buffer
-        .map((l) => l.trim())
-        .filter((l) => l.length > 0)
-        .map(parseSegmentLine);
-      if (items.length > 0) sections.push({ type, items });
-    } else {
-      const content = buffer.join("\n").trim();
-      if (content.length > 0) sections.push({ type, content } as Section);
-    }
-    buffer = [];
-  };
-
-  for (const line of lines) {
-    if (isSectionHead(line)) {
-      flush();
-      currentHead = line.trim().toUpperCase() as SectionHead;
-    } else if (currentHead) {
-      buffer.push(line);
-    }
-  }
-  flush();
-
-  return sections;
-}
 
 function metricTone(metric: string): "positive" | "flat" | "negative" {
   if (/^\+/.test(metric)) return "positive";
@@ -153,11 +102,11 @@ export function TrustSurface() {
     let i = 0;
     intervalRef.current = setInterval(() => {
       i += 1;
-      if (i >= SAMPLE_RESPONSE.length) {
-        setStreamedText(SAMPLE_RESPONSE);
+      if (i >= SAMPLE_STREAM_TEXT.length) {
+        setStreamedText(SAMPLE_STREAM_TEXT);
         stopStream();
       } else {
-        setStreamedText(SAMPLE_RESPONSE.slice(0, i));
+        setStreamedText(SAMPLE_STREAM_TEXT.slice(0, i));
       }
     }, STREAM_INTERVAL_MS);
   }, [stopStream]);
@@ -191,8 +140,6 @@ export function TrustSurface() {
     mode === "ready" ? "bg-fg-faint" : "bg-accent animate-pulse";
   const primaryLabel =
     mode === "ready" ? "Run" : mode === "text" ? "Show canvas" : "Show text";
-
-  const sections = parseResponse(streamedText);
 
   return (
     <div
@@ -232,6 +179,16 @@ export function TrustSurface() {
             defaultValue={SAMPLE_PROMPT}
             className="size-full resize-none border-0 bg-transparent px-4 py-3 text-sm text-fg placeholder:text-fg-faint focus:outline-none"
           />
+        ) : mode === "text" ? (
+          <div className="size-full overflow-y-auto p-4">
+            <p className="mb-4 font-mono text-2xs uppercase tracking-wider text-fg-faint">
+              You asked: {SAMPLE_PROMPT}
+            </p>
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-fg">
+              {streamedText}
+              {isStreaming && <StreamingCursor />}
+            </p>
+          </div>
         ) : (
           <div className="size-full overflow-y-auto p-4">
             <p className="mb-4 font-mono text-2xs uppercase tracking-wider text-fg-faint">
@@ -239,11 +196,7 @@ export function TrustSurface() {
             </p>
             <MotionConfig reducedMotion="user">
               <LayoutGroup>
-                <SectionList
-                  sections={sections}
-                  mode={mode}
-                  isStreaming={isStreaming}
-                />
+                <SectionList sections={SAMPLE_SECTIONS} />
               </LayoutGroup>
             </MotionConfig>
           </div>
@@ -272,51 +225,33 @@ export function TrustSurface() {
   );
 }
 
-function SectionList({
-  sections,
-  mode,
-  isStreaming,
-}: {
-  sections: Section[];
-  mode: "text" | "canvas";
-  isStreaming: boolean;
-}) {
+function SectionList({ sections }: { sections: Section[] }) {
   if (sections.length === 0) {
     return (
       <p className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
-        {isStreaming ? "Receiving structure…" : "No content yet."}
+        No content yet.
       </p>
     );
   }
 
   return (
-    <div className={mode === "text" ? "grid gap-4" : "grid gap-5"}>
-      {sections.map((section, i) => {
-        const last = i === sections.length - 1;
-        return (
-          <motion.div
-            key={sectionLayoutId(section.type)}
-            layoutId={sectionLayoutId(section.type)}
-            layout
-            transition={MORPH_TRANSITION}
-          >
-            {mode === "text" ? (
-              <SectionAsText
-                section={section}
-                showCursor={isStreaming && last}
-              />
-            ) : (
-              <SectionAsCard section={section} />
-            )}
-          </motion.div>
-        );
-      })}
+    <div className="grid gap-5">
+      {sections.map((section) => (
+        <motion.div
+          key={sectionLayoutId(section.type)}
+          layoutId={sectionLayoutId(section.type)}
+          layout
+          transition={MORPH_TRANSITION}
+        >
+          <SectionAsCard section={section} />
+        </motion.div>
+      ))}
     </div>
   );
 }
 
 /* ============================================================
-   Text mode — prose rendering of each section
+   Streaming cursor — used in text mode
    ============================================================ */
 
 function StreamingCursor() {
@@ -327,81 +262,6 @@ function StreamingCursor() {
     >
       ▍
     </span>
-  );
-}
-
-function SectionAsText({
-  section,
-  showCursor,
-}: {
-  section: Section;
-  showCursor: boolean;
-}) {
-  if (section.type === "tldr") {
-    return (
-      <div>
-        <p className="mb-1 font-mono text-2xs uppercase tracking-wider text-fg-faint">
-          TL;DR
-        </p>
-        <p className="text-sm leading-relaxed text-fg">
-          {section.content}
-          {showCursor && <StreamingCursor />}
-        </p>
-      </div>
-    );
-  }
-  if (section.type === "segments") {
-    const lastIndex = section.items.length - 1;
-    return (
-      <div>
-        <p className="mb-1 font-mono text-2xs uppercase tracking-wider text-fg-faint">
-          Segments
-        </p>
-        <ul className="text-sm leading-relaxed text-fg-soft">
-          {section.items.map((item, i) => (
-            <motion.li
-              key={segmentLayoutId(item.label)}
-              layoutId={segmentLayoutId(item.label)}
-              layout
-              transition={MORPH_TRANSITION}
-            >
-              <span className="text-fg">{item.label}:</span> {item.metric}
-              {item.detail && <span className="text-fg-faint"> · {item.detail}</span>}
-              {showCursor && i === lastIndex && <StreamingCursor />}
-            </motion.li>
-          ))}
-        </ul>
-      </div>
-    );
-  }
-  if (section.type === "risk") {
-    return (
-      <div>
-        <p className="mb-1 font-mono text-2xs uppercase tracking-wider text-fg-faint">
-          Risk
-        </p>
-        <p className="text-sm leading-relaxed text-fg-soft">
-          {section.content}
-          {showCursor && <StreamingCursor />}
-        </p>
-      </div>
-    );
-  }
-  return (
-    <div>
-      <p className="mb-1 font-mono text-2xs uppercase tracking-wider text-fg-faint">
-        Recommendation
-      </p>
-      <p className="flex gap-2 text-sm leading-relaxed text-fg-soft">
-        <span aria-hidden className="text-ok">
-          →
-        </span>
-        <span>
-          {section.content}
-          {showCursor && <StreamingCursor />}
-        </span>
-      </p>
-    </div>
   );
 }
 

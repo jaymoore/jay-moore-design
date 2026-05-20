@@ -12,7 +12,7 @@ const TLDR_METRICS: Metric[] = [
 		value: "96%",
 		sub: "48/50 on labeled test set",
 	},
-	{ label: "P95 LLM latency", value: "1.6s", sub: "target ≤ 3.5s" },
+	{ label: "AI response time", value: "1.6s", sub: "well under the 3.5-second target" },
 	{
 		label: "Beta partner status",
 		value: "onboarding",

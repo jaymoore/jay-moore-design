@@ -433,16 +433,16 @@ export async function CaseStudyContent() {
           <table className="w-full min-w-[480px] text-sm">
             <thead className="bg-bg-2">
               <tr>
-                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-soft">
                   Metric
                 </th>
-                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-soft">
                   Result
                 </th>
-                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-soft">
                   Target
                 </th>
-                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-soft">
                   Status
                 </th>
               </tr>
@@ -600,25 +600,20 @@ export async function CaseStudyContent() {
             <li
               key={entry.num}
               id={`bl-${entry.num}`}
-              className="grid scroll-mt-20 grid-cols-[64px_1fr] gap-4 border-t border-line pt-6 sm:grid-cols-[80px_1fr]"
+              className="scroll-mt-20 border-t border-line pt-6"
             >
-              <div className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
-                {entry.day}
-              </div>
-              <div>
-                <h3 className="text-base font-medium text-fg">
-                  <span className="mr-2 font-mono text-2xs uppercase tracking-wider text-fg-faint">
-                    {String(entry.num).padStart(2, "0")}
-                  </span>
-                  {entry.title}
-                </h3>
-                <p className="mt-2 max-w-[60ch] text-base leading-relaxed text-fg-soft">
-                  {entry.body}
-                </p>
-                <p className="mt-2 font-mono text-2xs uppercase tracking-wider text-fg-faint">
-                  {entry.refs}
-                </p>
-              </div>
+              <h3 className="text-base font-medium text-fg">
+                <span className="mr-3 font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                  {entry.day} · {String(entry.num).padStart(2, "0")}
+                </span>
+                {entry.title}
+              </h3>
+              <p className="mt-2 max-w-[60ch] text-base leading-relaxed text-fg-soft">
+                {entry.body}
+              </p>
+              <p className="mt-2 font-mono text-2xs uppercase tracking-wider text-fg-faint">
+                {entry.refs}
+              </p>
             </li>
           ))}
         </ol>
@@ -803,7 +798,7 @@ function Decision({
 }) {
   return (
     <div className="mt-10 border-t border-line pt-6">
-      <h3 className="font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
+      <h3 className="text-base font-medium text-fg">
         {title}
       </h3>
       <p className="mt-3 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
@@ -870,6 +865,8 @@ function placeholder() {
       </figcaption>
       <div
         className={`flex ${aspect} flex-col items-center justify-center rounded-md border border-line bg-bg-2`}
+        role="img"
+        aria-label={`Placeholder for ${caption}`}
       >
         <span className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
           [{typeLabel} placeholder]

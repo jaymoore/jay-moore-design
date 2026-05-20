@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "About — the pivot",
   description:
-    "10 yrs product design into design engineering. The cross-domain bridge for AI-native work.",
+    "Product designer with 10 years' experience, now shipping in code. Why I made the move.",
 };
 
 type TimelineEntry = {
@@ -40,7 +40,7 @@ const PRINCIPLES: PrincipleItem[] = [
   {
     label: "Operator framing",
     value:
-      "The user is not the system. Designs hold that gap visible.",
+      "The user has their own job. The tool serves that job. Design keeps the line between the two visible.",
   },
 ];
 
@@ -53,12 +53,11 @@ export default function AboutPage() {
           About — the pivot
         </p>
         <h1 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-tight text-fg sm:text-4xl">
-          Cross-domain bridge.
+          Designer first. Engineer when it helps.
         </h1>
         <p className="mt-6 max-w-[60ch] text-lg text-fg-soft">
-          10 yrs of zero-to-one product design. Now shipping through code with
-          AI as the pair. The pivot, the practice, and why this combination is
-          rare.
+          Ten years of product design. Now writing the code too, with AI as
+          the pair. The how and the why.
         </p>
       </header>
 
@@ -100,21 +99,23 @@ export default function AboutPage() {
 
           <Stanza label="Now">
             <Prose>
-              As a design engineer for AI-native workflows, every layer of the
+              As a product designer for AI-native workflows, every layer of the
               practice is in play at once.
             </Prose>
             <Prose>
-              <span className="text-fg">Trust surfaces</span> — show the
-              receipts when the model is uncertain; the operator decides.
+              <span className="text-fg">Designing for trust</span> — when the
+              model isn&rsquo;t sure, the interface says so and the person
+              decides what happens next.
             </Prose>
             <Prose>
-              <span className="text-fg">Streaming UI</span> — treat the stream
-              as transport for structured output, not chat bubbles.
+              <span className="text-fg">Streaming as design material</span> —
+              the AI&rsquo;s output is something to shape, not just print in a
+              chat bubble.
             </Prose>
             <Prose>
-              <span className="text-fg">Agentic fallbacks</span> — the seam
-              where AI capability meets human judgment, so the system stays
-              legible when autonomy hits its edge.
+              <span className="text-fg">Knowing when AI hands back</span> —
+              when the system can&rsquo;t take the next step on its own, the
+              design makes that handoff obvious.
             </Prose>
           </Stanza>
 
@@ -170,11 +171,9 @@ export default function AboutPage() {
 
           <SidebarBlock label="Role open to">
             <p className="font-mono text-2xs leading-relaxed text-fg-soft">
-              Staff / Principal
+              Senior / Staff
               <br />
               Product Designer
-              <br />
-              Design Engineer
               <br />
               US remote
             </p>
@@ -289,7 +288,7 @@ export default function AboutPage() {
               Get in touch
             </span>
             <span className="mt-2 text-sm text-fg-soft">
-              Open to Staff / Principal Design Engineer roles. US remote.
+              Open to Senior / Staff Product Designer roles. US remote.
             </span>
             <span className="mt-4 inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-wider text-accent">
               Email

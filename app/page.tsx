@@ -20,19 +20,19 @@ export default function Home() {
 
           <div className="md:pl-20">
             <p className="max-w-[50ch] font-mono text-2xs uppercase tracking-wider text-fg-faint">
-              Interaction designer who codes. 10 yrs in complex software UX,
-              now shipping it in React.
+              Product designer who codes. 10 yrs designing complex software,
+              now shipping the code too.
             </p>
 
             <h1 className="mt-6 text-3xl font-semibold leading-[1.05] tracking-tight text-fg sm:text-4xl md:text-5xl">
-              Design engineer for{" "}
+              Product designer for{" "}
               <span className="text-accent">AI-native</span> workflows.
             </h1>
 
             <p className="mt-8 max-w-[60ch] text-base text-fg-soft">
-              I build the trust surfaces, the streaming UI, and the agentic
-              fallbacks — the seam between design and engineering on products
-              where the AI has to stay legible to the person using it.
+              I design AI products and ship them in code. When the model is
+              uncertain, the interface says so and the person using it decides
+              what happens next.
             </p>
 
             <dl className="mt-12 grid max-w-[60ch] grid-cols-1 gap-y-6 sm:max-w-none sm:grid-cols-3 sm:gap-x-12">
@@ -57,7 +57,7 @@ export default function Home() {
                   open to
                 </dt>
                 <dd className="mt-1 font-mono text-2xs text-fg">
-                  Staff / Principal DE · US remote
+                  Senior / Staff PD · US remote
                 </dd>
               </div>
             </dl>
@@ -84,13 +84,13 @@ export default function Home() {
             </p>
 
             <h2 className="mt-4 text-2xl font-semibold leading-[1.1] tracking-tight text-fg sm:text-3xl">
-              Trust surface — confidence, evidence, override
+              Two views of the same answer.
             </h2>
 
             <p className="mt-6 max-w-[60ch] text-base text-fg-soft">
-              When the model is uncertain, show the receipts. Override beats
-              obedience — the operator decides, and the disagreement becomes
-              training data.
+              The AI streams a response in plain text. The same content gets
+              reformatted into a structured view you can scan. Two ways to read
+              the same thing — the person picks which one fits the moment.
             </p>
 
             {/* Hero slot — trust surface demo (Ready state) */}

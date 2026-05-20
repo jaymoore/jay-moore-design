@@ -21,11 +21,11 @@ const splineSansMono = Spline_Sans_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://jaymoore.net"),
   title: {
-    default: "Jay Moore — Design Engineer for AI-native workflows",
+    default: "Jay Moore — Product Designer for AI-native workflows",
     template: "%s · Jay Moore",
   },
   description:
-    "Design engineer for AI-native workflows. 10+ years shipping software workflows. Trust-first AI UX. Ships React.",
+    "Product designer for AI-native workflows. 10+ years shipping software workflows. Trust-first AI UX. Ships React.",
 };
 
 // Runs synchronously before React hydration to prevent FOUC on dark mode.

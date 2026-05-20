@@ -380,7 +380,7 @@ export async function CaseStudyContent() {
 								Get in touch
 							</span>
 							<span className="mt-2 text-sm text-fg-soft">
-								Open to Senior / Staff Product Designer + Design Engineer
+								Open to Senior / Staff Product Designer
 								roles. US remote.
 							</span>
 							<span className="mt-4 inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-wider text-accent">

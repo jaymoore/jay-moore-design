@@ -211,7 +211,7 @@ export async function CaseStudyContent() {
         <h1 className="mt-4 text-3xl font-semibold leading-[1.05] tracking-tight text-fg sm:text-4xl">
           Lead Response Loop.
         </h1>
-        <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+        <p className="mt-6 max-w-[60ch] text-xl leading-relaxed text-fg sm:text-[1.375rem]">
           Read this expecting engineering, not vertical. The product is missed-lead
           recovery for HVAC and plumbing owners. The patterns — multi-agent
           classification with a deterministic pre-filter, a frozen LLM output
@@ -237,7 +237,7 @@ export async function CaseStudyContent() {
           {TLDR_METRICS.map((m, i) => (
             <div
               key={m.label}
-              className={`grid grid-cols-[160px_1fr] items-baseline gap-4 px-5 py-5 sm:grid-cols-[220px_1fr] ${
+              className={`flex flex-col gap-1 px-5 py-5 sm:grid sm:grid-cols-[220px_1fr] sm:items-baseline sm:gap-4 ${
                 i > 0 ? "border-t border-line" : ""
               }`}
             >
@@ -429,8 +429,8 @@ export async function CaseStudyContent() {
           matrix.
         </p>
 
-        <div className="mt-8 max-w-[720px] overflow-hidden rounded-md border border-line">
-          <table className="w-full text-sm">
+        <div className="mt-8 max-w-[720px] overflow-x-auto rounded-md border border-line">
+          <table className="w-full min-w-[480px] text-sm">
             <thead className="bg-bg-2">
               <tr>
                 <th className="px-4 py-3 text-left font-mono text-2xs uppercase tracking-wider text-fg-faint">
@@ -546,7 +546,7 @@ export async function CaseStudyContent() {
           {outcomesTiles.map((m, i) => (
             <div
               key={m.label}
-              className={`grid grid-cols-[160px_1fr] items-baseline gap-4 px-5 py-5 sm:grid-cols-[220px_1fr] ${
+              className={`flex flex-col gap-1 px-5 py-5 sm:grid sm:grid-cols-[220px_1fr] sm:items-baseline sm:gap-4 ${
                 i > 0 ? "border-t border-line" : ""
               }`}
             >
@@ -606,7 +606,7 @@ export async function CaseStudyContent() {
                 {entry.day}
               </div>
               <div>
-                <h3 className="text-lg font-medium text-fg">
+                <h3 className="text-base font-medium text-fg">
                   <span className="mr-2 font-mono text-2xs uppercase tracking-wider text-fg-faint">
                     {String(entry.num).padStart(2, "0")}
                   </span>
@@ -676,7 +676,7 @@ export async function CaseStudyContent() {
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <Link
               href="/"
-              className="group flex flex-col rounded-md border border-line bg-panel p-6 transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:border-line-strong"
+              className="group flex flex-col rounded-md border border-line bg-panel p-6 transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:border-line-strong focus-visible:border-line-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               <span className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
                 Homepage
@@ -701,7 +701,7 @@ export async function CaseStudyContent() {
 
             <a
               href="mailto:jay@jaymoore.net"
-              className="group flex flex-col rounded-md border border-line bg-panel p-6 transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:border-line-strong"
+              className="group flex flex-col rounded-md border border-line bg-panel p-6 transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:border-line-strong focus-visible:border-line-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
             >
               <span className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
                 Contact

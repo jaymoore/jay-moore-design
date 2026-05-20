@@ -155,6 +155,7 @@ html.dark {
   code {
     background-color: var(--color-bg-2);
     padding: 0.1em 0.3em;
+    margin-inline: 0.1em;
     border-radius: 0.2em;
     font-size: 0.9em;
   }
@@ -162,6 +163,7 @@ html.dark {
   pre code {
     background: transparent;
     padding: 0;
+    margin-inline: 0;
     font-size: inherit;
     border-radius: 0;
   }

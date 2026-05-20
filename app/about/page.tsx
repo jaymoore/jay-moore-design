@@ -87,9 +87,9 @@ export default function AboutPage() {
 
           <Stanza label="Catalyst">
             <Prose>
-              I&rsquo;d been watching the shift for a few years. 2026 was the
-              moment it became obvious — time to change the foundation of how
-              I work and design.
+              I&rsquo;d been watching the shift for a few years. Early 2026
+              was the moment it became obvious — time to change the foundation
+              of how I work and design.
             </Prose>
             <Prose>
               Coming back to my roots: a designer who codes, this time paired

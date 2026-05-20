@@ -80,7 +80,7 @@ export default function Home() {
 
           <div className="md:pl-20">
             <p className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
-              — Live demo — the hero object
+              — Live demo
             </p>
 
             <h2 className="mt-4 text-2xl font-semibold leading-[1.1] tracking-tight text-fg sm:text-3xl">
@@ -109,10 +109,12 @@ export default function Home() {
               </span>
               <span className="hidden text-fg-faint sm:inline">/</span>
               <a
-                href="#"
+                href="https://github.com/jaymoore/jay-moore-design/commits/main"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 text-accent transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-accent-deep"
               >
-                view PR
+                view commits
                 <ArrowUpRight
                   size={12}
                   strokeWidth={1.5}

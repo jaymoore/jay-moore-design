@@ -14,7 +14,7 @@ const NAV_ITEMS: NavItem[] = [
   { kind: "anchor", href: "/#start", label: "Start", matchPathname: "/" },
   { kind: "anchor", href: "/#demo", label: "Demo" },
   { kind: "anchor", href: "/#depth", label: "Depth" },
-  { kind: "external", href: "https://github.com/jaymoore", label: "Github" },
+  { kind: "external", href: "https://github.com/jaymoore", label: "GitHub" },
 ];
 
 function navClass(active: boolean) {

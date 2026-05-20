@@ -138,7 +138,7 @@ export function SimulatorClient() {
 
 			{/* Write your own — closed by default for friction */}
 			<details ref={detailsRef} className="group">
-				<summary className="cursor-pointer list-none font-mono text-2xs uppercase tracking-wider text-neutral-500 hover:text-neutral-300 transition-colors duration-(--duration-fast) ease-(--ease-snappy) select-none">
+				<summary className="cursor-pointer list-none font-mono text-2xs uppercase tracking-wider text-fg-faint hover:text-fg-soft transition-colors duration-(--duration-fast) ease-(--ease-snappy) select-none">
 					<span className="group-open:hidden">+ Write your own (advanced)</span>
 					<span className="hidden group-open:inline">− Write your own (advanced)</span>
 				</summary>
@@ -149,10 +149,10 @@ export function SimulatorClient() {
 						disabled={isRunning || customSubmitting}
 						placeholder="Type a prospect message to run through the qualifier…"
 						rows={3}
-						className="w-full resize-none rounded border border-neutral-700 bg-neutral-900 px-3 py-2 font-mono text-xs text-neutral-200 placeholder:text-neutral-600 focus:border-accent focus:outline-none disabled:opacity-40"
+						className="w-full resize-none rounded-sm border border-line bg-bg px-3 py-2 font-mono text-xs text-fg placeholder:text-fg-faint focus:border-line-strong focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-40"
 					/>
 					<div className="flex items-center justify-between">
-						<span className={`font-mono text-2xs ${customText.length >= MAX_CUSTOM_CHARS ? "text-red-400" : "text-neutral-600"}`}>
+						<span className={`font-mono text-2xs ${customText.length >= MAX_CUSTOM_CHARS ? "text-accent" : "text-fg-faint"}`}>
 							{customText.length}/{MAX_CUSTOM_CHARS}
 						</span>
 						<button
@@ -169,7 +169,7 @@ export function SimulatorClient() {
 
 			{/* Fallback banner */}
 			{fallbackBanner && (
-				<div className="rounded border border-yellow-700/40 bg-yellow-950/30 px-3 py-2 font-mono text-2xs text-yellow-400">
+				<div className="rounded-sm border border-line bg-accent-wash px-3 py-2 font-mono text-2xs text-fg">
 					{fallbackBanner}
 				</div>
 			)}

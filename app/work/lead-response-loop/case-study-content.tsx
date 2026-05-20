@@ -13,7 +13,7 @@ const TLDR_METRICS: Metric[] = [
   { label: "P95 LLM latency", value: "1.6s", sub: "target ≤ 3.5s" },
   {
     label: "Beta partner status",
-    value: "Onboarding",
+    value: "onboarding",
     sub: "telemetry lands week of measurement",
   },
 ];
@@ -340,8 +340,8 @@ export async function CaseStudyContent() {
         <p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
           Pick a scenario below. The simulator dispatches a sequence of events
           that mirrors the production webhook flow — missed call, text-back,
-          prospect reply, pre-filter (or LLM classification), owner
-          notification. The classification call hits the product&rsquo;s
+          prospect reply, pre-filter (with LLM classification on what passes),
+          owner notification. The classification call hits the product&rsquo;s
           real{" "}
           <code>POST /qualify</code> endpoint when wired in production; falls
           back to a cached canned output here while the beta partner
@@ -677,11 +677,11 @@ export async function CaseStudyContent() {
                 Homepage
               </span>
               <span className="mt-2 text-lg font-medium text-fg">
-                Back to the scan spine
+                Homepage
               </span>
               <span className="mt-2 text-sm text-fg-soft">
-                See the rest of the work — the trust-surface demo, the depth
-                list, more.
+                Back to the rest of the work. Live trust-surface demo, the
+                pivot story, contact.
               </span>
               <span className="mt-4 inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-wider text-accent">
                 Back

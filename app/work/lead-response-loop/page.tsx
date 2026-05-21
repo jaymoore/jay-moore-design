@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default async function LeadResponseLoopPage() {
   const cookieStore = await cookies();
   const auth = cookieStore.get("lrl-case-study-auth")?.value;
-  const expected = process.env.CASE_STUDY_PASSWORD || "preview";
+  const expected = process.env.CASE_STUDY_PASSWORD || "explore";
 
   if (auth && auth === expected) {
     return <CaseStudyContent />;

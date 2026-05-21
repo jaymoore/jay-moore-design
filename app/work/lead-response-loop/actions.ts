@@ -13,7 +13,7 @@ export async function unlockCaseStudy(
     return { ok: false, error: "Enter a password." };
   }
 
-  const expected = process.env.CASE_STUDY_PASSWORD || "preview";
+  const expected = process.env.CASE_STUDY_PASSWORD || "explore";
   if (password !== expected) {
     return { ok: false, error: "Wrong password." };
   }

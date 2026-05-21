@@ -4,7 +4,7 @@ The written companion to [`style-guide.html`](./style-guide.html). Distills the 
 
 **Scope.** Tokens, components, patterns, motion, accessibility, theme, voice. Covers everything currently shipping on `main`.
 
-**Authority.** The frozen source of truth is [`process/token-contract.md`](../process/token-contract.md). This doc reads from it; do not edit values here independently.
+**Authority.** The frozen source of truth is [`process/token-contract.md`](../../process/token-contract.md). This doc reads from it; do not edit values here independently.
 
 **Reference image.** The user-shared homepage screenshot dated 2026-05-15 is the visual authority for layout and component composition. The Phase 0 HTML mockups under `process/round-3/` are exploration artifacts, **not** spec.
 
@@ -14,7 +14,7 @@ The written companion to [`style-guide.html`](./style-guide.html). Distills the 
 
 ### 1.1 Color
 
-15 semantic tokens. Light declared at `:root`; dark overrides on `html.dark`. Every shipped accent passes WCAG AA in both modes; body text passes AAA.
+15 semantic tokens. Light declared at `:root`; dark overrides on `html.dark`. Every shipped accent passes WCAG AA in both modes; body text passes AAA; meta/caption text passes AA against every shipped surface in both modes.
 
 | Token | Light | Dark | Role |
 |---|---|---|---|
@@ -23,7 +23,7 @@ The written companion to [`style-guide.html`](./style-guide.html). Distills the 
 | `--color-panel` | `#ffffff` | `#161a1e` | Raised surfaces, demo cards |
 | `--color-fg` | `#16191d` | `#e6e8ec` | Body text — AAA |
 | `--color-fg-soft` | `#42474e` | `#a8aeb7` | Secondary body, long-form — AAA |
-| `--color-fg-faint` | `#676c72` | `#777d87` | Meta labels, captions — AA |
+| `--color-fg-faint` | `#676c72` | `#8e949e` | Meta labels, captions — AA against all surface tokens both modes (dark lifted from `#777d87` on 2026-05-21 to clear AA against `--color-bg-2` and `--color-panel`) |
 | `--color-grid` | `rgba(28, 25, 23, 0.045)` | `rgba(238, 236, 231, 0.045)` | Body grid lines, fg-tinted 4.5% alpha |
 | `--color-line` | `#d7dbe0` | `#242a30` | Default border |
 | `--color-line-strong` | `#bfc4cb` | `#353c44` | Emphasized border |
@@ -313,9 +313,113 @@ Tailwind v4's `dark:*` variant defaults to a media query. Rebound to the class i
 
 ---
 
-## 6. Iconography
+## 6. Site metadata, OG, and PWA assets
 
-Library: [`lucide-react`](https://lucide.dev/) installed as a runtime dependency. Full conventions in [`process/icon-conventions.md`](../process/icon-conventions.md).
+How the site identifies itself to browsers, search engines, link-preview crawlers, and home-screen installers.
+
+### 6.1 Favicon set
+
+App Router file-convention assets in `app/`. Next.js auto-injects the `<link>` tags; no manual `<head>` work required.
+
+| File | Output `<link>` | Sizes | Source |
+|---|---|---|---|
+| `app/favicon.ico` | `rel="icon"` `type="image/x-icon"` | 48×48 (multi-resolution) | `design/jm-logo/favicon/favicon.ico` |
+| `app/icon.svg` | `rel="icon"` `type="image/svg+xml"` | `sizes="any"` | `design/jm-logo/favicon/favicon.svg` |
+| `app/icon.png` | `rel="icon"` `type="image/png"` | 96×96 | `design/jm-logo/favicon/favicon-96x96.png` |
+| `app/apple-icon.png` | `rel="apple-touch-icon"` | 180×180 | `design/jm-logo/favicon/apple-touch-icon.png` |
+
+### 6.2 Web app manifest
+
+`public/site.webmanifest` references two PWA install icons at `public/web-app-manifest-{192,512}.png`. Linked from `<head>` via `metadata.manifest` in `app/layout.tsx`.
+
+| Key | Value | Note |
+|---|---|---|
+| `name` | `Jay Moore` | Long install label |
+| `short_name` | `JM` | Home-screen tile label |
+| `theme_color` | `#f1f3f5` | Matches `--color-bg` light |
+| `background_color` | `#f1f3f5` | Matches `--color-bg` light |
+| `display` | `standalone` | PWA install mode |
+| icon `purpose` | `maskable` | Safe area baked in; works with Android adaptive icons |
+
+### 6.3 Viewport `theme-color`
+
+Two media-scoped values surfaced via `viewport.themeColor` in `app/layout.tsx`. Controls browser chrome tint (Safari status bar, Chrome address bar on Android) when the page is open.
+
+| Media query | Value | Token equivalent |
+|---|---|---|
+| `(prefers-color-scheme: light)` | `#f1f3f5` | `--color-bg` light |
+| `(prefers-color-scheme: dark)` | `#0b0d10` | `--color-bg` dark |
+
+This is the only place where dark-mode chrome is tied to OS preference rather than the `html.dark` class. Browser chrome can't read the class — the OS query is the only signal available.
+
+### 6.4 Open Graph image
+
+Generated dynamically at `/opengraph-image` via `next/og` (`app/opengraph-image.tsx`). Edge runtime. Dimensions locked at 1200×630. Type `image/png`.
+
+**Composition**
+
+| Element | Value |
+|---|---|
+| Background | `--color-bg` light (`#f1f3f5`) with grid texture at `rgba(28, 25, 23, 0.06)`, 80px cell |
+| Vertical accent rail | 2px wide, `--color-accent` (`#1f57bd`), 110px top inset, 110px bottom inset |
+| Top caption | Spline Sans Mono, 20px, uppercase, `0.08em` tracking, `--color-fg-faint` |
+| H1 | Hanken Grotesk Semibold, 96px, `−0.025em` tracking, `1.02` line-height. "AI-native" in `--color-accent` |
+| Subtitle | Hanken Grotesk Regular, 28px, `--color-fg-soft` |
+| Bottom meta strip | Spline Sans Mono, 18px uppercase, separated by `border-top: 1px solid --color-line` |
+| Bottom-right wordmark | Spline Sans Mono, 20px, `--color-fg`, preceded by 10px filled circle in `--color-accent` |
+
+**Fonts**
+
+Resolved at request time from the Google Fonts CSS API (`User-Agent: curl/8.0.0` forces TTF over WOFF2 since Satori has limited WOFF2 support). Three faces requested: Hanken Grotesk 400, Hanken Grotesk 600, Spline Sans Mono 400.
+
+**Failure mode**
+
+Font fetch wrapped in `try/catch` with 4-second `AbortSignal.timeout`. Any single failure returns the surviving subset; total failure returns `fonts: []` and Satori falls back to its bundled default. The route never 500s on font issues — the worst case is a visually-degraded but functional PNG.
+
+### 6.5 Metadata declarations
+
+All in `app/layout.tsx` `metadata` export:
+
+```ts
+metadataBase: new URL("https://jaymoore.net"),
+title: { default: SITE_TITLE, template: "%s · Jay Moore" },
+description: SITE_DESCRIPTION,
+alternates: { canonical: "/" },
+openGraph: {
+  type: "website",
+  siteName: "Jay Moore",
+  url: "https://jaymoore.net",
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  locale: "en_US",
+},
+twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION },
+robots: { index: true, follow: true },
+manifest: "/site.webmanifest",
+```
+
+Next.js auto-populates `og:image`, `og:image:width`, `og:image:height`, `og:image:type`, `og:image:alt`, and `twitter:image` from the `app/opengraph-image.tsx` file convention. Do not set them manually.
+
+### 6.6 Apex redirect
+
+`next.config.ts` returns a host-based 308 redirect:
+
+```ts
+{
+  source: "/:path*",
+  has: [{ type: "host", value: "www.jaymoore.net" }],
+  destination: "https://jaymoore.net/:path*",
+  permanent: true,
+}
+```
+
+Eliminates duplicate-content split between apex and `www`. `jaymoore.net` is canonical; `www.jaymoore.net` 308s to the same path on apex.
+
+---
+
+## 7. Iconography
+
+Library: [`lucide-react`](https://lucide.dev/) installed as a runtime dependency. Full conventions in [`process/icon-conventions.md`](../../process/icon-conventions.md).
 
 | Default prop | Value |
 |---|---|
@@ -332,9 +436,9 @@ Library: [`lucide-react`](https://lucide.dev/) installed as a runtime dependency
 
 ---
 
-## 7. Voice
+## 8. Voice
 
-### 7.1 Tone
+### 8.1 Tone
 
 Terse, restrained, instrument-coded. Jay's own voice, applied consistently.
 
@@ -344,7 +448,7 @@ Terse, restrained, instrument-coded. Jay's own voice, applied consistently.
 - No fragment-manifesto stacks ("Make it fast. Make it beautiful.") — that is Rauno's move; we don't borrow it.
 - Mono labels orient, never shout.
 
-### 7.2 Capitalization
+### 8.2 Capitalization
 
 - Body, headings, link labels: sentence case (`Design engineer for AI-native workflows`).
 - Mono coordinate labels and tags: lowercase (`now / prior / open to`).
@@ -352,7 +456,7 @@ Terse, restrained, instrument-coded. Jay's own voice, applied consistently.
 - Brand wordmark: `Jay Moore` — title case, never all caps.
 - Theme toggle current-mode label: lowercase (`light` / `dark`).
 
-### 7.3 Abbreviations
+### 8.3 Abbreviations
 
 - Expand abbreviations in body and headings (`Simple Path Media`, not `SPM`).
 - Mono coordinate labels may abbreviate when row width matters.
@@ -360,20 +464,20 @@ Terse, restrained, instrument-coded. Jay's own voice, applied consistently.
 
 ---
 
-## 8. Process
+## 9. Process
 
 How this system was built and how it changes.
 
-### 8.1 Authority
+### 9.1 Authority
 
 - **Frozen:** `process/token-contract.md`. Token names, count, type scale ratio, breakpoint values. Cannot change without reopening the contract.
 - **Iterable:** specific hex values, specific ms values, easing curves. Can tune post-launch.
 
-### 8.2 Visual reference
+### 9.2 Visual reference
 
 The user-shared homepage screenshot is the visual authority for layout and component composition. The Phase 0 HTML mockups in `process/round-3/` are exploration artifacts, **not** spec.
 
-### 8.3 Change protocol
+### 9.3 Change protocol
 
 1. Proposed change goes through the `frontend-design` skill (or `brainstorming` for novel interactions).
 2. Implementation goes through `codex-second-opinion` before commit.
@@ -382,14 +486,16 @@ The user-shared homepage screenshot is the visual authority for layout and compo
 5. If visible UI: `design-review` skill runs before merge.
 6. Token changes require updating `process/token-contract.md` first, then `app/globals.css`, then this doc.
 
-### 8.4 Related docs
+### 9.4 Related docs
 
 | Doc | Role |
 |---|---|
-| [`process/token-contract.md`](../process/token-contract.md) | Frozen tokens + operational rules |
-| [`process/icon-conventions.md`](../process/icon-conventions.md) | Icon library, defaults, curated set, skip list |
-| [`process/2026-05-14-phase-0-visual-direction.md`](../process/2026-05-14-phase-0-visual-direction.md) | Phase 0 working record |
-| [`process/2026-05-13-portfolio-redesign-design.md`](../process/2026-05-13-portfolio-redesign-design.md) | Design spec |
-| [`process/2026-05-13-portfolio-redesign.md`](../process/2026-05-13-portfolio-redesign.md) | Implementation plan |
-| [`app/globals.css`](../app/globals.css) | Live application of the contract |
-| [`design/style-guide.html`](./style-guide.html) | Visual companion to this doc |
+| [`process/token-contract.md`](../../process/token-contract.md) | Frozen tokens + operational rules |
+| [`process/icon-conventions.md`](../../process/icon-conventions.md) | Icon library, defaults, curated set, skip list |
+| [`process/2026-05-14-phase-0-visual-direction.md`](../../process/2026-05-14-phase-0-visual-direction.md) | Phase 0 working record |
+| [`app/globals.css`](../../app/globals.css) | Live application of the contract |
+| [`app/layout.tsx`](../../app/layout.tsx) | Metadata, viewport, manifest wiring |
+| [`app/opengraph-image.tsx`](../../app/opengraph-image.tsx) | Dynamic OG image (next/og) |
+| [`next.config.ts`](../../next.config.ts) | Host-based www → apex 308 redirect |
+| [`public/site.webmanifest`](../../public/site.webmanifest) | PWA install manifest |
+| [`design/design-system/style-guide.html`](./style-guide.html) | Visual companion to this doc |

@@ -4,10 +4,13 @@ Design-system asset bundle. Reference material for the jay-moore-design portfoli
 
 ## Files
 
-| File | Purpose |
+| Path | Purpose |
 |---|---|
-| [`design-system.md`](./design-system.md) | Written spec. Tokens, components, patterns, motion, a11y, theme, voice, process. |
-| [`style-guide.html`](./style-guide.html) | Visual companion. Single-file HTML, applies the system to itself. Open in a browser. |
+| [`design-system/README.md`](./design-system/README.md) | Written spec. Tokens, color, typography, components, patterns, motion, a11y, theme, site metadata + OG, voice, process. |
+| [`design-system/style-guide.html`](./design-system/style-guide.html) | Visual companion. Single-file HTML, applies the system to itself. Open in a browser. |
+| [`jm-logo/`](./jm-logo/) | Source logo assets — favicons, app icons, manifest source files. |
+| [`fonts/`](./fonts/) | Self-hosted font reference copies (Hanken Grotesk, Spline Sans Mono). |
+| [`specimen-iterations/`](./specimen-iterations/) | Type specimen explorations. |
 
 ## Authority
 

@@ -1,0 +1,80 @@
+name: Deploy to Vercel (Production)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install Vercel CLI (pinned)
+        run: npm install --global vercel@49
+
+      - name: Pull Vercel environment + project config
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Build (prebuilt artifact for deploy)
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Deploy prebuilt to production
+        id: deploy
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "Deployed: $URL"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Smoke test deployment URL
+        env:
+          DEPLOY_URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          set -euo pipefail
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            --connect-timeout 10 --max-time 30 \
+            --retry 3 --retry-delay 5 \
+            "$DEPLOY_URL")
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "401" ]; then
+            echo "::error::Deploy URL smoke test failed: $DEPLOY_URL returned HTTP $STATUS"
+            exit 1
+          fi
+          echo "Deploy URL OK (HTTP $STATUS)"
+
+      - name: Smoke test production custom domain
+        run: |
+          set -euo pipefail
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            --connect-timeout 10 --max-time 30 \
+            --retry 3 --retry-delay 5 \
+            https://jaymoore.net)
+          if [ "$STATUS" != "200" ]; then
+            echo "::error::Production custom-domain smoke test failed: jaymoore.net returned HTTP $STATUS"
+            exit 1
+          fi
+          echo "jaymoore.net OK (HTTP $STATUS)"

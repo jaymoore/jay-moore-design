@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Hanken_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SkipToContent } from "@/components/skip-to-content";
@@ -18,14 +18,45 @@ const splineSansMono = Spline_Sans_Mono({
   display: "swap",
 });
 
+const SITE_TITLE = "Jay Moore — Product Designer for AI-native workflows";
+const SITE_DESCRIPTION =
+  "Product designer for AI-native workflows. 10+ years shipping software workflows. Trust-first AI UX. Ships React.";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://jaymoore.net"),
   title: {
-    default: "Jay Moore — Product Designer for AI-native workflows",
+    default: SITE_TITLE,
     template: "%s · Jay Moore",
   },
-  description:
-    "Product designer for AI-native workflows. 10+ years shipping software workflows. Trust-first AI UX. Ships React.",
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Jay Moore",
+    url: "https://jaymoore.net",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  manifest: "/site.webmanifest",
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f1f3f5" },
+    { media: "(prefers-color-scheme: dark)", color: "#0b0d10" },
+  ],
 };
 
 // Runs synchronously before React hydration to prevent FOUC on dark mode.

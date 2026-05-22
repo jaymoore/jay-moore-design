@@ -1,7 +1,18 @@
 import Link from "next/link";
 import { Simulator } from "./simulator";
 import { PhoneMockupStrip } from "./phone-mockups";
+import { IxBothPhones } from "./ix-1-both-phones";
+import { IxTiming } from "./ix-2-timing";
+import { IxNotification } from "./ix-3-notification";
+import { IxFailure } from "./ix-4-failure";
 import { IxItem } from "./ix-item";
+
+const IX_MEDIA = [
+	<IxBothPhones key="ix-1" />,
+	<IxTiming key="ix-2" />,
+	<IxNotification key="ix-3" />,
+	<IxFailure key="ix-4" />,
+];
 import { getMetricsSnapshot } from "./metrics";
 
 type Metric = { label: string; value: string; sub?: string };
@@ -10,13 +21,17 @@ const TLDR_METRICS: Metric[] = [
 	{
 		label: "Qualification accuracy",
 		value: "96%",
-		sub: "48/50 on labeled test set",
+		sub: "across a 50-item labeled test set",
 	},
-	{ label: "AI response time", value: "1.6s", sub: "well under the 3.5-second target" },
+	{
+		label: "Beta response time",
+		value: "1.6s",
+		sub: "well under the 5-second target",
+	},
 	{
 		label: "Beta partner status",
 		value: "onboarding",
-		sub: "telemetry lands week of measurement",
+		sub: "telemetry lands the week of measurement",
 	},
 ];
 
@@ -33,29 +48,29 @@ const IX_ITEMS: IxItemData[] = [
 		side: "left",
 		imageSrc: "/case-study/ix-1.png",
 		imageAlt: "Both prospect and owner phones side by side, showing the loop in real time",
-		title: "Both phones at once.",
-		body: "Most product videos cut between caller and owner. That hides what matters — how fast the gap between them closes. Side-by-side, you watch it happen.",
+		title: "The whole point: close the gap.",
+		body: "A prospect calls and hangs up. The owner's phone buzzes about twenty-two seconds later. That's the whole product. The industry baseline for missed-call follow-up is hours or days. This one fits inside the prospect's walk to the kitchen.",
 	},
 	{
 		side: "right",
 		imageSrc: "/case-study/ix-2.png",
 		imageAlt: "Event log with elapsed-time stamps showing the system's tempo",
-		title: "Timing in plain view.",
-		body: "Every step shows when it happened. A 2-second delay between classification and notification isn't hidden in a log — it's in the design.",
+		title: "Every step shows how long it took.",
+		body: "The simulator stamps each step in the pipeline with a duration. The 2-second wait between the AI classifying the call and the SMS going out isn't buried in a log. It's right there in the UI. If the system ever feels slow, you can see exactly which step is slow.",
 	},
 	{
 		side: "left",
 		imageSrc: "/case-study/ix-3.png",
 		imageAlt: "Owner notification card with label, confidence percentage, and verbatim quote",
-		title: "The owner's notification, ranked for five seconds of attention.",
-		body: "Label first. Confidence next. Then one quote from the caller. Owner reads, owner decides. The order is the design.",
+		title: "First: what kind of lead. Second: how sure. Third: a quote.",
+		body: "Owners glance, decide, move on. So the SMS is ranked for that. The rings light up from the inside out in the order the owner should read: label first, then confidence, then one verbatim quote from the caller. Five seconds from start to finish, yes or no.",
 	},
 	{
 		side: "right",
 		imageSrc: "/case-study/ix-4.png",
 		imageAlt: "Loud failure state — empty panel filled with a clear message instead of a blank space",
-		title: "Loud failure.",
-		body: "Empty states are full messages, not blank panels. When the demo can't reach its endpoint, it says so. The systems this replaces failed quietly; this one doesn't.",
+		title: "When something breaks, it says so.",
+		body: "If the demo can't reach its endpoint, whether Twilio is down or the network drops or anything else, it says so out loud, with the error code and what it's doing to recover. The systems this replaces fail quietly: blank screens, missed messages, owners thinking everything's working when it isn't. I'd rather show a 504 than pretend.",
 	},
 ];
 
@@ -63,19 +78,19 @@ type Decision = { num: string; title: string; body: string };
 
 const DESIGN_DECISIONS: Decision[] = [
 	{
-		num: "01",
+		num: "A",
 		title: "Show the owner. Don't auto-send.",
-		body: "The default move with AI is to auto-book the confident matches. One wrong booking and the owner has to apologize. So the system shows them every lead — label, confidence, the caller's words — and books only when the owner says yes.",
+		body: "The default move with AI is to auto-book the confident matches. But one wrong booking and the owner has to apologize. So the system shows them every lead (label, confidence, the caller's words) and books only when the owner says yes.",
 	},
 	{
-		num: "02",
+		num: "B",
 		title: "Reply in under a minute.",
-		body: "Industry data says a 5-minute reply is roughly 21× more likely to convert than a 30-minute one. The system aims for a phone-buzzes-in-under-a-minute target. If the AI is slow, the message routes to the owner with no classification — slower, but never silent.",
+		body: "Industry data says a 5-minute reply is roughly 21 times more likely to convert than a 30-minute one. The system aims to get a buzz on the owner's phone in under a minute. If the AI is slow, the message routes to the owner with no classification. Slower, but never silent.",
 	},
 	{
-		num: "03",
+		num: "C",
 		title: "SMS, not a dashboard.",
-		body: "Owners drive between jobs, work under sinks, climb ladders. A web dashboard assumes a laptop they can't reach. So the system uses one SMS notification per lead, one keyword reply — read and decide in five seconds, no app to open.",
+		body: "Owners drive between jobs, work under sinks, climb ladders. A web dashboard assumes a laptop they can't reach. So the system uses one SMS notification per lead and one keyword reply. Read and decide in five seconds, no app to open.",
 	},
 ];
 
@@ -94,15 +109,15 @@ const ROADMAP_ITEMS: RoadmapItem[] = [
 	},
 	{
 		title: "Owner dashboard.",
-		body: "Everything happens over text right now. A web view becomes useful once a business hits 10+ leads a day or wants office staff handling decisions.",
+		body: "Everything happens over text right now. A web view becomes useful once a business hits 10 or more leads a day, or wants office staff handling decisions.",
 	},
 	{
 		title: "Weekly summary email.",
-		body: "What happened that week — calls handled, bookings, where things went wrong.",
+		body: "What happened that week: calls handled, bookings, where things went wrong.",
 	},
 	{
 		title: "AI receptionist.",
-		body: "Voice instead of text. Pick up the call rather than letting it ring out. Bigger project — saved for after the text version is live.",
+		body: "Voice instead of text. Pick up the call instead of letting it ring out. Bigger project, saved for after the text version is live.",
 	},
 ];
 
@@ -125,9 +140,9 @@ export async function CaseStudyContent() {
 				</h1>
 				<p className="mt-6 max-w-[60ch] text-xl leading-relaxed text-fg sm:text-[1.375rem]">
 					I designed and built a system that turns missed calls into bookings
-					for HVAC and plumbing businesses. If the business misses a call, the
-					system texts the caller back, qualifies the lead, and asks the owner
-					yes/no. Approved leads get a booking link.{" "}
+					for HVAC and plumbing businesses. When the business misses a call,
+					the system texts the caller back, qualifies the lead, and asks the
+					owner yes or no. Approved leads get a booking link.{" "}
 					<strong className="text-accent">Try the live demo below.</strong>
 				</p>
 			</header>
@@ -153,7 +168,7 @@ export async function CaseStudyContent() {
 				<SectionHeading eyebrow="TL;DR" title="Metrics first" />
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
 					Shipped end to end in 14 days. Live decision support over real Twilio
-					calls and real Claude qualifications. Beta partner onboarding in
+					calls and real Claude qualifications. Beta partner onboarding is in
 					progress.
 				</p>
 				<MetricList tiles={TLDR_METRICS} />
@@ -168,17 +183,18 @@ export async function CaseStudyContent() {
 					title="The response window is measured in minutes."
 				/>
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
-					Most plumbers and HVAC companies miss 30–40% of their calls during the
-					workday. The owner is usually driving between jobs; there&rsquo;s no
-					receptionist to catch what comes in. Each missed call is real money —
-					studies show a 5-minute reply is roughly 21× more likely to convert
-					than a 30-minute one. A leaking water heater goes to whoever picks up
-					first.
+					Most plumbers and HVAC companies miss 30 to 40% of their calls during
+					the workday. The owner is usually driving between jobs, and
+					there&rsquo;s no receptionist to catch what comes in. Each missed
+					call is real money. Studies show a 5-minute reply is roughly 21 times
+					more likely to convert than a 30-minute one. A leaking water heater
+					goes to whoever picks up first.
 				</p>
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
-					The tools that exist don&rsquo;t fit. CRMs take weeks to set up.
-					Auto-responders send the same generic text to every caller, including
-					spam. Neither closes the gap between a missed call and a booked job.
+					The tools that already exist don&rsquo;t fit. CRMs take weeks to set
+					up. Auto-responders send the same generic text to every caller,
+					including spam. Neither one closes the gap between a missed call and
+					a booked job.
 				</p>
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed font-medium text-fg">
 					So I designed something that does.
@@ -191,14 +207,14 @@ export async function CaseStudyContent() {
 			<CaseSection num="05" id="interaction-design" label="Interaction design">
 				<SectionHeading
 					eyebrow="Interaction design"
-					title="The simulator itself, as designed object."
+					title="The simulator was designed, too."
 				/>
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
-					The simulator above is itself a designed surface. A few choices worth
-					naming:
+					The thing you played with above isn&rsquo;t a screenshot. It&rsquo;s
+					part of the work. Four choices worth pointing out.
 				</p>
 				<div className="mt-10 flex flex-col gap-12">
-					{IX_ITEMS.map((item) => (
+					{IX_ITEMS.map((item, i) => (
 						<IxItem
 							key={item.imageSrc}
 							side={item.side}
@@ -206,6 +222,7 @@ export async function CaseStudyContent() {
 							imageAlt={item.imageAlt}
 							title={item.title}
 							body={item.body}
+							media={IX_MEDIA[i]}
 						/>
 					))}
 				</div>
@@ -243,9 +260,10 @@ export async function CaseStudyContent() {
 				<SectionHeading eyebrow="Outcomes" title="It works. Real callers next." />
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
 					The system runs end to end on a test number. The numbers in the
-					TL;DR come from a 50-example test set I built — not from real callers
-					yet. Once I find a beta HVAC or plumbing partner to use it, the
-					placeholders below get replaced with real call counts and bookings.
+					TL;DR above come from a 50-example test set I built, not from real
+					callers yet. Once I find a beta HVAC or plumbing partner to use it,
+					the placeholders below get replaced with real call counts and
+					bookings.
 				</p>
 				<MetricList tiles={OUTCOMES_TILES_V2} />
 			</CaseSection>

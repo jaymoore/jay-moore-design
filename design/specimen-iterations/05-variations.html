@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>05 · illustration variations · lead response loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" />
+<style>
+	:root {
+		--bg:           #f1f3f5;
+		--bg-2:         #e7eaed;
+		--panel:        #ffffff;
+		--fg:           #16191d;
+		--fg-soft:      #42474e;
+		--fg-faint:     #676c72;
+		--line:         #d7dbe0;
+		--line-strong:  #bfc4cb;
+		--accent:       #1f57bd;
+		--accent-deep:  #1a4496;
+		--accent-wash:  #e6eefb;
+		--font-mono: 'Spline Sans Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+		--font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+		--ease-rauno: cubic-bezier(0.32, 0.72, 0, 1);
+	}
+	* { box-sizing: border-box; }
+	html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+	.wrap { max-width: 1200px; margin: 0 auto; padding: 80px 32px 160px; }
+	header.page { margin-bottom: 64px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+	.eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 400; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-faint); margin: 0; }
+	h1 { font-family: var(--font-sans); font-weight: 600; font-size: 40px; line-height: 1.15; letter-spacing: -0.01em; margin: 8px 0 16px; color: var(--fg); }
+	.sub { color: var(--fg-soft); max-width: 60ch; line-height: 1.6; margin: 0; }
+	section.illust { margin-top: 80px; }
+	section.illust > .head { margin-bottom: 24px; max-width: 70ch; }
+	section.illust h2 { font-family: var(--font-sans); font-weight: 600; font-size: 28px; letter-spacing: -0.01em; margin: 4px 0 12px; color: var(--fg); }
+	section.illust p.body { color: var(--fg-soft); line-height: 1.6; margin: 0 0 16px; font-size: 17px; }
+	.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 24px; }
+	@media (max-width: 800px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 32px; } }
+	.card { display: flex; flex-direction: column; gap: 12px; }
+	.card-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); display: flex; justify-content: space-between; }
+	.card-label .meta { color: var(--line-strong); }
+	.card-label .recommended { color: var(--accent); }
+	.stage { position: relative; aspect-ratio: 16 / 9; background: var(--bg-2); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+	.stage .edge-l, .stage .edge-r { position: absolute; top: 0; bottom: 0; width: 48px; pointer-events: none; z-index: 2; }
+	.stage .edge-l { left: 0; background: linear-gradient(to right, var(--bg-2), transparent); }
+	.stage .edge-r { right: 0; background: linear-gradient(to left, var(--bg-2), transparent); }
+	.tab-num { font-variant-numeric: tabular-nums; }
+	.mono { font-family: var(--font-mono); }
+
+	/* ============================================================ */
+	/* 01 · STOPWATCH                                              */
+	/* ============================================================ */
+	.s01 { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 0 8%; gap: 18px; }
+	.s01 .big { font-family: var(--font-mono); font-weight: 500; font-size: clamp(32px, 6vw, 56px); font-variant-numeric: tabular-nums; color: var(--fg); letter-spacing: -0.02em; line-height: 1; }
+	.s01 .big .s { font-size: 0.5em; color: var(--fg-faint); margin-left: 4px; }
+	.s01 .row { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 460px; }
+	.s01 .ep { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); white-space: nowrap; }
+	.s01 .line-wrap { flex: 1; position: relative; height: 8px; display: flex; align-items: center; }
+	.s01 .line { height: 1px; background: var(--line-strong); width: 100%; transform-origin: left center; animation: s01-line 20s var(--ease-rauno) infinite; }
+	.s01 .dot-l { position: absolute; left: 0; top: 50%; width: 8px; height: 8px; border-radius: 50%; transform: translate(-50%, -50%); background: var(--fg); }
+	.s01 .dot-r { position: absolute; right: 0; top: 50%; width: 8px; height: 8px; border-radius: 50%; transform: translate(50%, -50%); background: var(--bg-2); border: 1px solid var(--fg); animation: s01-dotr 20s var(--ease-rauno) infinite; }
+	@keyframes s01-line { 0% { transform: scaleX(1); } 75%, 90% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+	@keyframes s01-dotr {
+		0% { right: 0; background: var(--bg-2); border-color: var(--fg); }
+		75%, 90% { right: 100%; background: var(--accent); border-color: var(--accent); }
+		100% { right: 0; background: var(--bg-2); border-color: var(--fg); }
+	}
+	/* 01-B additions: event markers */
+	.s01 .events { display: flex; justify-content: space-between; width: 100%; max-width: 460px; font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg-faint); }
+	.s01 .events .right { color: var(--accent); }
+
+	/* ============================================================ */
+	/* 02 · STEPPED BARS                                            */
+	/* ============================================================ */
+	.s02 { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 8%; }
+	.s02 .label-top { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); text-align: center; margin-bottom: 20px; }
+	.s02 .label-top .val { color: var(--accent); }
+	.s02 .bars-wrap { position: relative; }
+	/* duration labels (02-B) */
+	.s02 .duras { display: flex; gap: 4px; margin-bottom: 4px; font-family: var(--font-mono); font-size: 9px; color: var(--fg-faint); font-variant-numeric: tabular-nums; }
+	.s02 .duras > span { text-align: center; }
+	.s02 .duras > span.wait { color: var(--accent); font-weight: 500; }
+	.s02 .bars { display: flex; align-items: flex-end; gap: 4px; height: 60px; position: relative; }
+	.s02 .bar { background: transparent; border: 1px solid var(--line-strong); border-bottom: none; height: 100%; }
+	.s02 .bar.wait { border-color: var(--accent); background: var(--accent-wash); }
+	.s02 .bar.b1 { flex: 1.0; } .s02 .bar.b2 { flex: 0.6; } .s02 .bar.b3 { flex: 0.4; }
+	.s02 .bar.wait { flex: 3.0; } .s02 .bar.b4 { flex: 0.5; } .s02 .bar.b5 { flex: 1.2; }
+	.s02 .duras .l1 { flex: 1.0; } .s02 .duras .l2 { flex: 0.6; } .s02 .duras .l3 { flex: 0.4; }
+	.s02 .duras .wait { flex: 3.0; } .s02 .duras .l4 { flex: 0.5; } .s02 .duras .l5 { flex: 1.2; }
+	.s02 .scale { display: flex; height: 1px; background: var(--fg-faint); margin-top: 2px; }
+	.s02 .legend { display: flex; gap: 4px; margin-top: 8px; font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg-faint); }
+	.s02 .legend > span { text-align: center; }
+	.s02 .legend > .l1 { flex: 1.0; } .s02 .legend > .l2 { flex: 0.6; } .s02 .legend > .l3 { flex: 0.4; }
+	.s02 .legend > .l-wait { flex: 3.0; color: var(--accent); font-weight: 500; }
+	.s02 .legend > .l4 { flex: 0.5; } .s02 .legend > .l5 { flex: 1.2; }
+	.s02 .playhead { position: absolute; top: -8px; bottom: -16px; width: 1px; background: var(--fg); left: 0; animation: s02-play 5s linear infinite; }
+	.s02 .playhead::before { content: ''; position: absolute; top: -4px; left: 50%; width: 6px; height: 6px; background: var(--fg); border-radius: 50%; transform: translateX(-50%); }
+	@keyframes s02-play { 0% { left: 0%; } 100% { left: 100%; } }
+
+	/* ============================================================ */
+	/* 03 · RINGS vs SMS CARD                                       */
+	/* ============================================================ */
+	/* 03-A · rings (same as previous) */
+	.s03a { display: grid; grid-template-columns: 1fr 1fr; height: 100%; padding: 0 6% 0 8%; align-items: center; gap: 16px; }
+	.s03a svg { width: 100%; height: 100%; max-height: 70%; }
+	.s03a circle.dot { fill: var(--accent); }
+	.s03a circle.ring { fill: none; stroke-width: 1; }
+	.s03a circle.ring.r1 { animation: s03a-r1 6s linear infinite; }
+	.s03a circle.ring.r2 { animation: s03a-r2 6s linear infinite; }
+	.s03a circle.ring.r3 { animation: s03a-r3 6s linear infinite; }
+	.s03a .legend { display: flex; flex-direction: column; gap: 12px; font-family: var(--font-mono); font-size: 11px; }
+	.s03a .item { display: grid; grid-template-columns: 18px 1fr; gap: 8px; align-items: baseline; opacity: 0.2; }
+	.s03a .item .n { color: var(--accent); font-variant-numeric: tabular-nums; }
+	.s03a .item .lbl { color: var(--fg); text-transform: uppercase; letter-spacing: 0.14em; display: block; font-size: 10px; }
+	.s03a .item .sub { color: var(--fg-faint); font-size: 10px; margin-top: 2px; display: block; }
+	.s03a .item.i1 { animation: s03a-l1 6s linear infinite; }
+	.s03a .item.i2 { animation: s03a-l2 6s linear infinite; }
+	.s03a .item.i3 { animation: s03a-l3 6s linear infinite; }
+	@keyframes s03a-r1 { 0%, 10% { stroke-opacity: 0; stroke: var(--line-strong); } 20% { stroke-opacity: 1; stroke: var(--accent); } 30% { stroke: var(--line-strong); stroke-opacity: 1; } 100% { stroke-opacity: 1; } }
+	@keyframes s03a-r2 { 0%, 30% { stroke-opacity: 1; stroke: var(--line-strong); } 40% { stroke-opacity: 1; stroke: var(--accent); } 50% { stroke: var(--line-strong); stroke-opacity: 1; } 100% { stroke-opacity: 1; } }
+	@keyframes s03a-r3 { 0%, 50% { stroke-opacity: 1; stroke: var(--line-strong); } 60% { stroke-opacity: 1; stroke: var(--accent); } 70% { stroke: var(--line-strong); stroke-opacity: 1; } 100% { stroke-opacity: 1; } }
+	@keyframes s03a-l1 { 0%, 15% { opacity: 0.2; } 25% { opacity: 1; } 100% { opacity: 1; } }
+	@keyframes s03a-l2 { 0%, 35% { opacity: 0.2; } 45% { opacity: 1; } 100% { opacity: 1; } }
+	@keyframes s03a-l3 { 0%, 55% { opacity: 0.2; } 65% { opacity: 1; } 100% { opacity: 1; } }
+
+	/* 03-B · SMS card with top-to-bottom sweep */
+	.s03b { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 14%; gap: 12px; }
+	.s03b .notif { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; position: relative; overflow: hidden; box-shadow: 0 1px 0 rgba(0,0,0,0.02); }
+	.s03b .row { padding: 8px 0; display: grid; grid-template-columns: 16px 76px 1fr; gap: 10px; align-items: baseline; font-family: var(--font-mono); position: relative; z-index: 2; }
+	.s03b .row + .row { border-top: 1px solid var(--line); }
+	.s03b .row .rank { color: var(--accent); font-size: 9px; font-variant-numeric: tabular-nums; }
+	.s03b .row .key { color: var(--fg-faint); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; }
+	.s03b .row .val { color: var(--fg); font-size: 12px; }
+	.s03b .sweep { position: absolute; left: 0; right: 0; height: 33%; background: linear-gradient(180deg, transparent, var(--accent-wash) 50%, transparent); top: -33%; pointer-events: none; z-index: 1; animation: s03b-sweep 5s linear infinite; }
+	.s03b .caption { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); text-align: center; }
+	@keyframes s03b-sweep {
+		0%   { top: -33%; opacity: 0; }
+		10%  { opacity: 1; }
+		90%  { opacity: 1; }
+		100% { top: 100%; opacity: 0; }
+	}
+
+	/* ============================================================ */
+	/* 04 · WAVEFORM variations                                     */
+	/* ============================================================ */
+	.s04 { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 10%; gap: 18px; }
+	.s04 .row { display: grid; grid-template-columns: 90px 1fr 60px; gap: 16px; align-items: center; }
+	.s04 .row .key { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); }
+	.s04 .row.loud .key { color: var(--accent); }
+	.s04 .row .val { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); text-align: right; }
+	.s04 .row.loud .val { color: var(--accent); font-variant-numeric: tabular-nums; }
+	.s04 .wave { width: 100%; height: 32px; overflow: hidden; }
+	.s04 .wave svg { width: 100%; height: 100%; display: block; }
+	.s04 .wave .flat { stroke: var(--fg-faint); stroke-width: 1; fill: none; }
+	.s04 .wave .spike { stroke: var(--accent); stroke-width: 1; fill: none; stroke-linejoin: round; }
+	.s04 .spike-anim { animation: s04-shift 3s linear infinite; }
+	@keyframes s04-shift { 0% { transform: translateX(0); } 100% { transform: translateX(-200px); } }
+	/* 04-B additions: captions under each row */
+	.s04 .cap { font-family: var(--font-mono); font-size: 10px; color: var(--fg-faint); padding-left: 106px; margin-top: -10px; }
+	.s04 .cap.muted { color: var(--fg-faint); font-style: italic; }
+	.s04 .cap.loud { color: var(--accent); }
+
+	footer { margin-top: 96px; padding-top: 32px; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); display: flex; justify-content: space-between; }
+	.copy-box { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 16px 20px; margin: 16px 0 0; color: var(--fg); font-style: italic; line-height: 1.6; font-size: 16px; }
+	.copy-box strong { font-style: normal; display: block; margin-bottom: 6px; color: var(--fg); }
+
+	@media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page">
+	<p class="eyebrow">case study · lead response loop · section 05 · variations</p>
+	<h1>Illustration variations — matched to proposed copy.</h1>
+	<p class="sub">Per row: variant A = current. Variant B = enhanced to literally match the proposed body text next to it. Pick one per row. The proposed copy is also shown in italic for reference.</p>
+</header>
+
+<!-- ============================================================
+     01
+     ============================================================ -->
+<section class="illust">
+	<div class="head">
+		<p class="eyebrow">01 / Both phones</p>
+		<h2>The gap, end to end: about 22 seconds.</h2>
+		<div class="copy-box">From the prospect hanging up to the owner's phone showing the lead is roughly 22 seconds. The illustration shows that gap closing — the right dot walking left to meet the left dot, the counter falling from 22 to 0. Short enough that the owner can call back while the prospect is still standing in front of the broken water heater.</div>
+	</div>
+	<div class="grid">
+
+		<div class="card">
+			<div class="card-label"><span>01-A · current</span><span class="meta">20s loop</span></div>
+			<div class="stage">
+				<div class="s01">
+					<div class="big"><span id="s01a-val">22.0</span><span class="s">s</span></div>
+					<div class="row">
+						<span class="ep">caller</span>
+						<div class="line-wrap">
+							<div class="line"></div>
+							<div class="dot-l"></div>
+							<div class="dot-r"></div>
+						</div>
+						<span class="ep" style="text-align:right">owner</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-label"><span>01-B · with event markers</span><span class="recommended">matches copy</span></div>
+			<div class="stage">
+				<div class="s01">
+					<div class="big"><span id="s01b-val">22.0</span><span class="s">s</span></div>
+					<div class="row">
+						<span class="ep">prospect</span>
+						<div class="line-wrap">
+							<div class="line"></div>
+							<div class="dot-l"></div>
+							<div class="dot-r"></div>
+						</div>
+						<span class="ep" style="text-align:right">owner</span>
+					</div>
+					<div class="events">
+						<span>call ends</span>
+						<span class="right">sms arrives</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<!-- ============================================================
+     02
+     ============================================================ -->
+<section class="illust">
+	<div class="head">
+		<p class="eyebrow">02 / Each step</p>
+		<h2>Each bar is a step. Width is how long it took.</h2>
+		<div class="copy-box">Six steps from call to delivered SMS: receive, transcribe, classify, wait, send, deliver. The wait between classify and send — drawn in blue, about two seconds — is the longest. Hide the timing in a log and nobody knows why the system feels slow. Show it as a bar chart and the bottleneck is obvious.</div>
+	</div>
+	<div class="grid">
+
+		<div class="card">
+			<div class="card-label"><span>02-A · current</span><span class="meta">5s loop</span></div>
+			<div class="stage">
+				<div class="s02">
+					<div class="label-top">the wait <span class="meta">·</span> <span class="val">+2.0s</span></div>
+					<div class="bars-wrap">
+						<div class="bars">
+							<div class="bar b1"></div>
+							<div class="bar b2"></div>
+							<div class="bar b3"></div>
+							<div class="bar wait"></div>
+							<div class="bar b4"></div>
+							<div class="bar b5"></div>
+							<div class="playhead"></div>
+						</div>
+						<div class="scale"></div>
+						<div class="legend">
+							<span class="l1">call</span>
+							<span class="l2">trans</span>
+							<span class="l3">class</span>
+							<span class="l-wait">wait</span>
+							<span class="l4">sms</span>
+							<span class="l5">deliver</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-label"><span>02-B · with duration labels</span><span class="recommended">matches copy</span></div>
+			<div class="stage">
+				<div class="s02">
+					<div class="label-top">step timing <span class="meta">·</span> <span class="val">wait = 2.0s</span></div>
+					<div class="bars-wrap">
+						<div class="duras">
+							<span class="l1">0.6s</span>
+							<span class="l2">0.4s</span>
+							<span class="l3">0.3s</span>
+							<span class="wait">2.0s</span>
+							<span class="l4">0.3s</span>
+							<span class="l5">0.8s</span>
+						</div>
+						<div class="bars">
+							<div class="bar b1"></div>
+							<div class="bar b2"></div>
+							<div class="bar b3"></div>
+							<div class="bar wait"></div>
+							<div class="bar b4"></div>
+							<div class="bar b5"></div>
+							<div class="playhead"></div>
+						</div>
+						<div class="scale"></div>
+						<div class="legend">
+							<span class="l1">receive</span>
+							<span class="l2">trans</span>
+							<span class="l3">class</span>
+							<span class="l-wait">wait</span>
+							<span class="l4">send</span>
+							<span class="l5">deliver</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<!-- ============================================================
+     03
+     ============================================================ -->
+<section class="illust">
+	<div class="head">
+		<p class="eyebrow">03 / Notification rank</p>
+		<h2>First: what kind of lead. Second: how sure. Third: a quote.</h2>
+		<div class="copy-box">Owners glance, decide, move on. So the SMS is ranked for that. The rings light inside-out in the order the owner should read: label first, then confidence, then one verbatim quote from the caller. Five seconds, top to bottom, yes or no.</div>
+	</div>
+	<div class="grid">
+
+		<div class="card">
+			<div class="card-label"><span>03-A · concentric rings</span><span class="meta">6s loop</span></div>
+			<div class="stage">
+				<div class="s03a">
+					<svg viewBox="0 0 200 200">
+						<circle class="ring r3" cx="100" cy="100" r="80"></circle>
+						<circle class="ring r2" cx="100" cy="100" r="55"></circle>
+						<circle class="ring r1" cx="100" cy="100" r="30"></circle>
+						<circle class="dot" cx="100" cy="100" r="5"></circle>
+					</svg>
+					<div class="legend">
+						<div class="item i1"><span class="n">01</span><div><span class="lbl">label</span><span class="sub">"new booking lead"</span></div></div>
+						<div class="item i2"><span class="n">02</span><div><span class="lbl">confidence</span><span class="sub">96%</span></div></div>
+						<div class="item i3"><span class="n">03</span><div><span class="lbl">quote</span><span class="sub">"leaking everywhere"</span></div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-label"><span>03-B · sms card · top→bottom sweep</span><span class="recommended">matches copy</span></div>
+			<div class="stage">
+				<div class="s03b">
+					<div class="notif">
+						<div class="sweep"></div>
+						<div class="row r1"><span class="rank">01</span><span class="key">label</span><span class="val">new booking lead</span></div>
+						<div class="row r2"><span class="rank">02</span><span class="key">confidence</span><span class="val">96%</span></div>
+						<div class="row r3"><span class="rank">03</span><span class="key">quote</span><span class="val">"leaking everywhere"</span></div>
+					</div>
+					<div class="caption">5s · top to bottom · yes or no</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<!-- ============================================================
+     04
+     ============================================================ -->
+<section class="illust">
+	<div class="head">
+		<p class="eyebrow">04 / Loud failure</p>
+		<h2>Silent failures look identical to "everything's fine."</h2>
+		<div class="copy-box">Top row: a system that fails quietly. Flat line, no signal, owner assumes everything's working until the lead never shows up. Bottom row: this one. Spike, error code, "504 · sms unreachable · retry 15s." A loud failure looks bad. A silent one is bad.</div>
+	</div>
+	<div class="grid">
+
+		<div class="card">
+			<div class="card-label"><span>04-A · current</span><span class="meta">3s loop</span></div>
+			<div class="stage">
+				<div class="s04">
+					<div class="row">
+						<span class="key">silent fail</span>
+						<div class="wave">
+							<svg viewBox="0 0 200 32" preserveAspectRatio="none">
+								<line class="flat" x1="0" y1="16" x2="200" y2="16"></line>
+							</svg>
+						</div>
+						<span class="val">— —</span>
+					</div>
+					<div class="row loud">
+						<span class="key">loud fail</span>
+						<div class="wave">
+							<svg viewBox="0 0 400 32" preserveAspectRatio="none">
+								<g class="spike-anim">
+									<polyline class="spike" points="0,16 20,16 22,4 24,28 26,4 28,28 30,16 80,16 82,8 84,24 86,8 88,24 90,16 140,16 142,4 144,28 146,4 148,28 150,16 200,16 202,16 222,16 224,4 226,28 228,4 230,28 232,16 282,16 284,8 286,24 288,8 290,24 292,16 342,16 344,4 346,28 348,4 350,28 352,16 400,16"></polyline>
+								</g>
+							</svg>
+						</div>
+						<span class="val">504</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-label"><span>04-B · with full error caption</span><span class="recommended">matches copy</span></div>
+			<div class="stage">
+				<div class="s04">
+					<div class="row">
+						<span class="key">silent fail</span>
+						<div class="wave">
+							<svg viewBox="0 0 200 32" preserveAspectRatio="none">
+								<line class="flat" x1="0" y1="16" x2="200" y2="16"></line>
+							</svg>
+						</div>
+						<span class="val">— —</span>
+					</div>
+					<div class="cap muted">owner: "it's working"</div>
+					<div class="row loud">
+						<span class="key">loud fail</span>
+						<div class="wave">
+							<svg viewBox="0 0 400 32" preserveAspectRatio="none">
+								<g class="spike-anim">
+									<polyline class="spike" points="0,16 20,16 22,4 24,28 26,4 28,28 30,16 80,16 82,8 84,24 86,8 88,24 90,16 140,16 142,4 144,28 146,4 148,28 150,16 200,16 202,16 222,16 224,4 226,28 228,4 230,28 232,16 282,16 284,8 286,24 288,8 290,24 292,16 342,16 344,4 346,28 348,4 350,28 352,16 400,16"></polyline>
+								</g>
+							</svg>
+						</div>
+						<span class="val">504</span>
+					</div>
+					<div class="cap loud">504 · sms unreachable · retry 15s</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<footer>
+	<span>jay moore · illustration variations</span>
+	<span>2026-05-22 · auto-looping</span>
+</footer>
+
+</div>
+
+<script>
+	function bindCountdown(el, cycleMs, collapseFrac, holdFrac, max) {
+		const update = () => {
+			const t = (performance.now() % cycleMs) / cycleMs;
+			let v;
+			if (t < collapseFrac) {
+				const p = t / collapseFrac;
+				v = max * (1 - cubicBezier(0.32, 0.72, 0, 1, p));
+			} else if (t < collapseFrac + holdFrac) {
+				v = 0;
+			} else {
+				const p = (t - collapseFrac - holdFrac) / (1 - collapseFrac - holdFrac);
+				v = max * p;
+			}
+			el.textContent = v.toFixed(1);
+			requestAnimationFrame(update);
+		};
+		update();
+	}
+	function cubicBezier(p1x, p1y, p2x, p2y, t) {
+		const cy = 3 * p1y;
+		const by = 3 * (p2y - p1y) - cy;
+		const ay = 1 - cy - by;
+		return ((ay * t + by) * t + cy) * t;
+	}
+	bindCountdown(document.getElementById('s01a-val'), 20000, 0.75, 0.15, 22);
+	bindCountdown(document.getElementById('s01b-val'), 20000, 0.75, 0.15, 22);
+</script>
+
+</body>
+</html>

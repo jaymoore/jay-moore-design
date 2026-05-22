@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>05 · animated illustrations · lead response loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" />
+<style>
+	:root {
+		--bg:           #f1f3f5;
+		--bg-2:         #e7eaed;
+		--panel:        #ffffff;
+		--fg:           #16191d;
+		--fg-soft:      #42474e;
+		--fg-faint:     #676c72;
+		--line:         #d7dbe0;
+		--line-strong:  #bfc4cb;
+		--accent:       #1f57bd;
+		--accent-deep:  #1a4496;
+		--accent-wash:  #e6eefb;
+		--font-mono: 'Spline Sans Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+		--font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+		--ease-rauno: cubic-bezier(0.32, 0.72, 0, 1);
+	}
+	* { box-sizing: border-box; }
+	html, body {
+		margin: 0; padding: 0;
+		background: var(--bg);
+		color: var(--fg);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		text-rendering: optimizeLegibility;
+	}
+	.wrap {
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 80px 32px 160px;
+	}
+	header.page {
+		margin-bottom: 64px;
+		padding-bottom: 32px;
+		border-bottom: 1px solid var(--line);
+	}
+	.eyebrow {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		font-weight: 400;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--fg-faint);
+		margin: 0;
+	}
+	h1 {
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 40px;
+		line-height: 1.15;
+		letter-spacing: -0.01em;
+		margin: 8px 0 16px;
+		color: var(--fg);
+	}
+	.sub { color: var(--fg-soft); max-width: 60ch; line-height: 1.6; margin: 0; }
+	section.illust {
+		margin-top: 72px;
+	}
+	section.illust > .head { margin-bottom: 24px; }
+	section.illust h2 {
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 24px;
+		letter-spacing: -0.01em;
+		margin: 4px 0 12px;
+		color: var(--fg);
+	}
+	section.illust p.body {
+		color: var(--fg-soft);
+		max-width: 60ch;
+		line-height: 1.6;
+		margin: 0;
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 32px;
+		margin-top: 24px;
+	}
+	@media (max-width: 800px) {
+		.grid { grid-template-columns: 1fr; }
+		h1 { font-size: 32px; }
+	}
+	.card {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.card-label {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		text-transform: uppercase;
+		letter-spacing: 0.18em;
+		color: var(--fg-faint);
+		display: flex;
+		justify-content: space-between;
+	}
+	.card-label .meta { color: var(--line-strong); }
+	.stage {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		background: var(--bg-2);
+		border: 1px solid var(--line);
+		border-radius: 8px;
+		overflow: hidden;
+	}
+	.stage .edge-l, .stage .edge-r {
+		position: absolute; top: 0; bottom: 0; width: 48px;
+		pointer-events: none; z-index: 2;
+	}
+	.stage .edge-l { left: 0; background: linear-gradient(to right, var(--bg-2), transparent); }
+	.stage .edge-r { right: 0; background: linear-gradient(to left, var(--bg-2), transparent); }
+	.tab-num { font-variant-numeric: tabular-nums; }
+	.mono { font-family: var(--font-mono); }
+
+	/* ============================================================
+	   01-A · CONVERGENCE RULER
+	   ============================================================ */
+	.s01a { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 8%; }
+	.s01a .readout {
+		display: flex; justify-content: center; align-items: baseline; gap: 6px;
+		font-family: var(--font-mono); font-size: 11px; text-transform: uppercase;
+		letter-spacing: 0.18em; color: var(--fg-faint); margin-bottom: 28px;
+	}
+	.s01a .readout .val { color: var(--fg); font-variant-numeric: tabular-nums; }
+	.s01a .track { position: relative; height: 10px; margin-bottom: 12px; }
+	.s01a .rail { position: absolute; inset: 50% 0 auto 0; height: 1px; background: var(--line-strong); transform: translateY(-50%); }
+	.s01a .marker { position: absolute; top: 50%; width: 8px; height: 8px; border-radius: 50%; transform: translate(-50%, -50%); }
+	.s01a .caller { left: 0; background: var(--fg); }
+	.s01a .owner { background: var(--bg-2); border: 1px solid var(--fg); animation: s01a-owner 20s var(--ease-rauno) infinite; }
+	.s01a .pulse { position: absolute; left: 0; top: 50%; width: 8px; height: 8px; border-radius: 50%; border: 1px solid var(--accent); transform: translate(-50%, -50%) scale(0); opacity: 0; animation: s01a-pulse 20s linear infinite; }
+	.s01a .labels { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); margin-bottom: 32px; }
+	.s01a .ruler { position: relative; height: 28px; }
+	.s01a .ticks { position: absolute; inset: 0 0 auto 0; display: flex; justify-content: space-between; }
+	.s01a .tick { width: 1px; background: var(--line-strong); }
+	.s01a .tick.major { background: var(--fg-faint); height: 10px; }
+	.s01a .tick.minor { height: 6px; }
+	.s01a .nums { position: absolute; inset: 16px 0 0 0; }
+	.s01a .num { position: absolute; transform: translateX(-50%); font-family: var(--font-mono); font-size: 10px; color: var(--fg-faint); font-variant-numeric: tabular-nums; }
+	@keyframes s01a-owner {
+		0%   { left: 100%; background: var(--bg-2); border-color: var(--fg); transform: translate(-50%, -50%) scale(1); }
+		70%  { left: 9.09%; background: var(--bg-2); border-color: var(--fg); transform: translate(-50%, -50%) scale(1); }
+		75%  { left: 0; background: var(--accent); border-color: var(--accent); transform: translate(-50%, -50%) scale(1.6); }
+		90%  { left: 0; background: var(--accent); border-color: var(--accent); transform: translate(-50%, -50%) scale(1.2); }
+		100% { left: 100%; background: var(--bg-2); border-color: var(--fg); transform: translate(-50%, -50%) scale(1); }
+	}
+	@keyframes s01a-pulse {
+		0%, 73% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+		75%     { opacity: 0.6; transform: translate(-50%, -50%) scale(0.8); }
+		85%     { opacity: 0; transform: translate(-50%, -50%) scale(4); }
+		100%    { opacity: 0; transform: translate(-50%, -50%) scale(4); }
+	}
+
+	/* ============================================================
+	   01-B · STOPWATCH COLLAPSE
+	   ============================================================ */
+	.s01b { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; padding: 0 8%; gap: 20px; }
+	.s01b .big {
+		font-family: var(--font-mono); font-weight: 500; font-size: 56px;
+		font-variant-numeric: tabular-nums; color: var(--fg);
+		letter-spacing: -0.02em;
+	}
+	.s01b .big .s { font-size: 0.5em; color: var(--fg-faint); margin-left: 4px; }
+	.s01b .row { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 480px; }
+	.s01b .ep { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); }
+	.s01b .line-wrap { flex: 1; position: relative; height: 8px; display: flex; align-items: center; }
+	.s01b .line { height: 1px; background: var(--line-strong); width: 100%; transform-origin: left center; animation: s01b-line 20s var(--ease-rauno) infinite; }
+	.s01b .dot-l, .s01b .dot-r { position: absolute; top: 50%; width: 8px; height: 8px; border-radius: 50%; transform: translateY(-50%); }
+	.s01b .dot-l { left: 0; transform: translate(-50%, -50%); background: var(--fg); }
+	.s01b .dot-r { right: 0; transform: translate(50%, -50%); background: var(--bg-2); border: 1px solid var(--fg); animation: s01b-dotr 20s var(--ease-rauno) infinite; }
+	@keyframes s01b-line {
+		0%   { transform: scaleX(1); }
+		75%  { transform: scaleX(0); }
+		90%  { transform: scaleX(0); }
+		100% { transform: scaleX(1); }
+	}
+	@keyframes s01b-dotr {
+		0%   { right: 0; background: var(--bg-2); border-color: var(--fg); }
+		75%  { right: 100%; background: var(--accent); border-color: var(--accent); }
+		90%  { right: 100%; background: var(--accent); border-color: var(--accent); }
+		100% { right: 0; background: var(--bg-2); border-color: var(--fg); }
+	}
+
+	/* ============================================================
+	   02-A · STEPPED BARS TEMPO
+	   ============================================================ */
+	.s02a { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 8%; }
+	.s02a .label-top { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); text-align: center; margin-bottom: 24px; }
+	.s02a .label-top .val { color: var(--accent); }
+	.s02a .bars { display: flex; align-items: flex-end; gap: 4px; height: 64px; position: relative; }
+	.s02a .bar { background: transparent; border: 1px solid var(--line-strong); border-bottom: none; height: 100%; }
+	.s02a .bar.wait { border-color: var(--accent); background: var(--accent-wash); position: relative; }
+	.s02a .bar.wait::after {
+		content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+		height: 100%; background: var(--accent); transform-origin: left center;
+		transform: scaleX(0); animation: s02a-fill 5s var(--ease-rauno) infinite;
+		opacity: 0.12;
+	}
+	.s02a .bar.b1 { flex: 1.0; }
+	.s02a .bar.b2 { flex: 0.6; }
+	.s02a .bar.b3 { flex: 0.4; }
+	.s02a .bar.wait { flex: 3.0; }
+	.s02a .bar.b4 { flex: 0.5; }
+	.s02a .bar.b5 { flex: 1.2; }
+	.s02a .scale { display: flex; height: 1px; background: var(--fg-faint); margin-top: 2px; }
+	.s02a .legend { display: flex; gap: 4px; margin-top: 8px; font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--fg-faint); }
+	.s02a .legend > span { text-align: center; }
+	.s02a .legend > .l1 { flex: 1.0; }
+	.s02a .legend > .l2 { flex: 0.6; }
+	.s02a .legend > .l3 { flex: 0.4; }
+	.s02a .legend > .l-wait { flex: 3.0; color: var(--accent); font-weight: 500; }
+	.s02a .legend > .l4 { flex: 0.5; }
+	.s02a .legend > .l5 { flex: 1.2; }
+	.s02a .playhead {
+		position: absolute; top: -8px; bottom: -16px; width: 1px;
+		background: var(--fg); left: 0;
+		animation: s02a-play 5s linear infinite;
+	}
+	.s02a .playhead::before {
+		content: ''; position: absolute; top: -4px; left: 50%; width: 6px; height: 6px;
+		background: var(--fg); border-radius: 50%; transform: translateX(-50%);
+	}
+	@keyframes s02a-play {
+		0%   { left: 0%; }
+		100% { left: 100%; }
+	}
+	@keyframes s02a-fill {
+		0%   { transform: scaleX(0); }
+		40%  { transform: scaleX(0); }
+		70%  { transform: scaleX(1); }
+		100% { transform: scaleX(1); }
+	}
+
+	/* ============================================================
+	   02-B · ADAPTIVE ZOOM
+	   ============================================================ */
+	.s02b { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 8%; }
+	.s02b .zoom-stage { position: relative; height: 60px; overflow: hidden; }
+	.s02b .tape { position: absolute; inset: 0; display: flex; align-items: center; gap: 2px; padding: 0 16px; transform-origin: 35% center; animation: s02b-zoom 8s var(--ease-rauno) infinite; }
+	.s02b .seg { height: 8px; border-top: 1px solid var(--line-strong); position: relative; flex-shrink: 0; }
+	.s02b .seg.event { width: 2px; height: 14px; border: none; background: var(--fg-faint); border-radius: 1px; }
+	.s02b .seg.event.wait-event { background: var(--accent); }
+	.s02b .seg.gap { flex: 0 0 auto; }
+	.s02b .seg.gap.short { width: 24px; }
+	.s02b .seg.gap.med { width: 40px; }
+	.s02b .seg.gap.wait { width: 96px; }
+	.s02b .seg.gap.wait::before {
+		content: '+2.0s'; position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+		font-family: var(--font-mono); font-size: 10px; color: var(--accent);
+		font-variant-numeric: tabular-nums; opacity: 0;
+		animation: s02b-label 8s linear infinite;
+	}
+	.s02b .seg.gap.wait::after {
+		content: ''; position: absolute; top: 50%; left: 4px; right: 4px;
+		height: 1px; border-top: 1px dashed var(--accent); transform: translateY(-50%);
+	}
+	.s02b .caption { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); text-align: center; margin-top: 24px; }
+	@keyframes s02b-zoom {
+		0%   { transform: scale(1) translateX(0); }
+		30%  { transform: scale(1) translateX(0); }
+		50%  { transform: scale(2.4) translateX(-12%); }
+		80%  { transform: scale(2.4) translateX(-12%); }
+		100% { transform: scale(1) translateX(0); }
+	}
+	@keyframes s02b-label {
+		0%, 35% { opacity: 0; }
+		50%, 80% { opacity: 1; }
+		90%, 100% { opacity: 0; }
+	}
+
+	/* ============================================================
+	   03-A · CONCENTRIC RINGS SEQUENTIAL
+	   ============================================================ */
+	.s03a { display: grid; grid-template-columns: 1fr 1fr; height: 100%; padding: 0 6% 0 8%; align-items: center; gap: 16px; }
+	.s03a svg { width: 100%; height: 100%; max-height: 70%; }
+	.s03a circle.ring { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+	.s03a circle.dot { fill: var(--accent); }
+	.s03a circle.ring.r1 { animation: s03a-r1 6s linear infinite; }
+	.s03a circle.ring.r2 { animation: s03a-r2 6s linear infinite; }
+	.s03a circle.ring.r3 { animation: s03a-r3 6s linear infinite; }
+	.s03a circle.dot { animation: s03a-dot 6s linear infinite; }
+	.s03a .legend { display: flex; flex-direction: column; gap: 14px; font-family: var(--font-mono); font-size: 11px; }
+	.s03a .item { display: grid; grid-template-columns: 18px 1fr; gap: 8px; align-items: center; opacity: 0.2; }
+	.s03a .item .n { color: var(--accent); font-variant-numeric: tabular-nums; }
+	.s03a .item .lbl { color: var(--fg); text-transform: uppercase; letter-spacing: 0.14em; }
+	.s03a .item .sub { color: var(--fg-faint); text-transform: none; letter-spacing: 0; font-size: 10px; margin-top: 2px; display: block; }
+	.s03a .item.i1 { animation: s03a-l1 6s linear infinite; }
+	.s03a .item.i2 { animation: s03a-l2 6s linear infinite; }
+	.s03a .item.i3 { animation: s03a-l3 6s linear infinite; }
+	@keyframes s03a-dot { 0%, 5% { transform: scale(0); transform-origin: center; } 10% { transform: scale(1); } 100% { transform: scale(1); } }
+	@keyframes s03a-r1 { 0%, 10% { stroke-opacity: 0; } 20% { stroke-opacity: 1; stroke: var(--accent); } 30% { stroke: var(--line-strong); stroke-opacity: 1; } 100% { stroke-opacity: 1; } }
+	@keyframes s03a-r2 { 0%, 30% { stroke-opacity: 0; } 40% { stroke-opacity: 1; stroke: var(--accent); } 50% { stroke: var(--line-strong); stroke-opacity: 1; } 100% { stroke-opacity: 1; } }
+	@keyframes s03a-r3 { 0%, 50% { stroke-opacity: 0; } 60% { stroke-opacity: 1; stroke: var(--accent); } 70% { stroke: var(--line-strong); stroke-opacity: 1; } 100% { stroke-opacity: 1; } }
+	@keyframes s03a-l1 { 0%, 15% { opacity: 0.2; } 25% { opacity: 1; } 100% { opacity: 1; } }
+	@keyframes s03a-l2 { 0%, 35% { opacity: 0.2; } 45% { opacity: 1; } 100% { opacity: 1; } }
+	@keyframes s03a-l3 { 0%, 55% { opacity: 0.2; } 65% { opacity: 1; } 100% { opacity: 1; } }
+
+	/* ============================================================
+	   03-B · NOTIFICATION CARD WITH SWEEP
+	   ============================================================ */
+	.s03b { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 12%; }
+	.s03b .notif {
+		background: var(--panel); border: 1px solid var(--line); border-radius: 8px;
+		padding: 14px 16px; position: relative; overflow: hidden;
+		box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+	}
+	.s03b .row { padding: 8px 0; display: flex; gap: 12px; align-items: baseline; font-family: var(--font-mono); position: relative; z-index: 2; }
+	.s03b .row .rank { color: var(--accent); font-size: 9px; font-variant-numeric: tabular-nums; min-width: 14px; }
+	.s03b .row .key { color: var(--fg-faint); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; min-width: 78px; }
+	.s03b .row .val { color: var(--fg); font-size: 12px; }
+	.s03b .row.r1 + .row { border-top: 1px solid var(--line); }
+	.s03b .row + .row { border-top: 1px solid var(--line); }
+	.s03b .sweep {
+		position: absolute; left: 0; right: 0; height: 32%;
+		background: linear-gradient(180deg, transparent, var(--accent-wash) 50%, transparent);
+		top: 0; pointer-events: none; z-index: 1;
+		animation: s03b-sweep 6s linear infinite;
+	}
+	.s03b .caption { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); text-align: center; margin-top: 16px; }
+	@keyframes s03b-sweep {
+		0%   { top: -32%; opacity: 0; }
+		10%  { opacity: 1; }
+		35%  { top: 0%; }
+		65%  { top: 33%; }
+		90%  { top: 67%; opacity: 1; }
+		100% { top: 100%; opacity: 0; }
+	}
+
+	/* ============================================================
+	   04-A · TWO BREAKS (silent / loud)
+	   ============================================================ */
+	.s04a { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 10%; gap: 32px; }
+	.s04a .panel { display: flex; flex-direction: column; gap: 8px; }
+	.s04a .panel .top { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); }
+	.s04a .panel .top.loud { color: var(--accent); }
+	.s04a .line-silent { position: relative; height: 12px; }
+	.s04a .line-silent .solid { position: absolute; top: 50%; left: 0; right: 50%; height: 1px; background: var(--fg-faint); transform: translateY(-50%); }
+	.s04a .line-silent .dashed { position: absolute; top: 50%; left: 50%; right: 0; height: 1px; background-image: linear-gradient(90deg, var(--line-strong) 50%, transparent 50%); background-size: 6px 1px; transform: translateY(-50%); }
+	.s04a .line-loud { position: relative; height: 16px; }
+	.s04a .line-loud .seg-l { position: absolute; top: 50%; left: 0; right: 56%; height: 1px; background: var(--fg); transform: translateY(-50%); }
+	.s04a .line-loud .seg-r { position: absolute; top: 50%; right: 0; left: 56%; height: 1px; background: var(--fg); transform: translateY(-50%); }
+	.s04a .line-loud .break { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+	.s04a .line-loud .break .dot { width: 22px; height: 14px; background: var(--accent); border-radius: 3px; color: white; font-family: var(--font-mono); font-size: 9px; display: flex; align-items: center; justify-content: center; font-variant-numeric: tabular-nums; animation: s04a-pulse 3s ease-out infinite; }
+	.s04a .caption { font-family: var(--font-mono); font-size: 10px; color: var(--fg-soft); text-align: center; margin-top: 4px; }
+	.s04a .caption.muted { color: var(--fg-faint); }
+	@keyframes s04a-pulse {
+		0%, 60% { box-shadow: 0 0 0 0 rgba(31, 87, 189, 0.4); }
+		80%     { box-shadow: 0 0 0 8px rgba(31, 87, 189, 0); }
+		100%    { box-shadow: 0 0 0 0 rgba(31, 87, 189, 0); }
+	}
+
+	/* ============================================================
+	   04-B · WAVEFORM COMPARE
+	   ============================================================ */
+	.s04b { display: flex; flex-direction: column; justify-content: center; height: 100%; padding: 0 10%; gap: 24px; }
+	.s04b .row { display: grid; grid-template-columns: 90px 1fr 60px; gap: 16px; align-items: center; }
+	.s04b .row .key { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); }
+	.s04b .row.loud .key { color: var(--accent); }
+	.s04b .row .val { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--fg-faint); text-align: right; }
+	.s04b .row.loud .val { color: var(--accent); font-variant-numeric: tabular-nums; }
+	.s04b .wave { width: 100%; height: 32px; overflow: hidden; }
+	.s04b .wave svg { width: 100%; height: 100%; display: block; }
+	.s04b .wave .flat { stroke: var(--fg-faint); stroke-width: 1; fill: none; }
+	.s04b .wave .spike { stroke: var(--accent); stroke-width: 1; fill: none; stroke-linejoin: round; }
+	.s04b .spike-anim { animation: s04b-shift 3s linear infinite; }
+	@keyframes s04b-shift {
+		0%   { transform: translateX(0); }
+		100% { transform: translateX(-50%); }
+	}
+
+	footer {
+		margin-top: 96px;
+		padding-top: 32px;
+		border-top: 1px solid var(--line);
+		font-family: var(--font-mono);
+		font-size: 11px;
+		text-transform: uppercase;
+		letter-spacing: 0.18em;
+		color: var(--fg-faint);
+		display: flex;
+		justify-content: space-between;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		* { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+	}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page">
+	<p class="eyebrow">case study · lead response loop · section 05</p>
+	<h1>Animated illustrations — brainstorming.</h1>
+	<p class="sub">Two auto-looping candidates per placeholder. No user interaction. Pick one per row; tell me which to ship. Cards match the 16:9 aspect and token palette of the live case study.</p>
+</header>
+
+<!-- =============================================================
+     01 · BOTH PHONES AT ONCE
+     ============================================================= -->
+<section class="illust">
+	<div class="head">
+		<p class="eyebrow">01 / Both phones at once</p>
+		<h2>The gap between caller and owner, designed.</h2>
+		<p class="body"><strong>Metric:</strong> end-to-end time gap. One scalar duration shrinking to zero.</p>
+	</div>
+	<div class="grid">
+
+		<!-- 01-A · convergence ruler -->
+		<div class="card">
+			<div class="card-label"><span>01-A · convergence ruler</span><span class="meta">20s loop</span></div>
+			<div class="stage">
+				<div class="edge-l"></div><div class="edge-r"></div>
+				<div class="s01a">
+					<div class="readout"><span>gap</span><span class="meta">·</span><span class="val" id="s01a-val">22.0</span><span>s</span></div>
+					<div class="track">
+						<div class="rail"></div>
+						<div class="marker caller"></div>
+						<div class="marker owner"></div>
+						<div class="pulse"></div>
+					</div>
+					<div class="labels"><span>caller</span><span>owner</span></div>
+					<div class="ruler">
+						<div class="ticks" id="s01a-ticks"></div>
+						<div class="nums">
+							<span class="num" style="left:0%">00s</span>
+							<span class="num" style="left:22.7%">05s</span>
+							<span class="num" style="left:45.4%">10s</span>
+							<span class="num" style="left:68.2%">15s</span>
+							<span class="num" style="left:90.9%">20s</span>
+							<span class="num" style="left:100%">22s</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 01-B · stopwatch collapse -->
+		<div class="card">
+			<div class="card-label"><span>01-B · stopwatch collapse</span><span class="meta">20s loop</span></div>
+			<div class="stage">
+				<div class="s01b">
+					<div class="big"><span id="s01b-val">22.0</span><span class="s">s</span></div>
+					<div class="row">
+						<span class="ep">caller</span>
+						<div class="line-wrap">
+							<div class="line"></div>
+							<div class="dot-l"></div>
+							<div class="dot-r"></div>
+						</div>
+						<span class="ep" style="text-align:right">owner</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<!-- =============================================================
+     02 · TIMING IN PLAIN VIEW
+     ============================================================= -->
+<section class="illust">
+	<div class="head">
+		<p class="eyebrow">02 / Timing in plain view</p>
+		<h2>The 2-second wait is part of the design.</h2>
+		<p class="body"><strong>Metric:</strong> per-step durations across the pipeline; one focal step (the wait) made visible.</p>
+	</div>
+	<div class="grid">
+
+		<!-- 02-A · stepped bars tempo -->
+		<div class="card">
+			<div class="card-label"><span>02-A · stepped bars · width = time</span><span class="meta">5s loop</span></div>
+			<div class="stage">
+				<div class="s02a">
+					<div class="label-top">the wait · <span class="val">+2.0s</span></div>
+					<div class="bars">
+						<div class="bar b1"></div>
+						<div class="bar b2"></div>
+						<div class="bar b3"></div>
+						<div class="bar wait"></div>
+						<div class="bar b4"></div>
+						<div class="bar b5"></div>
+						<div class="playhead"></div>
+					</div>
+					<div class="scale"></div>
+					<div class="legend">
+						<span class="l1">call</span>
+						<span class="l2">trans</span>
+						<span class="l3">class</span>
+						<span class="l-wait">wait</span>
+						<span class="l4">sms</span>
+						<span class="l5">deliver</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 02-B · adaptive zoom -->
+		<div class="card">
+			<div class="card-label"><span>02-B · adaptive zoom</span><span class="meta">8s loop</span></div>
+			<div class="stage">
+				<div class="s02b">
+					<div class="zoom-stage">
+						<div class="tape">
+							<div class="seg event"></div>
+							<div class="seg gap short"></div>
+							<div class="seg event"></div>
+							<div class="seg gap med"></div>
+							<div class="seg event wait-event"></div>
+							<div class="seg gap wait"></div>
+							<div class="seg event wait-event"></div>
+							<div class="seg gap short"></div>
+							<div class="seg event"></div>
+							<div class="seg gap med"></div>
+							<div class="seg event"></div>
+						</div>
+					</div>
+					<div class="caption">absence, labeled — not absence, hidden</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<!-- =============================================================
+     03 · OWNER'S NOTIFICATION
+     ============================================================= -->
+<section class="illust">
+	<div class="head">
+		<p class="eyebrow">03 / Owner's notification</p>
+		<h2>Ranked for five seconds of attention.</h2>
+		<p class="body"><strong>Metric:</strong> ordinal reading rank — label → confidence → quote. Position is the data.</p>
+	</div>
+	<div class="grid">
+
+		<!-- 03-A · concentric rings sequential -->
+		<div class="card">
+			<div class="card-label"><span>03-A · concentric rings · inward-out reveal</span><span class="meta">6s loop</span></div>
+			<div class="stage">
+				<div class="s03a">
+					<svg viewBox="0 0 200 200">
+						<circle class="ring r3" cx="100" cy="100" r="80"></circle>
+						<circle class="ring r2" cx="100" cy="100" r="55"></circle>
+						<circle class="ring r1" cx="100" cy="100" r="30"></circle>
+						<circle class="dot" cx="100" cy="100" r="5"></circle>
+					</svg>
+					<div class="legend">
+						<div class="item i1"><span class="n">01</span><div><span class="lbl">label</span><span class="sub">"new booking lead"</span></div></div>
+						<div class="item i2"><span class="n">02</span><div><span class="lbl">confidence</span><span class="sub">96%</span></div></div>
+						<div class="item i3"><span class="n">03</span><div><span class="lbl">quote</span><span class="sub">"leaking everywhere"</span></div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 03-B · notification card with sweep -->
+		<div class="card">
+			<div class="card-label"><span>03-B · notification card · attention sweep</span><span class="meta">6s loop</span></div>
+			<div class="stage">
+				<div class="s03b">
+					<div class="notif">
+						<div class="sweep"></div>
+						<div class="row r1"><span class="rank">01</span><span class="key">label</span><span class="val">new booking lead</span></div>
+						<div class="row r2"><span class="rank">02</span><span class="key">confidence</span><span class="val">96%</span></div>
+						<div class="row r3"><span class="rank">03</span><span class="key">quote</span><span class="val">"leaking everywhere"</span></div>
+					</div>
+					<div class="caption">attention budget · 5s · spent inward</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<!-- =============================================================
+     04 · LOUD FAILURE
+     ============================================================= -->
+<section class="illust">
+	<div class="head">
+		<p class="eyebrow">04 / Loud failure</p>
+		<h2>Empty states are full messages, not blank panels.</h2>
+		<p class="body"><strong>Metric:</strong> signal present vs absent — a binary A/B contrast between silent and loud failure.</p>
+	</div>
+	<div class="grid">
+
+		<!-- 04-A · two breaks (silent / loud) -->
+		<div class="card">
+			<div class="card-label"><span>04-A · two breaks · silent / loud</span><span class="meta">3s loop</span></div>
+			<div class="stage">
+				<div class="s04a">
+					<div class="panel">
+						<div class="top"><span>silent</span><span>(nothing)</span></div>
+						<div class="line-silent">
+							<div class="solid"></div>
+							<div class="dashed"></div>
+						</div>
+						<div class="caption muted">owner: "it's working"</div>
+					</div>
+					<div class="panel">
+						<div class="top loud"><span>loud</span><span>504 · sms unreachable</span></div>
+						<div class="line-loud">
+							<div class="seg-l"></div>
+							<div class="break"><div class="dot">504</div></div>
+							<div class="seg-r"></div>
+						</div>
+						<div class="caption">"endpoint unreachable · retry 15s"</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 04-B · waveform compare -->
+		<div class="card">
+			<div class="card-label"><span>04-B · waveform compare</span><span class="meta">3s loop</span></div>
+			<div class="stage">
+				<div class="s04b">
+					<div class="row">
+						<span class="key">silent fail</span>
+						<div class="wave">
+							<svg viewBox="0 0 200 32" preserveAspectRatio="none">
+								<line class="flat" x1="0" y1="16" x2="200" y2="16"></line>
+							</svg>
+						</div>
+						<span class="val">— —</span>
+					</div>
+					<div class="row loud">
+						<span class="key">loud fail</span>
+						<div class="wave">
+							<svg viewBox="0 0 400 32" preserveAspectRatio="none">
+								<g class="spike-anim">
+									<polyline class="spike" points="0,16 20,16 22,4 24,28 26,4 28,28 30,16 80,16 82,8 84,24 86,8 88,24 90,16 140,16 142,4 144,28 146,4 148,28 150,16 200,16 202,16 222,16 224,4 226,28 228,4 230,28 232,16 282,16 284,8 286,24 288,8 290,24 292,16 342,16 344,4 346,28 348,4 350,28 352,16 400,16"></polyline>
+								</g>
+							</svg>
+						</div>
+						<span class="val">504</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<footer>
+	<span>jay moore · case study illustrations · brainstorm 06 of 06</span>
+	<span>2026-05-22 · auto-looping · no interaction</span>
+</footer>
+
+</div>
+
+<script>
+	// ticks for 01-A (23 ticks: 0..22)
+	(() => {
+		const wrap = document.getElementById('s01a-ticks');
+		const majors = new Set([0, 5, 10, 15, 20, 22]);
+		for (let i = 0; i <= 22; i++) {
+			const d = document.createElement('div');
+			d.className = 'tick ' + (majors.has(i) ? 'major' : 'minor');
+			wrap.appendChild(d);
+		}
+	})();
+
+	// Sync readout numbers to the keyframe timeline using performance.now
+	function bindCountdown(el, cycleMs, collapseFrac, holdFrac, max) {
+		const update = () => {
+			const t = (performance.now() % cycleMs) / cycleMs;
+			let v;
+			if (t < collapseFrac) {
+				// rauno ease cubic-bezier approximation via simple cubic ease-in-out feel
+				const p = t / collapseFrac;
+				const eased = cubicBezier(0.32, 0.72, 0, 1, p);
+				v = max * (1 - eased);
+			} else if (t < collapseFrac + holdFrac) {
+				v = 0;
+			} else {
+				const p = (t - collapseFrac - holdFrac) / (1 - collapseFrac - holdFrac);
+				v = max * p;
+			}
+			el.textContent = v.toFixed(1);
+			requestAnimationFrame(update);
+		};
+		update();
+	}
+	function cubicBezier(p1x, p1y, p2x, p2y, t) {
+		// solve y for parametric t (approximation: assume t = x)
+		const cy = 3 * p1y;
+		const by = 3 * (p2y - p1y) - cy;
+		const ay = 1 - cy - by;
+		return ((ay * t + by) * t + cy) * t;
+	}
+	bindCountdown(document.getElementById('s01a-val'), 20000, 0.75, 0.15, 22);
+	bindCountdown(document.getElementById('s01b-val'), 20000, 0.75, 0.15, 22);
+</script>
+
+</body>
+</html>

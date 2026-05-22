@@ -6,10 +6,11 @@ type Props = {
 	imageAlt: string;
 	title: string;
 	body: React.ReactNode;
+	media?: React.ReactNode;
 };
 
-export function IxItem({ side, imageSrc, imageAlt, title, body }: Props) {
-	const image = (
+export function IxItem({ side, imageSrc, imageAlt, title, body, media }: Props) {
+	const image = media ?? (
 		<div className="relative aspect-[16/9] overflow-hidden rounded-md border border-line bg-bg-2">
 			<Image
 				src={imageSrc}

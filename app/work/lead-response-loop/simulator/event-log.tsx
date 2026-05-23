@@ -19,7 +19,7 @@ export function EventLog({ events, llm_latency_ms }: Props) {
 			</p>
 			<ol className="mt-3 flex flex-col gap-1.5">
 				{events.map((e, i) => (
-					<li key={i} className="grid grid-cols-[72px_1fr] gap-3 items-baseline">
+					<li key={i} className="grid grid-cols-[88px_1fr] gap-4 items-baseline">
 						<span className="font-mono text-2xs tabular-nums text-fg-faint">
 							{formatT(e.t)}
 						</span>

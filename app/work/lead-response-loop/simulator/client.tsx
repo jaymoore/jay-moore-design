@@ -41,11 +41,17 @@ export function SimulatorClient() {
 	const [customText, setCustomText] = useState("");
 	const [customSubmitting, setCustomSubmitting] = useState(false);
 	const detailsRef = useRef<HTMLDetailsElement>(null);
+	const t0Ref = useRef<number | null>(null);
+
+	function elapsed(): number {
+		return t0Ref.current === null ? 0 : Date.now() - t0Ref.current;
+	}
 
 	async function runScenario(s: Scenario) {
 		setFallbackBanner(null);
 		dispatch({ type: "scenario_selected", scenario: s });
 		const t0 = Date.now();
+		t0Ref.current = t0;
 		await new Promise((r) => setTimeout(r, 300));
 		dispatch({ type: "call_missed", t: Date.now() - t0 });
 		await new Promise((r) => setTimeout(r, 500));
@@ -111,19 +117,19 @@ export function SimulatorClient() {
 	}
 
 	function ownerYes() {
-		const t = Date.now();
-		dispatch({ type: "owner_replied_yes", t });
+		const t0 = t0Ref.current;
+		dispatch({ type: "owner_replied_yes", t: elapsed() });
 		setTimeout(() => {
 			dispatch({
 				type: "booking_link_sent",
 				body: "Book a time: https://cal.com/spm/hvac-appointment",
-				t: Date.now(),
+				t: t0 === null ? 0 : Date.now() - t0,
 			});
 		}, 400);
 	}
 
 	function ownerNo() {
-		dispatch({ type: "owner_replied_no", t: Date.now() });
+		dispatch({ type: "owner_replied_no", t: elapsed() });
 	}
 
 	const isRunning = state.stage === "running" || state.stage === "awaiting_owner";

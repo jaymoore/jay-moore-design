@@ -13,7 +13,7 @@ import {
 
 const MAX_GAP = 22;
 const CYCLE = 20;
-const RAUNO_EASE: [number, number, number, number] = [0.32, 0.72, 0, 1];
+const APPROACH_EASE: [number, number, number, number] = [0.32, 0.72, 0.35, 1];
 
 export function IxBothPhones() {
 	const reduced = useReducedMotion();
@@ -22,13 +22,13 @@ export function IxBothPhones() {
 	const inView = useInView(containerRef, { amount: 0.3 });
 
 	const gap = useMotionValue(MAX_GAP);
-	const linePct = useTransform(gap, (v) => `${(v / MAX_GAP) * 100}%`);
-	const lineScale = useTransform(gap, (v) => v / MAX_GAP);
+	const linePct = useTransform(gap, (v) => `${(1 - v / MAX_GAP) * 100}%`);
 
 	const [meet, setMeet] = useState(false);
 
 	useMotionValueEvent(gap, "change", (v) => {
-		if (readoutRef.current) readoutRef.current.textContent = v.toFixed(1);
+		if (readoutRef.current)
+			readoutRef.current.textContent = (MAX_GAP - v).toFixed(1);
 		setMeet(v < 0.05);
 	});
 
@@ -37,7 +37,7 @@ export function IxBothPhones() {
 		const controls = animate(gap, [MAX_GAP, 0, 0, MAX_GAP], {
 			duration: CYCLE,
 			times: [0, 0.75, 0.9, 1],
-			ease: [RAUNO_EASE, "linear", "easeInOut"],
+			ease: [APPROACH_EASE, "linear", "easeInOut"],
 			repeat: Infinity,
 		});
 		return () => controls.stop();
@@ -47,12 +47,12 @@ export function IxBothPhones() {
 		<div
 			ref={containerRef}
 			role="img"
-			aria-label="Animated stopwatch: the 22-second gap between prospect and owner collapses to zero. The call ends, the SMS arrives, the dots meet."
+			aria-label="Looping animated stopwatch: counts up from zero to 22 seconds as the SMS travels from the prospect's ended call to the owner's phone, the dots meet on arrival, then the counter resets and the loop repeats."
 			className="relative aspect-[16/9] overflow-hidden rounded-md border border-line bg-bg-2"
 		>
 			<div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-[8%]">
 				<div className="flex items-baseline font-mono font-medium tabular-nums text-fg text-[clamp(36px,7vw,64px)] [letter-spacing:-0.02em]">
-					<span ref={readoutRef}>22.0</span>
+					<span ref={readoutRef}>0.0</span>
 					<span className="ml-1 text-[0.5em] text-fg-faint">s</span>
 				</div>
 
@@ -62,11 +62,8 @@ export function IxBothPhones() {
 							prospect
 						</span>
 						<div className="relative flex h-2 flex-1 items-center">
-							<motion.div
-								className="h-px w-full origin-left bg-line-strong"
-								style={{ scaleX: lineScale }}
-							/>
-							<div className="absolute left-0 top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-fg" />
+							<div className="h-px w-full bg-line-strong" />
+							<div className="absolute right-0 top-1/2 size-2 translate-x-1/2 -translate-y-1/2 rounded-full bg-fg" />
 							<motion.div
 								className="absolute top-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full border"
 								style={{
@@ -79,7 +76,7 @@ export function IxBothPhones() {
 										: "var(--color-fg)",
 								}}
 								animate={meet ? { scale: [1, 1.6, 1.2] } : { scale: 1 }}
-								transition={{ duration: 0.4, ease: RAUNO_EASE }}
+								transition={{ duration: 0.4, ease: APPROACH_EASE }}
 							/>
 						</div>
 						<span className="font-mono text-2xs uppercase tracking-wider text-fg-faint">

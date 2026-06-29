@@ -94,6 +94,9 @@ const DESIGN_DECISIONS: Decision[] = [
 	},
 ];
 
+// ponytail: flip to true once a real beta client exists. Hides section 07.
+const SHOW_OUTCOMES = false;
+
 const OUTCOMES_TILES_V2: Metric[] = [
 	{ label: "Calls handled", value: "0", sub: "waiting on beta partner" },
 	{ label: "Owner-approved leads", value: "0", sub: "waiting on beta partner" },
@@ -253,25 +256,30 @@ export async function CaseStudyContent() {
 				</div>
 			</CaseSection>
 
+			{/* Outcomes: hidden until a real beta client exists (no clients yet).
+			    On re-enable, renumber: Outcomes 07, Roadmap 08, Engineering proof 09, Where next 10. */}
+			{SHOW_OUTCOMES && (
+				<>
+					<hr className="my-16 border-line" />
+
+					<CaseSection num="07" id="outcomes" label="Outcomes">
+						<SectionHeading eyebrow="Outcomes" title="It works. Real callers next." />
+						<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
+							The system runs end to end on a test number. The numbers in the
+							TL;DR above come from a 50-example test set I built, not from real
+							callers yet. Once I find a beta HVAC or plumbing partner to use it,
+							the placeholders below get replaced with real call counts and
+							bookings.
+						</p>
+						<MetricList tiles={OUTCOMES_TILES_V2} />
+					</CaseSection>
+				</>
+			)}
+
 			<hr className="my-16 border-line" />
 
-			{/* 07 — Outcomes */}
-			<CaseSection num="07" id="outcomes" label="Outcomes">
-				<SectionHeading eyebrow="Outcomes" title="It works. Real callers next." />
-				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
-					The system runs end to end on a test number. The numbers in the
-					TL;DR above come from a 50-example test set I built, not from real
-					callers yet. Once I find a beta HVAC or plumbing partner to use it,
-					the placeholders below get replaced with real call counts and
-					bookings.
-				</p>
-				<MetricList tiles={OUTCOMES_TILES_V2} />
-			</CaseSection>
-
-			<hr className="my-16 border-line" />
-
-			{/* 08 — Roadmap */}
-			<CaseSection num="08" id="roadmap" label="Roadmap">
+			{/* 07 — Roadmap */}
+			<CaseSection num="07" id="roadmap" label="Roadmap">
 				<SectionHeading eyebrow="Roadmap" title="What's next." />
 				<div className="mt-8 flex flex-col gap-5">
 					{ROADMAP_ITEMS.map((item) => (
@@ -290,8 +298,8 @@ export async function CaseStudyContent() {
 
 			<hr className="my-16 border-line" />
 
-			{/* 09 — Engineering proof (collapsed) */}
-			<CaseSection num="09" id="engineering-proof" label="Engineering proof">
+			{/* 08 — Engineering proof (collapsed) */}
+			<CaseSection num="08" id="engineering-proof" label="Engineering proof">
 				<SectionHeading
 					eyebrow="Engineering proof"
 					title="The technical detail, for anyone who wants it."
@@ -354,9 +362,9 @@ export async function CaseStudyContent() {
 
 			<hr className="my-16 border-line" />
 
-			{/* 10 — Where next */}
+			{/* 09 — Where next */}
 			<section id="where-next" className="relative scroll-mt-20">
-				<CaseSectionLabel num="10" label="Where next" />
+				<CaseSectionLabel num="09" label="Where next" />
 				<div className="md:pl-20">
 					<h2 className="font-mono text-2xs font-normal uppercase tracking-wider text-fg-faint">
 						Where to go next

@@ -254,7 +254,7 @@ export function CaseStudyContent() {
 				</p>
 				<div className="mt-12 grid gap-6 sm:grid-cols-2 md:gap-10">
 					<figure>
-						<div className="overflow-hidden rounded-md border border-accent bg-bg-2">
+						<div className="overflow-hidden rounded-md border border-accent bg-bg-2 p-5 sm:p-8">
 							<Image
 								src={`${IMG}/screen-nurse-card.png`}
 								alt="Nurse card on her phone: Hello I'm Carol band, a red please-know-first allergy card, why I'm here, and small things that help a lot"
@@ -269,7 +269,7 @@ export function CaseStudyContent() {
 						</figcaption>
 					</figure>
 					<figure>
-						<div className="overflow-hidden rounded-md border border-line bg-bg-2">
+						<div className="overflow-hidden rounded-md border border-line bg-bg-2 p-5 sm:p-8">
 							<Image
 								src={`${IMG}/packet-print.png`}
 								alt="Printable letter-size ER packet auto-filled from the app: patient header, red allergy band, full medications table, baseline, and family call order"
@@ -430,14 +430,14 @@ function DirectionRow({ d }: { d: Direction }) {
 		<div
 			className={`overflow-hidden rounded-md border ${
 				d.hot ? "border-accent" : "border-line"
-			} bg-bg-2`}
+			} bg-bg-2 p-4 sm:p-8`}
 		>
 			<Image
 				src={d.img}
 				alt={d.alt}
 				width={1752}
 				height={844}
-				sizes="(min-width: 1120px) 1072px, 100vw"
+				sizes="(min-width: 1120px) 1008px, 100vw"
 				className="h-auto w-full"
 			/>
 		</div>
@@ -461,7 +461,7 @@ function DirectionRow({ d }: { d: Direction }) {
 
 function ScreenRow({ s, flip }: { s: Screen; flip: boolean }) {
 	const image = (
-		<div className="mx-auto w-full max-w-[360px] overflow-hidden rounded-md border border-line bg-bg-2">
+		<div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-md border border-line bg-bg-2 p-5 sm:p-8">
 			<Image
 				src={s.img}
 				alt={s.alt}
@@ -519,7 +519,7 @@ function Figure({
 }) {
 	return (
 		<figure className={`mt-8 ${narrow ? "max-w-[720px]" : ""}`}>
-			<div className="overflow-hidden rounded-md border border-line bg-bg-2">
+			<div className="overflow-hidden rounded-md border border-line bg-bg-2 p-4 sm:p-8">
 				<Image
 					src={src}
 					alt={alt}

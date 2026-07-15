@@ -258,8 +258,8 @@ export function CaseStudyContent() {
 							<Image
 								src={`${IMG}/screen-nurse-card.png`}
 								alt="Nurse card on her phone: Hello I'm Carol band, a red please-know-first allergy card, why I'm here, and small things that help a lot"
-								width={780}
-								height={1688}
+								width={900}
+								height={1808}
 								sizes="(min-width: 768px) 460px, 100vw"
 								className="h-auto w-full"
 							/>
@@ -465,8 +465,8 @@ function ScreenRow({ s, flip }: { s: Screen; flip: boolean }) {
 			<Image
 				src={s.img}
 				alt={s.alt}
-				width={780}
-				height={1688}
+				width={900}
+				height={1808}
 				sizes="(min-width: 768px) 360px, 80vw"
 				className="h-auto w-full"
 			/>

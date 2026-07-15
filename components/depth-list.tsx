@@ -21,13 +21,20 @@ const ITEMS: DepthItem[] = [
   },
   {
     number: "02",
+    title: "Listing Launch",
+    body: "A B2B tool that gets a real-estate listing from won to live without the agent losing control of what goes public. AI drafts; the human approves every word. Password-gated.",
+    cta: "Case study",
+    href: "/work/listing-launch",
+  },
+  {
+    number: "03",
     title: "About — the pivot",
     body: "Ten years of product design at Fiserv, Kleinfelder, and SPM. Why I'm shipping in code now too.",
     cta: "Background",
     href: "/about",
   },
   {
-    number: "03",
+    number: "04",
     title: "Get in touch",
     body: "Open to Senior / Staff Product Designer roles. US remote.",
     cta: "Contact",

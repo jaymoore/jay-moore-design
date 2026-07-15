@@ -28,13 +28,20 @@ const ITEMS: DepthItem[] = [
   },
   {
     number: "03",
+    title: "Personal Nurse",
+    body: "An ER-wait advocacy app for an 80-year-old patient — my own mother. Four design directions, a measured WCAG pass, and a system that switches design language when the phone changes hands. Password-gated.",
+    cta: "Case study",
+    href: "/work/personal-nurse",
+  },
+  {
+    number: "04",
     title: "About — the pivot",
     body: "Ten years of product design at Fiserv, Kleinfelder, and SPM. Why I'm shipping in code now too.",
     cta: "Background",
     href: "/about",
   },
   {
-    number: "04",
+    number: "05",
     title: "Get in touch",
     body: "Open to Senior / Staff Product Designer roles. US remote.",
     cta: "Contact",

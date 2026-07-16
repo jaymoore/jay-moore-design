@@ -41,21 +41,21 @@ const DIRECTIONS: Direction[] = [
 		eyebrow: "Direction A · Soft Sanctuary 2.0",
 		title: "Calm that ages with the patient's energy.",
 		body: "The existing hypothesis, matured. Low-arousal periwinkle, tonal layering, pill shapes — plus a decay-aware idea: as the wait passes hour 2, 4, 6, type grows and choices shrink.",
-		img: `${IMG}/direction-a-v2.png`,
+		img: `${IMG}/direction-a`,
 		alt: "Direction A: four periwinkle-and-cream phone screens — home with one big I'm at the ER button, active visit with a radial wait clock, nurse card, and family timeline",
 	},
 	{
 		eyebrow: "Direction B · Paper Chart",
 		title: "Trust through familiarity.",
 		body: "Nurses parse paper charts for a living, so the app looks like a clinical document: ink on paper, ruled fields, uppercase section labels, one alert red. No motion at all.",
-		img: `${IMG}/direction-b-v2.png`,
+		img: `${IMG}/direction-b`,
 		alt: "Direction B: four document-styled screens — packet-like home, visit record with monospace wait clock, an emergency room card with a red allergy band, and a family log",
 	},
 	{
 		eyebrow: "Direction C · Warm Hearth",
 		title: "A daughter's hand on the shoulder.",
 		body: "Family companion, not medical tool. Terracotta and cream, rounded humanist type, copy that sounds like family. Presence is the core mechanic: who's watching, who claimed the call.",
-		img: `${IMG}/direction-c-v2.png`,
+		img: `${IMG}/direction-c`,
 		alt: "Direction C: four warm terracotta screens — Hi Carol home with family avatars, a gentle suggestion card, a warm nurse card, and a family screen with claimed actions",
 		hot: true,
 	},
@@ -63,7 +63,7 @@ const DIRECTIONS: Direction[] = [
 		eyebrow: "Direction D · Warm Sanctuary",
 		title: "C's layout, A's color, AAA discipline.",
 		body: "A control experiment: keep C's conversational layout, swap in the accessible periwinkle system. It proved the warmth was in the voice and layout — not the terracotta.",
-		img: `${IMG}/direction-d-v2.png`,
+		img: `${IMG}/direction-d`,
 		alt: "Direction D: the same four screen layouts as Direction C rendered in accessible periwinkle and cream",
 	},
 ];
@@ -302,14 +302,20 @@ export function CaseStudyContent() {
 					one person claims the action so three people don&rsquo;t all call
 					the front desk at once.
 				</p>
-				<Figure
-					src={`${IMG}/family-row-v2.png`}
-					alt="Two family screens: a quiet live view with the patient's day so far and who's watching, and an escalation view with a claimed I've-got-this-one action"
-					width={836}
-					height={844}
-					caption="Quiet state and escalation state. Claiming a nudge is visible to everyone — coordination, not noise."
-					narrow
-				/>
+				<figure className="mt-8 max-w-[720px]">
+					<div className="overflow-hidden rounded-md border border-line">
+						<ThemedRowImage
+							base={`${IMG}/family-row`}
+							alt="Two family screens: a quiet live view with the patient's day so far and who's watching, and an escalation view with a claimed I've-got-this-one action"
+							width={932}
+							height={940}
+						/>
+					</div>
+					<figcaption className="mt-3 font-mono text-2xs uppercase tracking-wider text-fg-faint">
+						Quiet state and escalation state. Claiming a nudge is visible to
+						everyone — coordination, not noise.
+					</figcaption>
+				</figure>
 			</CaseSection>
 
 			<hr className="my-16 border-line" />
@@ -427,21 +433,49 @@ export function CaseStudyContent() {
    Image rows
    ============================================================ */
 
+function ThemedRowImage({
+	base,
+	alt,
+	width,
+	height,
+}: {
+	base: string;
+	alt: string;
+	width: number;
+	height: number;
+}) {
+	// Light/dark backgrounds are baked into the exports (#E7EAED / #121619);
+	// the pair swaps with the html.dark class.
+	return (
+		<>
+			<Image
+				src={`${base}-light.png`}
+				alt={alt}
+				width={width}
+				height={height}
+				sizes="(min-width: 1120px) 1072px, 100vw"
+				className="block h-auto w-full dark:hidden"
+			/>
+			<Image
+				src={`${base}-dark.png`}
+				alt={alt}
+				width={width}
+				height={height}
+				sizes="(min-width: 1120px) 1072px, 100vw"
+				className="hidden h-auto w-full dark:block"
+			/>
+		</>
+	);
+}
+
 function DirectionRow({ d }: { d: Direction }) {
 	const image = (
 		<div
 			className={`overflow-hidden rounded-md border ${
 				d.hot ? "border-accent" : "border-line"
-			} bg-[#E7EAED] dark:bg-[#121619] p-4 sm:p-8`}
+			}`}
 		>
-			<Image
-				src={d.img}
-				alt={d.alt}
-				width={1752}
-				height={844}
-				sizes="(min-width: 1120px) 1008px, 100vw"
-				className="h-auto w-full"
-			/>
+			<ThemedRowImage base={d.img} alt={d.alt} width={1800} height={940} />
 		</div>
 	);
 	return (

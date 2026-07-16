@@ -6,7 +6,7 @@ import { PasswordGate } from "./password-gate";
 export const metadata: Metadata = {
   title: "Personal Nurse — case study",
   description:
-    "An ER-wait advocacy app for an 80-year-old patient. Four design directions, a measured accessibility pass, and a system where the design language switches when the phone changes hands.",
+    "An ER-wait advocacy app for anyone facing a long wait. Four design directions, a measured accessibility pass, and a system where the design language switches when the phone changes hands.",
   robots: {
     index: false,
     follow: false,

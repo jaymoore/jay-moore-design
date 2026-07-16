@@ -29,7 +29,7 @@ const ITEMS: DepthItem[] = [
   {
     number: "03",
     title: "Personal Nurse",
-    body: "An ER-wait advocacy app for an 80-year-old patient — my own mother. Four design directions, a measured WCAG pass, and a system that switches design language when the phone changes hands. Password-gated.",
+    body: "An ER-wait advocacy app for anyone facing a long wait — it began with my own mother. Four design directions, a measured WCAG pass, and a system that switches design language when the phone changes hands. Password-gated.",
     cta: "Case study",
     href: "/work/personal-nurse",
   },

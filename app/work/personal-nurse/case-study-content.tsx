@@ -39,7 +39,7 @@ type Direction = {
 const DIRECTIONS: Direction[] = [
 	{
 		eyebrow: "Direction A · Soft Sanctuary 2.0",
-		title: "Calm that ages with her energy.",
+		title: "Calm that ages with the patient's energy.",
 		body: "The existing hypothesis, matured. Low-arousal periwinkle, tonal layering, pill shapes — plus a decay-aware idea: as the wait passes hour 2, 4, 6, type grows and choices shrink.",
 		img: `${IMG}/direction-a.png`,
 		alt: "Direction A: four periwinkle-and-cream phone screens — home with one big I'm at the ER button, active visit with a radial wait clock, nurse card, and family timeline",
@@ -84,7 +84,7 @@ const PATIENT_SCREENS: Screen[] = [
 	{
 		eyebrow: "Screen 1 · Home",
 		title: "One tap starts everything.",
-		body: "No login, no menu maze. The screen exists for exactly one moment: she's at the ER and needs the app working for her. Her family's avatars are right there — she's not doing this alone.",
+		body: "No login, no menu maze. The screen exists for exactly one moment: the patient is at the ER and needs the app working for them. The family's avatars are right there — no one does this alone.",
 		img: `${IMG}/screen-home.png`,
 		alt: "Home screen: Hi Carol greeting, one large terracotta I'm at the ER button, three family avatars, and two quick links",
 	},
@@ -98,21 +98,21 @@ const PATIENT_SCREENS: Screen[] = [
 	{
 		eyebrow: "Screen 3 · Setup",
 		title: "Filled in on a good day.",
-		body: "Hearing side, upright tolerance, what makes her foggy — captured at leisure, at peak cognition. Every field feeds both the nurse card and the nudge rules. All of it optional.",
+		body: "Hearing side, upright tolerance, what makes the fog set in — captured at leisure, at peak cognition. Every field feeds both the nurse card and the nudge rules. All of it optional.",
 		img: `${IMG}/screen-setup.png`,
 		alt: "Setup screen: hearing side chips, an upright-hours stepper reading 2 hours, three toggles, and a save button",
 	},
 	{
 		eyebrow: "Screen 4 · Active visit",
 		title: "The app carries the load.",
-		body: "As her energy drains over the wait, a deterministic rules engine — not an LLM — surfaces one gentle, timed nudge at a time. Comfort, logistics, communication. Never clinical advice; a guardrail test in code enforces it.",
+		body: "As the patient's energy drains over the wait, a deterministic rules engine — not an LLM — surfaces one gentle, timed nudge at a time. Comfort, logistics, communication. Never clinical advice; a guardrail test in code enforces it.",
 		img: `${IMG}/screen-active.png`,
 		alt: "Active visit screen: You're doing fine Carol, a suggestion card offering the words to ask for a recliner, and status choices including Worse — tell my family",
 	},
 	{
 		eyebrow: "Screen 5 · Feeling worse",
 		title: "The words, when she can't find them.",
-		body: "One tap tells the whole family, then hands her an exact script — or she hands the phone to the desk. The state is persistent and reversible, and she can see who is already acting.",
+		body: "One tap tells the whole family, then hands the patient an exact script — or they hand the phone to the desk. The state is persistent and reversible, and they can see who is already acting.",
 		img: `${IMG}/screen-worse.png`,
 		alt: "Feeling worse screen: Your family knows banner, a show-this-or-say-this script card, an undo option, and live family responses",
 	},
@@ -137,10 +137,10 @@ export function CaseStudyContent() {
 					Personal Nurse.
 				</h1>
 				<p className="mt-6 max-w-[60ch] text-xl leading-relaxed text-fg sm:text-[1.375rem]">
-					An 80-year-old reaches the ER sharp, then drains over a 4–8 hour
-					wait — forgetting what to ask exactly when asking matters most. I
-					designed an app that front-loads her context while she&rsquo;s
-					sharp, then advocates for her as she fades.{" "}
+					A patient reaches the ER sharp, then drains over a 4–8 hour wait —
+					forgetting what to ask exactly when asking matters most. I designed
+					an app that front-loads their context while they&rsquo;re sharp,
+					then advocates for them as they fade.{" "}
 					<strong className="text-accent">
 						The patient holds the phone. The app carries the load.
 					</strong>
@@ -156,10 +156,11 @@ export function CaseStudyContent() {
 					title="Her voice fades over the exact hours it matters most."
 				/>
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
-					Customer zero is my own mother. Real visits, real stakes. Existing
-					tools — Medical ID, patient portals, panic buttons — are static
-					records or emergency triggers. None carry her context forward in
-					time. The design problem in one picture:
+					It began with customer zero — my own mother — but the product is for
+					anyone facing a long ER wait. Existing tools — Medical ID, patient
+					portals, panic buttons — are static records or emergency triggers.
+					None carry the patient&rsquo;s context forward in time. The design
+					problem in one picture:
 				</p>
 				<Figure
 					src={`${IMG}/decay-diagram.png`}
@@ -180,7 +181,7 @@ export function CaseStudyContent() {
 				/>
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
 					Each direction is a complete argument about what an anxious
-					80-year-old trusts — not a re-skin. All four carry the same five
+					patient trusts — not a re-skin. All four carry the same five
 					principles: front-load at peak cognition, one decision per screen,
 					never give medical advice, work offline, and let the app do the
 					remembering.
@@ -246,11 +247,12 @@ export function CaseStudyContent() {
 					title="The design language switches when the phone changes hands."
 				/>
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
-					The project began as a hand-typed paper packet in her purse. The
-					system closes that loop: her setup data renders as a warm card on
-					screen and regenerates the letter-size packet for print — same
-					record, two readers. Meds change, update once, reprint. The purse
-					copy can never drift more than one print behind.
+					The project began as a hand-typed paper packet in my mother&rsquo;s
+					purse. The system closes that loop: the patient&rsquo;s setup data
+					renders as a warm card on screen and regenerates the letter-size
+					packet for print — same record, two readers. Meds change, update
+					once, reprint. The paper copy can never drift more than one print
+					behind.
 				</p>
 				<div className="mt-12 grid gap-6 sm:grid-cols-2 md:gap-10">
 					<figure>
@@ -296,9 +298,9 @@ export function CaseStudyContent() {
 				/>
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
 					Family joins by magic link — no app store, no account. A quiet
-					state that says she&rsquo;s okay, and an escalation state where one
-					person claims the action so three people don&rsquo;t all call the
-					front desk at once.
+					state that says the patient is okay, and an escalation state where
+					one person claims the action so three people don&rsquo;t all call
+					the front desk at once.
 				</p>
 				<Figure
 					src={`${IMG}/family-row.png`}
@@ -339,19 +341,19 @@ export function CaseStudyContent() {
 			<CaseSection num="08" id="tldr" label="TL;DR">
 				<SectionHeading eyebrow="TL;DR" title="At a glance" />
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
-					A self-initiated product for a real user — my mother — with the
-					patient side already running as a client-only PWA (deterministic
-					rules engine, offline, no account). This case study is the design
-					system pass before the rebuild. All patient data shown is
-					fictional.
+					A self-initiated product for anyone facing a long ER wait — it
+					began with my mother as customer zero — with the patient side
+					already running as a client-only PWA (deterministic rules engine,
+					offline, no account). This case study is the design system pass
+					before the rebuild. All patient data shown is fictional.
 				</p>
 				<MetricList tiles={TLDR_METRICS} />
 				<p className="mt-8 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
 					The lesson I&rsquo;d hand another designer: the warmth was never
 					decoration — it was the accessibility feature. Tech anxiety, not
-					touch targets, is what keeps an 80-year-old from using an app in a
-					crisis. And a contrast ratio is the cheapest usability test
-					you&rsquo;ll ever run.
+					touch targets, is what keeps an overwhelmed patient from using an
+					app in a crisis. And a contrast ratio is the cheapest usability
+					test you&rsquo;ll ever run.
 				</p>
 			</CaseSection>
 

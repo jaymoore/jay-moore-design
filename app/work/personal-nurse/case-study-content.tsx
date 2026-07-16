@@ -41,21 +41,21 @@ const DIRECTIONS: Direction[] = [
 		eyebrow: "Direction A · Soft Sanctuary 2.0",
 		title: "Calm that ages with the patient's energy.",
 		body: "The existing hypothesis, matured. Low-arousal periwinkle, tonal layering, pill shapes — plus a decay-aware idea: as the wait passes hour 2, 4, 6, type grows and choices shrink.",
-		img: `${IMG}/direction-a.png`,
+		img: `${IMG}/direction-a-v2.png`,
 		alt: "Direction A: four periwinkle-and-cream phone screens — home with one big I'm at the ER button, active visit with a radial wait clock, nurse card, and family timeline",
 	},
 	{
 		eyebrow: "Direction B · Paper Chart",
 		title: "Trust through familiarity.",
 		body: "Nurses parse paper charts for a living, so the app looks like a clinical document: ink on paper, ruled fields, uppercase section labels, one alert red. No motion at all.",
-		img: `${IMG}/direction-b.png`,
+		img: `${IMG}/direction-b-v2.png`,
 		alt: "Direction B: four document-styled screens — packet-like home, visit record with monospace wait clock, an emergency room card with a red allergy band, and a family log",
 	},
 	{
 		eyebrow: "Direction C · Warm Hearth",
 		title: "A daughter's hand on the shoulder.",
 		body: "Family companion, not medical tool. Terracotta and cream, rounded humanist type, copy that sounds like family. Presence is the core mechanic: who's watching, who claimed the call.",
-		img: `${IMG}/direction-c.png`,
+		img: `${IMG}/direction-c-v2.png`,
 		alt: "Direction C: four warm terracotta screens — Hi Carol home with family avatars, a gentle suggestion card, a warm nurse card, and a family screen with claimed actions",
 		hot: true,
 	},
@@ -63,7 +63,7 @@ const DIRECTIONS: Direction[] = [
 		eyebrow: "Direction D · Warm Sanctuary",
 		title: "C's layout, A's color, AAA discipline.",
 		body: "A control experiment: keep C's conversational layout, swap in the accessible periwinkle system. It proved the warmth was in the voice and layout — not the terracotta.",
-		img: `${IMG}/direction-d.png`,
+		img: `${IMG}/direction-d-v2.png`,
 		alt: "Direction D: the same four screen layouts as Direction C rendered in accessible periwinkle and cream",
 	},
 ];
@@ -163,7 +163,7 @@ export function CaseStudyContent() {
 					problem in one picture:
 				</p>
 				<Figure
-					src={`${IMG}/decay-diagram.png`}
+					src={`${IMG}/decay-diagram-v2.png`}
 					alt="Diagram: the patient's capacity to self-advocate declines over eight hours while what the wait demands of them stays flat — the widening gap is what the app carries"
 					width={1680}
 					height={668}
@@ -207,7 +207,7 @@ export function CaseStudyContent() {
 					terracotta text measured 3.9:1 — under WCAG AA.
 				</p>
 				<Figure
-					src={`${IMG}/evaluation-matrix.png`}
+					src={`${IMG}/evaluation-matrix-v2.png`}
 					alt="Evaluation matrix scoring directions A, B and C across six criteria, with a recommendation card beneath"
 					width={1680}
 					height={629}
@@ -303,7 +303,7 @@ export function CaseStudyContent() {
 					the front desk at once.
 				</p>
 				<Figure
-					src={`${IMG}/family-row.png`}
+					src={`${IMG}/family-row-v2.png`}
 					alt="Two family screens: a quiet live view with the patient's day so far and who's watching, and an escalation view with a claimed I've-got-this-one action"
 					width={836}
 					height={844}

@@ -111,7 +111,7 @@ const PATIENT_SCREENS: Screen[] = [
 	},
 	{
 		eyebrow: "Screen 5 · Feeling worse",
-		title: "The words, when she can't find them.",
+		title: "The words, when they won't come.",
 		body: "One tap tells the whole family, then hands the patient an exact script — or they hand the phone to the desk. The state is persistent and reversible, and they can see who is already acting.",
 		img: `${IMG}/screen-worse.png`,
 		alt: "Feeling worse screen: Your family knows banner, a show-this-or-say-this script card, an undo option, and live family responses",
@@ -153,7 +153,7 @@ export function CaseStudyContent() {
 			<CaseSection num="01" id="problem" label="Problem">
 				<SectionHeading
 					eyebrow="Problem"
-					title="Her voice fades over the exact hours it matters most."
+					title="The patient's voice fades over the exact hours it matters most."
 				/>
 				<p className="mt-6 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
 					It began with customer zero — my own mother — but the product is for
@@ -164,10 +164,10 @@ export function CaseStudyContent() {
 				</p>
 				<Figure
 					src={`${IMG}/decay-diagram.png`}
-					alt="Diagram: her capacity to self-advocate declines over eight hours while what the wait demands of her stays flat — the widening gap is what the app carries"
+					alt="Diagram: the patient's capacity to self-advocate declines over eight hours while what the wait demands of them stays flat — the widening gap is what the app carries"
 					width={1680}
 					height={668}
-					caption="Front-load context at hour 0. The app holds it and prompts the right small action at the right minute as she fades."
+					caption="Front-load context at hour 0. The app holds it and prompts the right small action at the right minute as the patient fades."
 				/>
 			</CaseSection>
 
@@ -228,7 +228,7 @@ export function CaseStudyContent() {
 			{/* 04 — Patient journey */}
 			<CaseSection num="04" id="patient" label="Patient">
 				<SectionHeading
-					eyebrow="Final system · her phone"
+					eyebrow="Final system · the patient's phone"
 					title="Six screens, one decision each."
 				/>
 				<div className="mt-12 flex flex-col gap-16">
@@ -259,7 +259,7 @@ export function CaseStudyContent() {
 						<div className="overflow-hidden rounded-md border border-accent bg-bg-2 p-5 sm:p-8">
 							<Image
 								src={`${IMG}/screen-nurse-card.png`}
-								alt="Nurse card on her phone: Hello I'm Carol band, a red please-know-first allergy card, why I'm here, and small things that help a lot"
+								alt="Nurse card on the patient's phone: Hello I'm Carol band, a red please-know-first allergy card, why I'm here, and small things that help a lot"
 								width={780}
 								height={1688}
 								sizes="(min-width: 768px) 460px, 100vw"
@@ -304,7 +304,7 @@ export function CaseStudyContent() {
 				</p>
 				<Figure
 					src={`${IMG}/family-row.png`}
-					alt="Two family screens: a quiet live view with her day so far and who's watching, and an escalation view with a claimed I've-got-this-one action"
+					alt="Two family screens: a quiet live view with the patient's day so far and who's watching, and an escalation view with a claimed I've-got-this-one action"
 					width={836}
 					height={844}
 					caption="Quiet state and escalation state. Claiming a nudge is visible to everyone — coordination, not noise."

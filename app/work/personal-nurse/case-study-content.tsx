@@ -27,46 +27,37 @@ const TLDR_METRICS: Metric[] = [
    Direction gallery — one row per direction, image-first
    ============================================================ */
 
-type Direction = {
+type DirectionNote = {
 	eyebrow: string;
 	title: string;
 	body: string;
-	img: string;
-	alt: string;
-	hot?: boolean;
 };
 
-const DIRECTIONS: Direction[] = [
+const REJECTED_DIRECTIONS: DirectionNote[] = [
 	{
 		eyebrow: "Direction A · Soft Sanctuary 2.0",
 		title: "Calm that ages with the patient's energy.",
 		body: "The existing hypothesis, matured. Low-arousal periwinkle, tonal layering, pill shapes — plus a decay-aware idea: as the wait passes hour 2, 4, 6, type grows and choices shrink.",
-		img: `${IMG}/direction-a`,
-		alt: "Direction A: four periwinkle-and-cream phone screens — home with one big I'm at the ER button, active visit with a radial wait clock, nurse card, and family timeline",
 	},
 	{
 		eyebrow: "Direction B · Paper Chart",
 		title: "Trust through familiarity.",
 		body: "Nurses parse paper charts for a living, so the app looks like a clinical document: ink on paper, ruled fields, uppercase section labels, one alert red. No motion at all.",
-		img: `${IMG}/direction-b`,
-		alt: "Direction B: four document-styled screens — packet-like home, visit record with monospace wait clock, an emergency room card with a red allergy band, and a family log",
-	},
-	{
-		eyebrow: "Direction C · Warm Hearth",
-		title: "A daughter's hand on the shoulder.",
-		body: "Family companion, not medical tool. Terracotta and cream, rounded humanist type, copy that sounds like family. Presence is the core mechanic: who's watching, who claimed the call.",
-		img: `${IMG}/direction-c`,
-		alt: "Direction C: four warm terracotta screens — Hi Carol home with family avatars, a gentle suggestion card, a warm nurse card, and a family screen with claimed actions",
-		hot: true,
 	},
 	{
 		eyebrow: "Direction D · Warm Sanctuary",
 		title: "C's layout, A's color, AAA discipline.",
 		body: "A control experiment: keep C's conversational layout, swap in the accessible periwinkle system. It proved the warmth was in the voice and layout — not the terracotta.",
-		img: `${IMG}/direction-d`,
-		alt: "Direction D: the same four screen layouts as Direction C rendered in accessible periwinkle and cream",
 	},
 ];
+
+const SELECTED_DIRECTION = {
+	eyebrow: "Direction C · Warm Hearth",
+	title: "A daughter's hand on the shoulder.",
+	body: "Family companion, not medical tool. Terracotta and cream, rounded humanist type, copy that sounds like family. Presence is the core mechanic: who's watching, who claimed the call. This is the decided look and feel for the entire app.",
+	img: `${IMG}/direction-c`,
+	alt: "Direction C: four warm terracotta screens — Hi Carol home with family avatars, a gentle suggestion card, a warm nurse card, and a family screen with claimed actions",
+};
 
 /* ============================================================
    Final system — patient journey, image-led alternating rows
@@ -186,10 +177,26 @@ export function CaseStudyContent() {
 					never give medical advice, work offline, and let the app do the
 					remembering.
 				</p>
-				<div className="mt-12 flex flex-col gap-16">
-					{DIRECTIONS.map((d) => (
-						<DirectionRow key={d.eyebrow} d={d} />
+				<div className="mt-12 grid gap-4 sm:grid-cols-3">
+					{REJECTED_DIRECTIONS.map((d) => (
+						<div
+							key={d.eyebrow}
+							className="rounded-md border border-line bg-panel p-6"
+						>
+							<p className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
+								{d.eyebrow}
+							</p>
+							<h3 className="mt-2 text-lg font-medium leading-tight text-fg">
+								{d.title}
+							</h3>
+							<p className="mt-3 text-sm leading-relaxed text-fg-soft">
+								{d.body}
+							</p>
+						</div>
 					))}
+				</div>
+				<div className="mt-16">
+					<SelectedDirectionRow d={SELECTED_DIRECTION} />
 				</div>
 			</CaseSection>
 
@@ -302,14 +309,28 @@ export function CaseStudyContent() {
 					one person claims the action so three people don&rsquo;t all call
 					the front desk at once.
 				</p>
-				<figure className="mt-8 max-w-[720px]">
-					<div className="overflow-hidden rounded-md border border-line">
-						<ThemedRowImage
-							base={`${IMG}/family-row`}
-							alt="Two family screens: a quiet live view with the patient's day so far and who's watching, and an escalation view with a claimed I've-got-this-one action"
-							width={932}
-							height={940}
-						/>
+				<figure className="mt-8 max-w-[880px]">
+					<div className="grid gap-6 sm:grid-cols-2">
+						<div className="overflow-hidden rounded-md border border-line bg-[#E7EAED] dark:bg-[#121619] p-5 sm:p-8">
+							<Image
+								src={`${IMG}/screen-family-quiet.png`}
+								alt="Family quiet view: Carol's at Mercy General, she's okay banner, her day so far timeline, who's watching avatars, and a send-her-something-small button"
+								width={780}
+								height={1688}
+								sizes="(min-width: 768px) 420px, 100vw"
+								className="h-auto w-full"
+							/>
+						</div>
+						<div className="overflow-hidden rounded-md border border-line bg-[#E7EAED] dark:bg-[#121619] p-5 sm:p-8">
+							<Image
+								src={`${IMG}/screen-family-escalation.png`}
+								alt="Family escalation view: she-could-use-a-hand card with a claimed I've-got-this-one action, who's on it list, and her day so far"
+								width={780}
+								height={1688}
+								sizes="(min-width: 768px) 420px, 100vw"
+								className="h-auto w-full"
+							/>
+						</div>
 					</div>
 					<figcaption className="mt-3 font-mono text-2xs uppercase tracking-wider text-fg-faint">
 						Quiet state and escalation state. Claiming a nudge is visible to
@@ -468,21 +489,12 @@ function ThemedRowImage({
 	);
 }
 
-function DirectionRow({ d }: { d: Direction }) {
-	const image = (
-		<div
-			className={`overflow-hidden rounded-md border ${
-				d.hot ? "border-accent" : "border-line"
-			}`}
-		>
-			<ThemedRowImage base={d.img} alt={d.alt} width={1800} height={940} />
-		</div>
-	);
+function SelectedDirectionRow({ d }: { d: typeof SELECTED_DIRECTION }) {
 	return (
 		<div>
 			<p className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
 				{d.eyebrow}
-				{d.hot && <span className="ml-3 text-accent">Selected</span>}
+				<span className="ml-3 text-accent">Selected</span>
 			</p>
 			<h3 className="mt-2 text-xl font-semibold leading-tight tracking-tight text-fg">
 				{d.title}
@@ -490,7 +502,9 @@ function DirectionRow({ d }: { d: Direction }) {
 			<p className="mt-3 max-w-[60ch] text-lg leading-relaxed text-fg-soft">
 				{d.body}
 			</p>
-			<div className="mt-6">{image}</div>
+			<div className="mt-6 overflow-hidden rounded-md border border-accent">
+				<ThemedRowImage base={d.img} alt={d.alt} width={1800} height={940} />
+			</div>
 		</div>
 	);
 }

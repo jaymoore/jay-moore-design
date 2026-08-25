@@ -57,3 +57,8 @@ When Phase 0 approves:
 
 - Original sources at `~/00-Dev/career-ops/docs/superpowers/specs/` and `~/00-Dev/career-ops/docs/superpowers/plans/` — career-ops repo retains its copies (do not delete unless intentional)
 - Agent memory: `~/.claude/projects/-Users-jay-00-Dev-career-ops/memory/portfolio_visual_design_iteration.md` (the rule about multiple visual rounds)
+
+## Motion Design
+
+# "When working on UI motion, consult .claude/context/rauno-interfaces/README.md 
+#  for interaction detail standards. Invoke the emilkowal skill for code review."

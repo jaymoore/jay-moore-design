@@ -264,7 +264,6 @@ export default function AboutPage() {
             <span className="mt-2 text-sm text-fg-soft">
               Decision-support response system for high-noise inbound lead
               channels. HVAC + plumbing first, pattern transferable.
-              Password-gated.
             </span>
             <span className="mt-4 inline-flex items-center gap-1 font-mono text-2xs uppercase tracking-wider text-accent">
               Read

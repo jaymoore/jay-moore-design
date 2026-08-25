@@ -15,17 +15,18 @@ const ITEMS: DepthItem[] = [
   {
     number: "01",
     title: "Lead Response Loop",
-    body: "A system I designed and built that turns missed calls into bookings for HVAC and plumbing businesses. End to end — the design and the code. Password-gated.",
+    body: "A system I designed and built that turns missed calls into bookings for HVAC and plumbing businesses. End to end — the design and the code.",
     cta: "Case study",
     href: "/work/lead-response-loop",
   },
   {
     number: "02",
     title: "Listing Launch",
-    body: "A B2B tool that gets a real-estate listing from won to live without the agent losing control of what goes public. AI drafts; the human approves every word. Password-gated.",
+    body: "A B2B tool that gets a real-estate listing from won to live without the agent losing control of what goes public. AI drafts; the human approves every word.",
     cta: "Case study",
     href: "/work/listing-launch",
   },
+  // ponytail: Personal Nurse hidden for now; route still lives at /work/personal-nurse
   {
     number: "03",
     title: "About — the pivot",

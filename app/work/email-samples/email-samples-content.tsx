@@ -161,7 +161,7 @@ export function EmailSamplesContent() {
 
 function NoteGrid({ notes }: { notes: Note[] }) {
 	return (
-		<dl className="mt-8 grid gap-x-8 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+		<dl className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
 			{notes.map((n) => (
 				<div key={n.title} className="border-t border-line pt-4">
 					<dt className="text-base font-semibold text-fg">{n.title}</dt>
@@ -193,9 +193,9 @@ function RegionList({
 				/>
 				{locked ? "Locked regions" : "Editable slots"}
 			</p>
-			<ul className="mt-3 flex flex-col gap-4">
+			<ul className="mt-4 flex flex-col gap-4">
 				{notes.map((n) => (
-					<li key={n.title} className="border-t border-line pt-3">
+					<li key={n.title} className="border-t border-line pt-4">
 						<p className="text-base font-semibold text-fg">{n.title}</p>
 						<p className="mt-1 text-sm leading-relaxed text-fg-soft">
 							{n.body}

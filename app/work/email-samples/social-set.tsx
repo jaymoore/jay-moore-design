@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { ArtboardZoom } from "./artboard-zoom";
 import { contrastRatio } from "./contrast";
 
 // Fictional brand: Larkspur Institute. Concept work only.
@@ -144,16 +145,25 @@ export function SocialSet() {
 			<div className="mt-10 grid items-end gap-6 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1.4fr]">
 				{SIZES.map((s) => (
 					<figure key={s.name}>
-						<Artboard size={s} />
-						<figcaption className="mt-3 font-mono text-2xs uppercase tracking-wider text-fg-faint">
+						<ArtboardZoom
+							label={`${s.name} ${s.w} × ${s.h} graphic`}
+							ratio={s.w / s.h}
+							maxWidth={s.w}
+							preview={<Artboard size={s} />}
+							full={<Artboard size={s} />}
+						/>
+						<figcaption className="mt-4 font-mono text-2xs uppercase tracking-wider text-fg-faint">
 							{s.w} × {s.h} · {s.use} · concept
 						</figcaption>
 					</figure>
 				))}
 			</div>
+			<p className="mt-4 text-sm text-fg-faint">
+				Select any graphic to see it at full size.
+			</p>
 
 			<div className="mt-12 rounded-md border border-line bg-panel">
-				<div className="border-b border-line px-5 py-4">
+				<div className="border-b border-line px-6 py-4">
 					<p className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
 						Rule sheet · Larkspur Institute (fictional)
 					</p>
@@ -161,7 +171,7 @@ export function SocialSet() {
 
 				<div className="grid md:grid-cols-2">
 					{/* Logo clear space */}
-					<section className="border-b border-line p-5 md:border-r">
+					<section className="border-b border-line p-6 md:border-r">
 						<h3 className="text-base font-semibold text-fg">Wordmark clear space</h3>
 						<div
 							className="mt-4 flex justify-center rounded-sm p-6"
@@ -184,7 +194,7 @@ export function SocialSet() {
 								Larkspur Institute
 							</span>
 						</div>
-						<p className="mt-3 text-sm leading-relaxed text-fg-soft">
+						<p className="mt-4 text-sm leading-relaxed text-fg-soft">
 							Keep clear space equal to the wordmark&rsquo;s cap height on
 							every side. The wordmark sits on Ink Blue or Cream, never on
 							Marigold or a photo.
@@ -192,7 +202,7 @@ export function SocialSet() {
 					</section>
 
 					{/* Type scale */}
-					<section className="border-b border-line p-5">
+					<section className="border-b border-line p-6">
 						<h3 className="text-base font-semibold text-fg">Type scale</h3>
 						<table className="mt-4 w-full text-left text-sm">
 							<thead className="font-mono text-2xs uppercase tracking-wider text-fg-faint">
@@ -227,7 +237,7 @@ export function SocialSet() {
 								</tr>
 							</tbody>
 						</table>
-						<p className="mt-3 text-sm leading-relaxed text-fg-soft">
+						<p className="mt-4 text-sm leading-relaxed text-fg-soft">
 							Headline sizes are square / portrait / landscape. Same
 							faces as the newsletter, so the brand reads the same in the
 							inbox and the feed. Margins are {PAD} px on every size.
@@ -235,7 +245,7 @@ export function SocialSet() {
 					</section>
 
 					{/* Color pairs */}
-					<section className="border-b border-line p-5 md:border-b-0 md:border-r">
+					<section className="border-b border-line p-6 md:border-b-0 md:border-r">
 						<h3 className="text-base font-semibold text-fg">Approved color pairs</h3>
 						<ul className="mt-4 flex flex-col gap-2">
 							{PAIRS.map((p) => {
@@ -243,7 +253,7 @@ export function SocialSet() {
 								return (
 									<li
 										key={`${p.fgName}-${p.bgName}`}
-										className="flex items-center gap-3"
+										className="flex items-center gap-4"
 									>
 										<span
 											aria-hidden
@@ -269,14 +279,14 @@ export function SocialSet() {
 					</section>
 
 					{/* What a non-designer may change */}
-					<section className="p-5">
+					<section className="p-6">
 						<h3 className="text-base font-semibold text-fg">
 							Who can change what
 						</h3>
 						<p className="mt-4 font-mono text-2xs uppercase tracking-wider text-accent">
 							Anyone on the team
 						</p>
-						<ul className="mt-2 list-disc pl-5 text-sm leading-relaxed text-fg-soft">
+						<ul className="mt-2 list-disc pl-6 text-sm leading-relaxed text-fg-soft">
 							<li>Event name, as long as it fits on two lines</li>
 							<li>Date and time line</li>
 							<li>The tag line above the headline</li>
@@ -284,7 +294,7 @@ export function SocialSet() {
 						<p className="mt-4 font-mono text-2xs uppercase tracking-wider text-fg-faint">
 							Locked
 						</p>
-						<ul className="mt-2 list-disc pl-5 text-sm leading-relaxed text-fg-soft">
+						<ul className="mt-2 list-disc pl-6 text-sm leading-relaxed text-fg-soft">
 							<li>Wordmark, colors, typefaces, and sizes</li>
 							<li>Margins and the sun graphic&rsquo;s position</li>
 							<li>New sizes: ask the designer for a new artboard</li>

@@ -123,7 +123,7 @@ export const NEWSLETTER_HTML = `<!DOCTYPE html>
   <td height="32" style="font-size:32px; line-height:32px;">&nbsp;</td>
   </tr>
   <tr>
-  <td>
+  <td style="font-size:0; line-height:0;"><!-- font-size:0 removes inline-block whitespace so the gap is exactly 20px, matching the Outlook spacer. -->
   <!--[if mso]><table role="presentation" width="520" cellpadding="0" cellspacing="0" border="0"><tr><td width="250" valign="top"><![endif]-->
   <div class="stack" style="display:inline-block; width:250px; vertical-align:top;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -136,7 +136,7 @@ export const NEWSLETTER_HTML = `<!DOCTYPE html>
     </table>
   </div>
   <!--[if mso]></td><td width="20"></td><td width="250" valign="top"><![endif]-->
-  <div class="stack" style="display:inline-block; width:250px; vertical-align:top; margin-left:16px;">
+  <div class="stack" style="display:inline-block; width:250px; vertical-align:top; margin-left:20px;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
     <tr><td class="stack-pad" style="padding:0 0 16px 0;">
       <img src="/email-samples/story-study.png" width="250" height="161" alt="Illustration: rows of dots with a few highlighted in marigold." class="fluid" style="width:250px; max-width:100%; height:auto;">

@@ -9,13 +9,14 @@ type Width = 600 | 375;
 // Links are disabled so a click can't navigate the frame away from the email.
 const PREVIEW_CSS = "a{pointer-events:none}";
 
-// Template mode: outline every data-region cell and label it.
+// Template mode: outline every data-region cell and label it. Labels sit on the
+// region's top edge, left side, so they cover padding instead of content.
 const REGION_CSS = `
 [data-region]{position:relative}
 [data-region]::after{content:"";position:absolute;inset:0;pointer-events:none}
 [data-region="editable"]::after{outline:2px dashed #1f57bd;outline-offset:-2px}
 [data-region="locked"]::after{outline:2px solid #16191d;outline-offset:-2px;background:repeating-linear-gradient(135deg,rgba(22,25,29,.10) 0 2px,transparent 2px 8px)}
-[data-region]::before{position:absolute;top:6px;right:6px;z-index:1;padding:3px 6px;border-radius:3px;font:600 10px/1.2 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:#fff}
+[data-region]::before{position:absolute;top:-10px;left:8px;z-index:1;padding:3px 6px;border-radius:3px;font:600 10px/1.2 ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:#fff}
 [data-region="editable"]::before{content:"Edit \\00B7  " attr(data-label);background:#1f57bd}
 [data-region="locked"]::before{content:"Locked \\00B7  " attr(data-label);background:#16191d}
 [data-label="Brand bar"]::before{display:none}
@@ -83,7 +84,7 @@ export function EmailPreview({
 				<div
 					role="group"
 					aria-label="Preview width"
-					className="inline-flex rounded-sm border border-line bg-panel p-0.5"
+					className="inline-flex rounded-sm border border-line bg-panel p-1"
 				>
 					{([600, 375] as const).map((w) => (
 						<button
@@ -91,7 +92,7 @@ export function EmailPreview({
 							type="button"
 							aria-pressed={width === w}
 							onClick={() => setWidth(w)}
-							className={`h-8 rounded-[4px] px-3 font-mono text-2xs uppercase tracking-wider transition-colors duration-(--duration-fast) ease-(--ease-snappy) active:bg-bg-2 ${
+							className={`h-8 rounded-[2px] px-4 font-mono text-2xs uppercase tracking-wider transition-colors duration-(--duration-fast) ease-(--ease-snappy) active:bg-bg-2 ${
 								width === w
 									? "bg-accent text-selection-fg"
 									: "text-fg-soft hover:bg-bg-2 hover:text-fg"
@@ -118,11 +119,11 @@ export function EmailPreview({
 						width: width === 600 ? "602px" : "min(377px, 100%)",
 						height,
 					}}
-					className="mx-auto block rounded-sm border border-line bg-white shadow-(--shadow) transition-[width] duration-(--duration-normal) ease-(--ease-snappy)"
+					className="mx-auto block rounded-sm border border-line bg-white shadow-(--shadow) transition-[width,height] duration-(--duration-normal) ease-(--ease-snappy)"
 				/>
 			</div>
 
-			<figcaption className="mt-3 max-w-[70ch] text-sm leading-relaxed text-fg-faint">
+			<figcaption className="mt-4 max-w-[70ch] text-sm leading-relaxed text-fg-faint">
 				{mode === "template"
 					? "Preview only: the outlines and labels are added for this view. The HTML underneath is the same file as sample 01."
 					: "Preview only: links are switched off inside this frame so a click stays on the page. Everything else is the HTML below, unchanged."}
@@ -130,7 +131,7 @@ export function EmailPreview({
 
 			{mode === "email" && (
 				<details className="group mt-6 rounded-md border border-line bg-panel">
-					<summary className="flex h-12 cursor-pointer list-none items-center justify-between gap-4 px-5 font-mono text-2xs uppercase tracking-wider text-fg-soft transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-fg [&::-webkit-details-marker]:hidden">
+					<summary className="flex h-12 cursor-pointer list-none items-center justify-between gap-4 px-6 font-mono text-2xs uppercase tracking-wider text-fg-soft transition-colors duration-(--duration-fast) ease-(--ease-snappy) hover:text-fg [&::-webkit-details-marker]:hidden">
 						<span>
 							<span className="text-accent">View HTML</span> · {LINE_COUNT}{" "}
 							lines · {SIZE_KB} KB
@@ -145,7 +146,7 @@ export function EmailPreview({
 					<pre
 						tabIndex={0}
 						aria-label="Newsletter HTML source"
-						className="max-h-[480px] overflow-auto border-t border-line bg-bg-2 p-5 font-mono text-2xs leading-relaxed text-fg-soft">
+						className="max-h-[480px] overflow-auto border-t border-line bg-bg-2 p-6 font-mono text-2xs leading-relaxed text-fg-soft">
 						<code>{NEWSLETTER_HTML}</code>
 					</pre>
 				</details>
